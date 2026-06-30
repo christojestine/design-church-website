@@ -6,6 +6,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const srcPath = path.resolve(__dirname, 'src')
 const assetsPath = path.resolve(__dirname, 'src/app/assets')
 const isDev = process.env.NODE_ENV !== 'production'
+const isProd = process.env.NODE_ENV === 'production'
 
 const config = {
   entry: path.resolve(srcPath, 'main.tsx'),
@@ -13,7 +14,7 @@ const config = {
     path: path.resolve(__dirname, 'dist'),
     filename: isDev ? '[name].js' : '[name].[contenthash:8].js',
     chunkFilename: isDev ? '[name].js' : '[name].[contenthash:8].js',
-    publicPath: '/',
+    publicPath: isProd ? '/design-church-website/' : '/',
     assetModuleFilename: 'assets/[name].[hash:8][ext][query]',
   },
   mode: isDev ? 'development' : 'production',
