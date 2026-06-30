@@ -2,8 +2,7 @@ name: Deploy to GitHub Pages
 
 on:
   push:
-    branches:
-      - main
+    branches: [main]
 
 jobs:
   build-and-deploy:
@@ -12,30 +11,33 @@ jobs:
       contents: read
       pages: write
       id-token: write
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Use Node.js
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 18
-          cache: "pnpm"
+          # pin to Node 18 for compatibility; change to 20/24 if you need
+          node-version: "18"
 
-      - name: Setup pnpm (preferred)
+      - name: Setup pnpm (official)
         uses: pnpm/action-setup@v2
         with:
-          version: 8
+          version: "8"
 
-      - name: Ensure pnpm available (Corepack fallback)
+      - name: Corepack fallback (ensure pnpm on PATH)
         run: |
           corepack enable || true
           corepack prepare pnpm@latest --activate || true
 
-      - name: Verify pnpm
+      - name: Verify environment
         run: |
-          echo "pnpm path: $(which pnpm || true)"
-          pnpm -v
+          node -v
+          npm -v
+          echo "pnpm: $(which pnpm || 'not found')"
+          pnpm -v || true
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
@@ -43,8 +45,11 @@ jobs:
       - name: Build
         run: pnpm build
 
-      - name: Deploy to GitHub Pages
+      - name: Publish to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./dist
+          publish_branch: gh-pages
+          user_name: github-actions[bot]
+          user_email: github-actions[bot]@users.noreply.github.com
