@@ -19,8 +19,9 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          # pin to Node 18 for compatibility; change to 20/24 if you need
-          node-version: "18"
+          # Rspack requires Node 20.19+ or 22.12+; use Node 20 for compatibility
+          node-version: "20"
+          cache: "pnpm"
 
       - name: Setup pnpm (official)
         uses: pnpm/action-setup@v2
