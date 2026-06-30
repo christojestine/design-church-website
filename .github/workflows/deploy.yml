@@ -20,7 +20,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           # Rspack requires Node 20.19+ or 22.12+; use Node 20 for compatibility
-          node-version: "20"
+          node-version: "24.14.1"
           cache: "pnpm"
 
       - name: Setup pnpm (official)
