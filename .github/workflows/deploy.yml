@@ -8,6 +8,10 @@ on:
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -28,8 +32,13 @@ jobs:
           corepack enable || true
           corepack prepare pnpm@latest --activate || true
 
+      - name: Verify pnpm
+        run: |
+          echo "pnpm path: $(which pnpm || true)"
+          pnpm -v
+
       - name: Install dependencies
-        run: pnpm install
+        run: pnpm install --frozen-lockfile
 
       - name: Build
         run: pnpm build
