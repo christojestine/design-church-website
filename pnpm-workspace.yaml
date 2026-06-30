@@ -1,0 +1,10 @@
+packages:
+  - '.'
+
+allowBuilds:
+  '@swc/core': false
+
+# Optimize pnpm behavior
+linkWorkspacePackages: true
+preferWorkspacePackages: true
+shamefullyHoistDependencies: false

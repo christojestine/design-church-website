@@ -1,0 +1,10 @@
+peerDependencyRules:
+  ignoreMissing:
+    - '@types/react'
+    - '@types/react-dom'
+
+overrides: {}
+
+# # Skip build script verification
+# ignore-scripts: false
+# ignore-pnpm-err: false

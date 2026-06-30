@@ -1,0 +1,11 @@
+declare module '*.avif';
+declare module '*.bmp';
+declare module '*.gif';
+declare module '*.jpg';
+declare module '*.JPG';
+declare module '*.jpeg';
+declare module '*.JPEG';
+declare module '*.png';
+declare module '*.PNG';
+declare module '*.webp';
+declare module '*.svg';
