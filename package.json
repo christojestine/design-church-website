@@ -6,7 +6,9 @@
   "scripts": {
     "dev": "rspack serve",
     "build": "rspack build",
-    "preview": "rspack build && rspack serve"
+    "preview": "rspack build && rspack serve",
+    "predeploy": "pnpm build",
+    "deploy": "gh-pages -d dist"
   },
   "dependencies": {
     "@emotion/react": "11.14.0",
@@ -32,6 +34,7 @@
     "@types/react-dom": "^19.2.3",
     "@types/three": "^0.185.0",
     "css-loader": "^7.1.4",
+    "gh-pages": "^6.3.0",
     "postcss": "^8.5.15",
     "postcss-loader": "^8.2.1",
     "react-refresh": "^0.18.0",
