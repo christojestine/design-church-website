@@ -7,10 +7,10 @@ import MenuBookIcon from "@mui/icons-material/MenuBook";
 import PublicIcon from "@mui/icons-material/Public";
 import churchExterior from "@/imports/118A1922.jpg";
 import grottoSmall from "@/imports/118A2143-q1i6wlsiqm03o4ehgyalbdplv9c71xmkizsndnfwxy_2ac44f49.jpg";
-import frVarghese from "@/imports/Fr.Varghese.jpg";
-import frAlbin from "@/imports/Fr.Albin.jpg";
-import frJoyal from "@/imports/Fr.Joyal.jpg";
-import frSinto from "@/imports/Fr.Sinto.jpg";
+import frVarghese from "@/app/assets/images/Fr.Varghese.jpg";
+import frAlbin from "@/app/assets/images/Fr.Albin.jpg";
+import frJoyal from "@/app/assets/images/Fr.Joyal.jpg";
+import frSinto from "@/app/assets/images/Fr.Sinto.jpg";
 
 const glassCard = {
   background: "rgba(255,255,255,0.6)",
