@@ -93,7 +93,7 @@ const staff = [
     photo: frSinto,
   },
 ];
-
+// The About page component
 export default function About() {
   return (
     <Box>
