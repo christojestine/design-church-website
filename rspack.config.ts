@@ -1,6 +1,6 @@
 import path from 'path'
 import { fileURLToPath } from 'url'
-import { HtmlRspackPlugin, DefinePlugin } from '@rspack/core'
+import { HtmlRspackPlugin, DefinePlugin, CopyRspackPlugin } from '@rspack/core'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const srcPath = path.resolve(__dirname, 'src')
@@ -36,6 +36,10 @@ const config = {
     new DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify(isDev ? 'development' : 'production'),
       '__REACT_DEVTOOLS_GLOBAL_HOOK__': '(typeof window !== "undefined" ? window.__REACT_DEVTOOLS_GLOBAL_HOOK__ : undefined)',
+    }),
+    // Copy 404.html to dist so GitHub Pages serves it for unknown routes
+    new CopyRspackPlugin({
+      patterns: [{ from: path.resolve(__dirname, '404.html'), to: '404.html' }],
     }),
   ],
   module: {
