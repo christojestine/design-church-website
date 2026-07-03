@@ -473,10 +473,14 @@ export default function MarianBackground3D() {
 
     let targetTime = 0;
     let smoothedTime = 0;
+    let lastWrittenTime = -1;
     let lastTimestamp = performance.now();
     let rafId: number;
 
-    const onScroll = () => {
+    // Only seek when change ≥ 1 frame at 25 fps — avoids constant decoding on mobile
+    const MIN_SEEK_DELTA = 1 / 25;
+
+    const updateTarget = () => {
       if (!video.duration) return;
       const maxScroll =
         document.documentElement.scrollHeight - window.innerHeight;
@@ -484,28 +488,42 @@ export default function MarianBackground3D() {
       targetTime = fraction * video.duration;
     };
 
-    // Exponential ease — frame-rate independent.
-    // alpha = 1 - e^(-k·dt): k=4 → ~250 ms settling time.
-    // Always updates so there is no hard stop; the video coasts to rest.
+    // fastSeek() snaps to nearest keyframe — far cheaper on mobile than currentTime=
+    const seekTo = (t: number) => {
+      if (typeof (video as any).fastSeek === "function") {
+        (video as any).fastSeek(t);
+      } else {
+        video.currentTime = t;
+      }
+    };
+
     const animate = (timestamp: number) => {
-      const dt = Math.min(timestamp - lastTimestamp, 50); // cap at 50 ms
+      const dt = Math.min(timestamp - lastTimestamp, 50);
       lastTimestamp = timestamp;
 
       if (video.duration) {
         const alpha = 1 - Math.exp((-4 * dt) / 1000);
         smoothedTime += (targetTime - smoothedTime) * alpha;
         smoothedTime = Math.max(0, Math.min(video.duration, smoothedTime));
-        video.currentTime = smoothedTime;
+
+        // Skip write if change is sub-frame — reduces decode thrash on mobile
+        if (Math.abs(smoothedTime - lastWrittenTime) >= MIN_SEEK_DELTA) {
+          seekTo(smoothedTime);
+          lastWrittenTime = smoothedTime;
+        }
       }
 
       rafId = requestAnimationFrame(animate);
     };
 
-    window.addEventListener("scroll", onScroll, { passive: true });
+    // touchmove gives more granular updates on mobile than scroll alone
+    window.addEventListener("scroll", updateTarget, { passive: true });
+    window.addEventListener("touchmove", updateTarget, { passive: true });
     rafId = requestAnimationFrame(animate);
 
     return () => {
-      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("scroll", updateTarget);
+      window.removeEventListener("touchmove", updateTarget);
       cancelAnimationFrame(rafId);
     };
   }, []);

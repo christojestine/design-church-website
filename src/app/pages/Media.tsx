@@ -13,13 +13,6 @@ import { ScrollReveal } from "../components/ScrollReveal";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import PhotoLibraryIcon from "@mui/icons-material/PhotoLibrary";
 import VideocamIcon from "@mui/icons-material/Videocam";
-import { ImageWithFallback } from "../components/figma/ImageWithFallback";
-
-import img1 from "@/imports/118A1922.jpg";
-import img2 from "@/imports/118A2142-q1i6wlsiqm03o4ehgyalbdplv9c71xmkizsndnfwxy_bcccfee6.jpg";
-import img3 from "@/imports/118A2327.jpg";
-import img4 from "@/imports/118A2143.jpg";
-import img5 from "@/imports/118A2143-q1i6wlsiqm03o4ehgyalbdplv9c71xmkizsndnfwxy_2ac44f49.jpg";
 
 const glassCard = {
   background: "rgba(255,255,255,0.6)",
