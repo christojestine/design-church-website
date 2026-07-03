@@ -1,362 +1,25 @@
 /**
  * MarianBackground3D
  * ─────────────────────────────────────────────────────────────────────────────
- * Transparent Three.js canvas overlaid on the existing light CSS background.
- * Shows the watercolour image of Our Lady at centre with a full, animated
- * 5-decade rosary (traditional bead layout + cross tail) orbiting her.
+ * Full-screen background video with a transparent Three.js canvas overlay
+ * for ambient animations (light rays, crown of stars, lily flowers, rose
+ * petals, floating doves, sparkles).
  */
-import { useRef, useMemo, Suspense, Component, type ReactNode } from "react";
-import { Canvas, useFrame, useLoader } from "@react-three/fiber";
+import {
+  useRef,
+  useMemo,
+  useEffect,
+  useState,
+  Suspense,
+  Component,
+  type ReactNode,
+} from "react";
+import { Canvas, useFrame } from "@react-three/fiber";
 import { Sparkles } from "@react-three/drei";
 import * as THREE from "three";
-import { TextureLoader } from "three";
 
-// ─── image ────────────────────────────────────────────────────────────────────
-import maryJpg from "../assets/images/mary.jpg";
-
-// ─── constants ────────────────────────────────────────────────────────────────
-const OA = 1.9; // ellipse x semi-axis
-const OB = 2.55; // ellipse y semi-axis
-
-const SR = 0.055; // small (Hail Mary) bead radius
-const LR = 0.092; // large (Our Father) bead radius
-
-const C_SMALL = new THREE.Color("#7a8090");
-const C_LARGE = new THREE.Color("#4a5060");
-const C_CORD = new THREE.Color("#9aa0ae");
-const C_CROSS = new THREE.Color("#8a9099");
-const C_HALO = new THREE.Color("#f5c842");
-
-// ─── helpers ──────────────────────────────────────────────────────────────────
-function ellipsePos(angle: number, z = 0): THREE.Vector3 {
-  return new THREE.Vector3(OA * Math.cos(angle), OB * Math.sin(angle), z);
-}
-
-function buildLoopPattern(): ("L" | "S")[] {
-  const arr: ("L" | "S")[] = [];
-  for (let d = 0; d < 5; d++) {
-    arr.push("L");
-    for (let s = 0; s < 10; s++) arr.push("S");
-  }
-  return arr; // 55 beads
-}
-
-// ─── Cord ─────────────────────────────────────────────────────────────────────
-function Cord({
-  points,
-  closed,
-}: {
-  points: THREE.Vector3[];
-  closed?: boolean;
-}) {
-  const lineObj = useMemo(() => {
-    const pts = closed ? [...points, points[0].clone()] : points;
-    const geom = new THREE.BufferGeometry().setFromPoints(pts);
-    const mat = new THREE.LineBasicMaterial({
-      color: C_CORD,
-      transparent: true,
-      opacity: 0.55,
-    });
-    return new THREE.Line(geom, mat);
-  }, [points, closed]);
-  return <primitive object={lineObj} />;
-}
-
-// ─── Instanced small beads ────────────────────────────────────────────────────
-function SmallBeads({ positions }: { positions: THREE.Vector3[] }) {
-  const ref = useRef<THREE.InstancedMesh>(null!);
-  const count = positions.length;
-  const dummy = useMemo(() => new THREE.Object3D(), []);
-
-  useFrame(({ clock }) => {
-    if (!ref.current) return;
-    const t = clock.getElapsedTime();
-    for (let i = 0; i < count; i++) {
-      dummy.position.copy(positions[i]);
-      dummy.scale.setScalar(1 + Math.sin(t * 1.4 + i * 0.35) * 0.04);
-      dummy.updateMatrix();
-      ref.current.setMatrixAt(i, dummy.matrix);
-    }
-    ref.current.instanceMatrix.needsUpdate = true;
-  });
-
-  return (
-    <instancedMesh ref={ref} args={[undefined, undefined, count]}>
-      <sphereGeometry args={[SR, 14, 14]} />
-      <meshStandardMaterial color={C_SMALL} metalness={0.55} roughness={0.32} />
-    </instancedMesh>
-  );
-}
-
-// ─── Large bead ───────────────────────────────────────────────────────────────
-function LargeBead({ position }: { position: THREE.Vector3 }) {
-  const ref = useRef<THREE.Mesh>(null!);
-  useFrame(({ clock }) => {
-    if (ref.current) ref.current.rotation.y = clock.getElapsedTime() * 0.4;
-  });
-  return (
-    <mesh ref={ref} position={position}>
-      <sphereGeometry args={[LR, 18, 18]} />
-      <meshStandardMaterial color={C_LARGE} metalness={0.65} roughness={0.22} />
-    </mesh>
-  );
-}
-
-// ─── Crucifix ─────────────────────────────────────────────────────────────────
-function Crucifix({ position }: { position: THREE.Vector3 }) {
-  const crossShape = useMemo(() => {
-    const s = new THREE.Shape();
-    const w = 0.065,
-      h = 0.36,
-      aw = 0.058,
-      ax = 0.22,
-      top = h * 0.18;
-    s.moveTo(-w / 2, -h / 2);
-    s.lineTo(w / 2, -h / 2);
-    s.lineTo(w / 2, top - aw / 2);
-    s.lineTo(ax / 2, top - aw / 2);
-    s.lineTo(ax / 2, top + aw / 2);
-    s.lineTo(w / 2, top + aw / 2);
-    s.lineTo(w / 2, h / 2);
-    s.lineTo(-w / 2, h / 2);
-    s.lineTo(-w / 2, top + aw / 2);
-    s.lineTo(-ax / 2, top + aw / 2);
-    s.lineTo(-ax / 2, top - aw / 2);
-    s.lineTo(-w / 2, top - aw / 2);
-    s.closePath();
-    return s;
-  }, []);
-
-  const ref = useRef<THREE.Mesh>(null!);
-  useFrame(({ clock }) => {
-    if (ref.current)
-      ref.current.rotation.z = Math.sin(clock.getElapsedTime() * 0.3) * 0.06;
-  });
-
-  return (
-    <mesh ref={ref} position={position}>
-      <extrudeGeometry
-        args={[
-          crossShape,
-          {
-            depth: 0.03,
-            bevelEnabled: true,
-            bevelSize: 0.008,
-            bevelThickness: 0.006,
-            bevelSegments: 3,
-          },
-        ]}
-      />
-      <meshStandardMaterial
-        color={C_CROSS}
-        metalness={0.7}
-        roughness={0.2}
-        emissive={C_CROSS}
-        emissiveIntensity={0.12}
-      />
-    </mesh>
-  );
-}
-
-// ─── Full Rosary ──────────────────────────────────────────────────────────────
-function Rosary() {
-  const groupRef = useRef<THREE.Group>(null!);
-
-  useFrame(({ clock }) => {
-    const t = clock.getElapsedTime();
-    if (groupRef.current) {
-      groupRef.current.rotation.z = Math.sin(t * 0.28) * 0.045;
-      groupRef.current.rotation.x = Math.sin(t * 0.18) * 0.018;
-    }
-  });
-
-  const loopPattern = useMemo(() => buildLoopPattern(), []);
-  const N = loopPattern.length; // 55
-
-  // Bead positions on the oval — start at 6 o'clock (bottom = junction)
-  const loopPositions = useMemo(
-    () =>
-      loopPattern.map((_, i) =>
-        ellipsePos(Math.PI / 2 + (i / N) * Math.PI * 2),
-      ),
-    [loopPattern, N],
-  );
-
-  const smallLoopPos = useMemo(
-    () => loopPositions.filter((_, i) => loopPattern[i] === "S"),
-    [loopPositions, loopPattern],
-  );
-  const largeLoopPos = useMemo(
-    () => loopPositions.filter((_, i) => loopPattern[i] === "L"),
-    [loopPositions, loopPattern],
-  );
-
-  // Tail (hangs from junction at bottom of oval)
-  const jY = -OB;
-  const gap = 0.19;
-  const tailDefs: { type: "L" | "S"; y: number }[] = [
-    { type: "S", y: jY - gap * 0.8 },
-    { type: "L", y: jY - gap * 1.9 },
-    { type: "S", y: jY - gap * 3.1 },
-    { type: "S", y: jY - gap * 4.0 },
-    { type: "S", y: jY - gap * 4.9 },
-    { type: "L", y: jY - gap * 6.1 },
-  ];
-  const crossY = jY - gap * 8.0;
-
-  const tailSmallPos = useMemo(
-    () =>
-      tailDefs
-        .filter((b) => b.type === "S")
-        .map((b) => new THREE.Vector3(0, b.y, 0)),
-    [],
-  );
-  const tailLargePos = useMemo(
-    () =>
-      tailDefs
-        .filter((b) => b.type === "L")
-        .map((b) => new THREE.Vector3(0, b.y, 0)),
-    [],
-  );
-
-  const loopCordPts = useMemo(() => [...loopPositions], [loopPositions]);
-  const tailCordPts = useMemo(
-    () => [
-      new THREE.Vector3(0, jY, 0),
-      ...tailDefs.map((b) => new THREE.Vector3(0, b.y, 0)),
-      new THREE.Vector3(0, crossY + 0.16, 0),
-    ],
-    [],
-  );
-
-  const allSmall = useMemo(
-    () => [...smallLoopPos, ...tailSmallPos],
-    [smallLoopPos, tailSmallPos],
-  );
-
-  return (
-    <group ref={groupRef} position={[0, 0.18, 0.15]}>
-      <Cord points={loopCordPts} closed />
-      <Cord points={tailCordPts} />
-      <SmallBeads positions={allSmall} />
-      {largeLoopPos.map((p, i) => (
-        <LargeBead key={`ll${i}`} position={p} />
-      ))}
-      {tailLargePos.map((p, i) => (
-        <LargeBead key={`lt${i}`} position={p} />
-      ))}
-      <Crucifix position={new THREE.Vector3(0, crossY, 0)} />
-    </group>
-  );
-}
-
-// ─── Very soft warm glow behind image (no visible disc edge) ─────────────────
-function GoldenAura() {
-  const glowMap = useMemo(() => {
-    const size = 256;
-    const c = document.createElement("canvas");
-    c.width = size;
-    c.height = size;
-    const ctx = c.getContext("2d")!;
-    const grad = ctx.createRadialGradient(
-      size / 2,
-      size / 2,
-      0,
-      size / 2,
-      size / 2,
-      size / 2,
-    );
-    grad.addColorStop(0.0, "rgba(245,200,66,0.55)");
-    grad.addColorStop(0.45, "rgba(245,200,66,0.20)");
-    grad.addColorStop(0.75, "rgba(245,200,66,0.04)");
-    grad.addColorStop(1.0, "rgba(245,200,66,0.00)");
-    ctx.fillStyle = grad;
-    ctx.fillRect(0, 0, size, size);
-    return new THREE.CanvasTexture(c);
-  }, []);
-
-  const ref = useRef<THREE.Mesh>(null!);
-  useFrame(({ clock }) => {
-    if (ref.current)
-      (ref.current.material as THREE.MeshBasicMaterial).opacity =
-        0.65 + Math.sin(clock.getElapsedTime() * 0.5) * 0.12;
-  });
-  return (
-    <mesh ref={ref} position={[0, 0.22, -0.52]}>
-      <planeGeometry args={[4.2, 4.2]} />
-      <meshBasicMaterial
-        map={glowMap}
-        transparent
-        opacity={0.65}
-        depthWrite={false}
-      />
-    </mesh>
-  );
-}
-
-// ─── Mary image — edge-fade so it dissolves into the background ───────────────
-function MaryImage() {
-  const texture = useLoader(TextureLoader, maryJpg as string);
-  texture.colorSpace = THREE.SRGBColorSpace;
-
-  // Radial alpha map: white (opaque) at centre → black (transparent) at edges
-  const alphaMap = useMemo(() => {
-    const size = 512;
-    const c = document.createElement("canvas");
-    c.width = size;
-    c.height = size;
-    const ctx = c.getContext("2d")!;
-    ctx.fillStyle = "#000";
-    ctx.fillRect(0, 0, size, size);
-
-    // Oval-shaped fade: squeeze x so sides fade faster than top/bottom
-    ctx.save();
-    ctx.translate(size / 2, size / 2);
-    ctx.scale(0.82, 1);
-    const grad = ctx.createRadialGradient(0, 0, size * 0.12, 0, 0, size * 0.5);
-    grad.addColorStop(0.0, "#ffffff");
-    grad.addColorStop(0.42, "#ffffff");
-    grad.addColorStop(0.62, "rgba(255,255,255,0.80)");
-    grad.addColorStop(0.78, "rgba(255,255,255,0.35)");
-    grad.addColorStop(0.9, "rgba(255,255,255,0.06)");
-    grad.addColorStop(1.0, "#000000");
-    ctx.fillStyle = grad;
-    ctx.beginPath();
-    ctx.arc(0, 0, size / 2, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.restore();
-
-    return new THREE.CanvasTexture(c);
-  }, []);
-
-  return (
-    <mesh position={[0, 0.22, -0.18]}>
-      <planeGeometry args={[3.1, 3.78]} />
-      <meshBasicMaterial
-        map={texture}
-        alphaMap={alphaMap}
-        transparent
-        opacity={0.95}
-        toneMapped={false}
-        depthWrite={false}
-      />
-    </mesh>
-  );
-}
-
-// ─── Error boundary ───────────────────────────────────────────────────────────
-interface EBState {
-  err: boolean;
-}
-class ImageEB extends Component<{ children: ReactNode }, EBState> {
-  state: EBState = { err: false };
-  static getDerivedStateFromError() {
-    return { err: true };
-  }
-  render() {
-    return this.state.err ? null : this.props.children;
-  }
-}
+// ─── video ────────────────────────────────────────────────────────────────────
+import bgVideo from "../assets/Videos/backgroundVideo.mp4";
 
 // ─── Divine Light Rays ────────────────────────────────────────────────────────
 function LightRays() {
@@ -748,19 +411,8 @@ function MarianScene() {
       {/* ── Far back: light rays ── */}
       <LightRays />
 
-      {/* ── Mary image + halo ── */}
-      <GoldenAura />
-      <ImageEB>
-        <Suspense fallback={null}>
-          <MaryImage />
-        </Suspense>
-      </ImageEB>
-
-      {/* ── Crown of 12 stars above Mary ── */}
+      {/* ── Crown of 12 stars ── */}
       <CrownOfStars />
-
-      {/* ── Rosary ── */}
-      <Rosary />
 
       {/* ── Lily blossoms on the sides ── */}
       <LilyFlower position={[-5.5, 0.8, -3.5]} scale={1.1} delay={0} />
@@ -801,6 +453,55 @@ function MarianScene() {
 
 // ─── Export ───────────────────────────────────────────────────────────────────
 export default function MarianBackground3D() {
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [isMobile, setIsMobile] = useState(
+    () => window.matchMedia("(max-width: 767px)").matches,
+  );
+
+  useEffect(() => {
+    const mql = window.matchMedia("(max-width: 767px)");
+    const handler = (e: MediaQueryListEvent) => setIsMobile(e.matches);
+    mql.addEventListener("change", handler);
+    return () => mql.removeEventListener("change", handler);
+  }, []);
+
+  const videoSize = isMobile ? "60%" : "80%";
+
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    let targetTime = 0;
+    let rafId: number;
+
+    const onScroll = () => {
+      if (!video.duration) return;
+      const maxScroll =
+        document.documentElement.scrollHeight - window.innerHeight;
+      const fraction = maxScroll > 0 ? window.scrollY / maxScroll : 0;
+      targetTime = fraction * video.duration;
+    };
+
+    // Smooth lerp toward target each frame — decouples scroll ticks from playback
+    const animate = () => {
+      if (video.duration) {
+        const diff = targetTime - video.currentTime;
+        if (Math.abs(diff) > 0.001) {
+          video.currentTime += diff * 0.08;
+        }
+      }
+      rafId = requestAnimationFrame(animate);
+    };
+
+    window.addEventListener("scroll", onScroll, { passive: true });
+    rafId = requestAnimationFrame(animate);
+
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      cancelAnimationFrame(rafId);
+    };
+  }, []);
+
   return (
     <div
       style={{
@@ -812,6 +513,31 @@ export default function MarianBackground3D() {
         transform: "scale(1.01)",
       }}
     >
+      {/* Full-screen background video — scroll-scrubbed, no borders */}
+      <video
+        ref={videoRef}
+        muted
+        playsInline
+        preload="auto"
+        src={bgVideo as string}
+        style={{
+          position: "absolute",
+          top: "50%",
+          left: "50%",
+          transform: "translate(-50%, -50%)",
+          width: videoSize,
+          height: videoSize,
+          objectFit: "cover",
+          display: "block",
+          opacity: 0.38,
+          maskImage:
+            "radial-gradient(ellipse at center, black 0%, rgba(0,0,0,0.92) 18%, rgba(0,0,0,0.65) 34%, rgba(0,0,0,0.28) 48%, rgba(0,0,0,0.06) 58%, transparent 63%)",
+          WebkitMaskImage:
+            "radial-gradient(ellipse at center, black 0%, rgba(0,0,0,0.92) 18%, rgba(0,0,0,0.65) 34%, rgba(0,0,0,0.28) 48%, rgba(0,0,0,0.06) 58%, transparent 63%)",
+        }}
+      />
+
+      {/* Transparent 3D animation overlay */}
       <Canvas
         dpr={[1, 1.5]}
         camera={{ position: [0, -0.3, 8.5], fov: 54, near: 0.1, far: 80 }}
@@ -820,7 +546,13 @@ export default function MarianBackground3D() {
           alpha: true,
           powerPreference: "high-performance",
         }}
-        style={{ width: "100%", height: "100%", background: "transparent" }}
+        style={{
+          position: "absolute",
+          inset: 0,
+          width: "100%",
+          height: "100%",
+          background: "transparent",
+        }}
       >
         <Suspense fallback={null}>
           <MarianScene />

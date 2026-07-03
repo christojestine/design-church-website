@@ -1,3 +1,5 @@
+declare module '*.mp4';
+declare module '*.webm';
 declare module '*.avif';
 declare module '*.bmp';
 declare module '*.gif';

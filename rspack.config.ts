@@ -101,6 +101,10 @@ const config = {
         type: 'asset/resource',
       },
       {
+        test: /\.(mp4|webm|ogg)$/i,
+        type: 'asset/resource',
+      },
+      {
         test: /\.csv$/i,
         type: 'asset/resource',
       },
