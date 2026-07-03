@@ -472,6 +472,8 @@ export default function MarianBackground3D() {
     if (!video) return;
 
     let targetTime = 0;
+    let smoothedTime = 0;
+    let lastTimestamp = performance.now();
     let rafId: number;
 
     const onScroll = () => {
@@ -482,14 +484,20 @@ export default function MarianBackground3D() {
       targetTime = fraction * video.duration;
     };
 
-    // Smooth lerp toward target each frame — decouples scroll ticks from playback
-    const animate = () => {
+    // Exponential ease — frame-rate independent.
+    // alpha = 1 - e^(-k·dt): k=4 → ~250 ms settling time.
+    // Always updates so there is no hard stop; the video coasts to rest.
+    const animate = (timestamp: number) => {
+      const dt = Math.min(timestamp - lastTimestamp, 50); // cap at 50 ms
+      lastTimestamp = timestamp;
+
       if (video.duration) {
-        const diff = targetTime - video.currentTime;
-        if (Math.abs(diff) > 0.001) {
-          video.currentTime += diff * 0.08;
-        }
+        const alpha = 1 - Math.exp((-4 * dt) / 1000);
+        smoothedTime += (targetTime - smoothedTime) * alpha;
+        smoothedTime = Math.max(0, Math.min(video.duration, smoothedTime));
+        video.currentTime = smoothedTime;
       }
+
       rafId = requestAnimationFrame(animate);
     };
 
