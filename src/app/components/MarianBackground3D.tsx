@@ -502,7 +502,7 @@ export default function MarianBackground3D() {
       lastTimestamp = timestamp;
 
       if (video.duration) {
-        const alpha = 1 - Math.exp((-4 * dt) / 1000);
+        const alpha = 1 - Math.exp((-2.5 * dt) / 1000);
         smoothedTime += (targetTime - smoothedTime) * alpha;
         smoothedTime = Math.max(0, Math.min(video.duration, smoothedTime));
 
@@ -516,14 +516,13 @@ export default function MarianBackground3D() {
       rafId = requestAnimationFrame(animate);
     };
 
-    // touchmove gives more granular updates on mobile than scroll alone
+    // touchmove reads scrollY before the compositor updates it on iOS —
+    // causes jumps when touch point changes. scroll alone is correct on all devices.
     window.addEventListener("scroll", updateTarget, { passive: true });
-    window.addEventListener("touchmove", updateTarget, { passive: true });
     rafId = requestAnimationFrame(animate);
 
     return () => {
       window.removeEventListener("scroll", updateTarget);
-      window.removeEventListener("touchmove", updateTarget);
       cancelAnimationFrame(rafId);
     };
   }, []);
