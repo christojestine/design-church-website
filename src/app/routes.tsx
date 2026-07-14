@@ -6,6 +6,7 @@ import Programs from "./pages/Programs";
 import Ministries from "./pages/Ministries";
 import Media from "./pages/Media";
 import Contact from "./pages/Contact";
+import ParishTeam from "./components/ParishTeam";
 import NotFound from "./pages/NotFound";
 
 // In production (GitHub Pages) the app is served from /design-church-website/.
@@ -21,6 +22,7 @@ export const router = createBrowserRouter(
       children: [
         { index: true, Component: Home },
         { path: "about", Component: About },
+        { path: "parish-team", Component: ParishTeam },
         { path: "programs", Component: Programs },
         { path: "ministries", Component: Ministries },
         { path: "media", Component: Media },

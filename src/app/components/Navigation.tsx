@@ -22,6 +22,7 @@ const navItems = [
   { label: "Home", path: "/" },
   { label: "Program Schedule", path: "/programs" },
   { label: "About", path: "/about" },
+  { label: "Parish Team", path: "/parish-team" },
   { label: "Ministries", path: "/ministries" },
   { label: "Media", path: "/media" },
   { label: "Contact", path: "/contact" },
