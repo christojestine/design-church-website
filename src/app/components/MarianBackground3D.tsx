@@ -2,18 +2,9 @@
  * MarianBackground3D
  * ─────────────────────────────────────────────────────────────────────────────
  * Full-screen background video with a transparent Three.js canvas overlay
- * for ambient animations (light rays, crown of stars, lily flowers, rose
  * petals, floating doves, sparkles).
  */
-import {
-  useRef,
-  useMemo,
-  useEffect,
-  useState,
-  Suspense,
-  Component,
-  type ReactNode,
-} from "react";
+import { useRef, useMemo, useEffect, useState, Suspense } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { Sparkles } from "@react-three/drei";
 import * as THREE from "three";
@@ -60,46 +51,6 @@ function LightRays() {
           />
         </mesh>
       ))}
-    </group>
-  );
-}
-
-// ─── Crown of 12 Stars ────────────────────────────────────────────────────────
-function CrownOfStars() {
-  const starShape = useMemo(() => {
-    const s = new THREE.Shape();
-    const outer = 0.1,
-      inner = 0.042;
-    for (let i = 0; i < 10; i++) {
-      const a = (i / 10) * Math.PI * 2 - Math.PI / 2;
-      const rr = i % 2 === 0 ? outer : inner;
-      if (i === 0) s.moveTo(Math.cos(a) * rr, Math.sin(a) * rr);
-      else s.lineTo(Math.cos(a) * rr, Math.sin(a) * rr);
-    }
-    s.closePath();
-    return s;
-  }, []);
-
-  return (
-    <group position={[0, 1.82, -0.1]}>
-      {Array.from({ length: 12 }).map((_, i) => {
-        const angle = (i / 12) * Math.PI * 2;
-        const R = 1.78;
-        return (
-          <StarMesh
-            key={i}
-            idx={i}
-            shape={starShape}
-            basePos={
-              new THREE.Vector3(
-                Math.cos(angle) * R,
-                Math.sin(angle) * R * 0.38,
-                0,
-              )
-            }
-          />
-        );
-      })}
     </group>
   );
 }
@@ -181,14 +132,15 @@ function RosePetals() {
     return list;
   }, []);
 
-  useFrame(({ clock }) => {
+  useFrame(({ clock }, delta) => {
+    const dt = Math.min(delta, 1 / 20);
     const t = clock.getElapsedTime();
     if (!groupRef.current) return;
     groupRef.current.children.forEach((child, i) => {
       const p = petals[i];
       const mesh = child as THREE.Mesh;
       // drift downward and sideways, wrap when off-screen
-      let newY = p.pos.y - p.speed * 0.012;
+      let newY = p.pos.y - p.speed * dt;
       if (newY < -6) newY = 7;
       p.pos.y = newY;
       mesh.position.y = newY;
@@ -411,9 +363,6 @@ function MarianScene() {
       {/* ── Far back: light rays ── */}
       <LightRays />
 
-      {/* ── Crown of 12 stars ── */}
-      <CrownOfStars />
-
       {/* ── Lily blossoms on the sides ── */}
       <LilyFlower position={[-5.5, 0.8, -3.5]} scale={1.1} delay={0} />
       <LilyFlower position={[5.2, 0.4, -3.0]} scale={0.95} delay={2.5} />
@@ -471,58 +420,81 @@ export default function MarianBackground3D() {
     const video = videoRef.current;
     if (!video) return;
 
-    let targetTime = 0;
-    let smoothedTime = 0;
-    let lastWrittenTime = -1;
+    let targetProgress = 0;
+    let smoothedProgress = 0;
     let lastTimestamp = performance.now();
+    let lastSeekTimestamp = 0;
+    let duration = 0;
     let rafId: number;
 
-    // Only seek when change ≥ 1 frame at 25 fps — avoids constant decoding on mobile
-    const MIN_SEEK_DELTA = 1 / 25;
+    // Seek cadence and delta are balanced for smoother visual progression
+    // without flooding the decoder with tiny seeks.
+    const MIN_SEEK_DELTA = 1 / 40;
+    const SEEK_INTERVAL_MS = 1000 / 24;
+
+    const clamp01 = (v: number) => Math.max(0, Math.min(1, v));
+
+    const syncDuration = () => {
+      duration = Number.isFinite(video.duration) ? video.duration : 0;
+    };
 
     const updateTarget = () => {
-      if (!video.duration) return;
       const maxScroll =
         document.documentElement.scrollHeight - window.innerHeight;
       const fraction = maxScroll > 0 ? window.scrollY / maxScroll : 0;
-      targetTime = fraction * video.duration;
-    };
-
-    // fastSeek() snaps to nearest keyframe — far cheaper on mobile than currentTime=
-    const seekTo = (t: number) => {
-      if (typeof (video as any).fastSeek === "function") {
-        (video as any).fastSeek(t);
-      } else {
-        video.currentTime = t;
-      }
+      targetProgress = clamp01(fraction);
     };
 
     const animate = (timestamp: number) => {
       const dt = Math.min(timestamp - lastTimestamp, 50);
       lastTimestamp = timestamp;
 
-      if (video.duration) {
-        const alpha = 1 - Math.exp((-2.5 * dt) / 1000);
-        smoothedTime += (targetTime - smoothedTime) * alpha;
-        smoothedTime = Math.max(0, Math.min(video.duration, smoothedTime));
+      if (duration > 0 && video.readyState >= 2 && !document.hidden) {
+        const alpha = 1 - Math.exp((-8 * dt) / 1000);
+        smoothedProgress += (targetProgress - smoothedProgress) * alpha;
+        smoothedProgress = clamp01(smoothedProgress);
+        const desiredTime = smoothedProgress * duration;
 
-        // Skip write if change is sub-frame — reduces decode thrash on mobile
-        if (Math.abs(smoothedTime - lastWrittenTime) >= MIN_SEEK_DELTA) {
-          seekTo(smoothedTime);
-          lastWrittenTime = smoothedTime;
+        const canSeekAgain = timestamp - lastSeekTimestamp >= SEEK_INTERVAL_MS;
+        if (
+          canSeekAgain &&
+          Math.abs(desiredTime - video.currentTime) >= MIN_SEEK_DELTA
+        ) {
+          video.currentTime = desiredTime;
+          lastSeekTimestamp = timestamp;
         }
       }
 
       rafId = requestAnimationFrame(animate);
     };
 
-    // touchmove reads scrollY before the compositor updates it on iOS —
-    // causes jumps when touch point changes. scroll alone is correct on all devices.
+    const handleLoadedMetadata = () => {
+      syncDuration();
+      updateTarget();
+      smoothedProgress = targetProgress;
+      if (duration > 0) {
+        video.currentTime = smoothedProgress * duration;
+      }
+    };
+
+    // Scroll is enough here; touchmove may observe stale scrollY on iOS.
     window.addEventListener("scroll", updateTarget, { passive: true });
+    window.addEventListener("resize", updateTarget, { passive: true });
+    video.addEventListener("loadedmetadata", handleLoadedMetadata);
+
+    syncDuration();
+    updateTarget();
+    if (duration > 0) {
+      smoothedProgress = targetProgress;
+      video.currentTime = smoothedProgress * duration;
+    }
+
     rafId = requestAnimationFrame(animate);
 
     return () => {
       window.removeEventListener("scroll", updateTarget);
+      window.removeEventListener("resize", updateTarget);
+      video.removeEventListener("loadedmetadata", handleLoadedMetadata);
       cancelAnimationFrame(rafId);
     };
   }, []);
@@ -543,6 +515,7 @@ export default function MarianBackground3D() {
         ref={videoRef}
         muted
         playsInline
+        disablePictureInPicture
         preload="auto"
         src={bgVideo as string}
         style={{
@@ -555,6 +528,7 @@ export default function MarianBackground3D() {
           objectFit: "cover",
           display: "block",
           opacity: 0.38,
+          willChange: "transform, opacity",
           maskImage:
             "radial-gradient(ellipse at center, black 0%, rgba(0,0,0,0.92) 18%, rgba(0,0,0,0.65) 34%, rgba(0,0,0,0.28) 48%, rgba(0,0,0,0.06) 58%, transparent 63%)",
           WebkitMaskImage:
@@ -564,13 +538,14 @@ export default function MarianBackground3D() {
 
       {/* Transparent 3D animation overlay */}
       <Canvas
-        dpr={[1, 1.5]}
+        dpr={isMobile ? [0.8, 1.1] : [1, 1.4]}
         camera={{ position: [0, -0.3, 8.5], fov: 54, near: 0.1, far: 80 }}
         gl={{
-          antialias: true,
+          antialias: !isMobile,
           alpha: true,
           powerPreference: "high-performance",
         }}
+        performance={{ min: 0.7 }}
         style={{
           position: "absolute",
           inset: 0,
