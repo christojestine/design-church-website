@@ -66,7 +66,7 @@ const vachabhishekaSayanam = [
   { day: "2nd Sunday of the Month", time: "5:00 PM to 9:00 PM" },
 ];
 
-export default function MassTimes() {
+export default function Programs() {
   return (
     <Box>
       <Box sx={{ textAlign: "center", py: { xs: 4, md: 4 }, px: 3 }}>

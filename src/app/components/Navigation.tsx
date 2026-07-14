@@ -20,7 +20,7 @@ import NavigationBarLogo from "../assets/images/Navigation Bar Logo.webp";
 
 const navItems = [
   { label: "Home", path: "/" },
-  { label: "Mass Times", path: "/mass-times" },
+  { label: "Program Schedule", path: "/programs" },
   { label: "About", path: "/about" },
   { label: "Ministries", path: "/ministries" },
   { label: "Media", path: "/media" },

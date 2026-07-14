@@ -519,7 +519,7 @@ export default function Home() {
                   in recognition of its spiritual and historical significance.
                   The church is also known for its majestic Gothic-style belfry,
                   the Marian Grotto built in 2000, and the Perpetual Adoration
-                  Centre established in 2001. A major attraction is the
+                  Centre established in 2001. A major attraction is the{" "}
                   <Box component="span" sx={{ fontWeight: "bold" }}>
                     Holy Land
                   </Box>{" "}
