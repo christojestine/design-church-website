@@ -507,17 +507,26 @@ export default function Home() {
                   Thomas the Apostle, who arrived in India in 52 AD. The first
                   church was established around 600 AD and later relocated to
                   its present site in the 13th century, reflecting centuries of
-                  faith and communal harmony. Renowned for the miraculous
-                  **Swayamvara Altar**, the church has long been a center of
-                  Marian devotion. In 1987, it was declared a **Marian Pilgrim
-                  Centre** in recognition of its spiritual and historical
-                  significance. The church is also known for its majestic
-                  Gothic-style belfry, the Marian Grotto built in 2000, and the
-                  Perpetual Adoration Centre established in 2001. A major
-                  attraction is the **Holy Land**, inaugurated in 2006,
-                  featuring life-size biblical replicas, sacred relics, and
-                  artistic recreations of key events from the life of Jesus,
-                  offering pilgrims a profound spiritual experience.
+                  faith and communal harmony. Renowned for the miraculous{" "}
+                  <Box component="span" sx={{ fontWeight: "bold" }}>
+                    Swayamvara Altar
+                  </Box>
+                  , the church has long been a center of Marian devotion. In
+                  1987, it was declared a{" "}
+                  <Box component="span" sx={{ fontWeight: "bold" }}>
+                    Marian Pilgrim Centre
+                  </Box>{" "}
+                  in recognition of its spiritual and historical significance.
+                  The church is also known for its majestic Gothic-style belfry,
+                  the Marian Grotto built in 2000, and the Perpetual Adoration
+                  Centre established in 2001. A major attraction is the
+                  <Box component="span" sx={{ fontWeight: "bold" }}>
+                    Holy Land
+                  </Box>{" "}
+                  , inaugurated in 2006, featuring life-size biblical replicas,
+                  sacred relics, and artistic recreations of key events from the
+                  life of Jesus, offering pilgrims a profound spiritual
+                  experience.
                 </Typography>
                 <Button
                   href="https://maps.app.goo.gl/NCCH7mXPgpeR62P67"
