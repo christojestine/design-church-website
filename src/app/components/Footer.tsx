@@ -1,6 +1,5 @@
 import { Link } from "react-router";
 import { Box, Typography, Grid, Divider, IconButton } from "@mui/material";
-import AccountBalanceIcon from "@mui/icons-material/AccountBalance";
 import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined";
 import PhoneIcon from "@mui/icons-material/Phone";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
@@ -19,10 +18,26 @@ const quickLinks = [
 ];
 
 const socialIcons = [
-  { Icon: FacebookIcon, label: "Facebook" },
-  { Icon: InstagramIcon, label: "Instagram" },
-  { Icon: YouTubeIcon, label: "YouTube" },
-  { Icon: WhatsappIcon, label: "WhatsApp" },
+  {
+    Icon: FacebookIcon,
+    label: "Facebook",
+    link: "https://www.facebook.com/chalakudymarianpilgrimcentre/",
+  },
+  {
+    Icon: InstagramIcon,
+    label: "Instagram",
+    link: "https://www.instagram.com/stmarysforanechurchchalakudy/?hl=en",
+  },
+  {
+    Icon: YouTubeIcon,
+    label: "YouTube",
+    link: "https://www.youtube.com/@StMarysForaneChurchChalakudy",
+  },
+  {
+    Icon: WhatsappIcon,
+    label: "WhatsApp",
+    link: "https://wa.me/7012711766",
+  },
 ];
 
 export function Footer() {
@@ -199,11 +214,13 @@ export function Footer() {
               Connect With Us
             </Typography>
             <Box sx={{ display: "flex", gap: 1.5 }}>
-              {socialIcons.map(({ Icon, label }) => (
+              {socialIcons.map(({ Icon, label, link }) => (
                 <IconButton
                   key={label}
                   aria-label={label}
-                  href="#"
+                  href={link}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   sx={{
                     width: 42,
                     height: 42,
