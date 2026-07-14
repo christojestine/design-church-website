@@ -27,20 +27,20 @@ import MenuBookIcon from "@mui/icons-material/MenuBook";
 import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 
-import ChurchHelicamView from "../assets/images/1.JPG";
-import ChurchAltar from "../assets/images/2.jpg";
-import ChurchFrontView from "../assets/images/3.jpg";
-import ChurchGrotto from "../assets/images/4.jpeg";
+import ChurchHelicamView from "../assets/images/1.webp";
+import ChurchAltar from "../assets/images/2.webp";
+import ChurchFrontView from "../assets/images/3.webp";
+import ChurchGrotto from "../assets/images/4.webp";
 // Replace local 5th image with Instagram post link
-const OldAltar =
-  "https://www.instagram.com/p/DUcEUZUj6Zi/?igsh=MW5qY25pcHRncXg5ZA==";
+// const OldAltar =
+//   "https://www.instagram.com/p/DUcEUZUj6Zi/?igsh=MW5qY25pcHRncXg5ZA==";
 
 const heroSlides = [
   { src: ChurchHelicamView, alt: "Slide 1", label: "House of God" },
   { src: ChurchAltar, alt: "Slide 2", label: "Sacred Interior" },
   { src: ChurchFrontView, alt: "Slide 3", label: "Evening Prayer" },
   { src: ChurchGrotto, alt: "Slide 4", label: "Grotto Shrine" },
-  { src: OldAltar, alt: "Slide 5", label: "Blessed Grounds" },
+  // { src: OldAltar, alt: "Slide 5", label: "Blessed Grounds" },
 ];
 
 const glassCard = {

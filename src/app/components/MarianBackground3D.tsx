@@ -19,7 +19,7 @@ import { Sparkles } from "@react-three/drei";
 import * as THREE from "three";
 
 // ─── video ────────────────────────────────────────────────────────────────────
-import bgVideo from "../assets/Videos/backgroundVideo.mp4";
+import bgVideo from "../assets/Videos/backgroundVideo.webm";
 
 // ─── Divine Light Rays ────────────────────────────────────────────────────────
 function LightRays() {
