@@ -12,11 +12,11 @@ If a PR changes anything that affects how this project works, this file must be 
 ## Tech Stack
 - **Framework/UI:** React 19, React Router, MUI
 - **Language:** TypeScript
-- **Animation:** `motion` (Framer Motion package line)
+- **Animation:** `motion` package (from Framer Motion)
 - **Carousel:** Swiper
 - **3D:** `three`, `@react-three/fiber`, `@react-three/drei`
 - **Bundler:** Rspack
-- **Package manager:** pnpm (lockfile/workspace present; npm commands also work)
+- **Package manager:** pnpm (`pnpm-lock.yaml` and `pnpm-workspace.yaml` are committed; npm commands also work)
 
 ## Entry Points and App Shell
 - App bootstrap: `src/main.tsx`
