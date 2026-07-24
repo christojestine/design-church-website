@@ -35,7 +35,7 @@ Defined in `src/app/routes.tsx`:
 - `/contact` → Contact form/info
 - `*` → NotFound
 
-Production routing uses basename `/design-church-website` for GitHub Pages.
+Production routing uses basename `/design-church-website` for GitHub Pages (configured in `src/app/routes.tsx`).
 
 ## Main Pages
 - `Home.tsx`: Hero image carousel, welcome story, ministry cards, upcoming events.
