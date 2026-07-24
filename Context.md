@@ -19,10 +19,10 @@ If a PR changes anything that affects how this project works, this file must be 
 - **Package manager:** pnpm (lockfile/workspace present; npm commands also work)
 
 ## Entry Points and App Shell
-- App bootstrap: `/home/runner/work/design-church-website/design-church-website/src/main.tsx`
-- Root app + theme provider: `/home/runner/work/design-church-website/design-church-website/src/app/App.tsx`
-- Router definition: `/home/runner/work/design-church-website/design-church-website/src/app/routes.tsx`
-- Shared layout (background, navigation, footer, route outlet): `/home/runner/work/design-church-website/design-church-website/src/app/Layout.tsx`
+- App bootstrap: `src/main.tsx`
+- Root app + theme provider: `src/app/App.tsx`
+- Router definition: `src/app/routes.tsx`
+- Shared layout (background, navigation, footer, route outlet): `src/app/Layout.tsx`
 
 ## Routing Map
 Defined in `src/app/routes.tsx`:
@@ -69,7 +69,7 @@ From `package.json`:
 - `npm run deploy` → publish `dist/` via `gh-pages`
 
 ## Build/Deploy Notes
-- Bundler config: `/home/runner/work/design-church-website/design-church-website/rspack.config.ts`
+- Bundler config: `rspack.config.ts`
 - `publicPath` is `/design-church-website/` in production.
 - `404.html` is copied to `dist/` for GitHub Pages route fallback behavior.
 - Router basename and bundler public path must stay aligned.
