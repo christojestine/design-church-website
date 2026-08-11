@@ -357,6 +357,25 @@ export default function MarianBackground3D() {
     const video = videoRef.current;
     if (!video) return;
 
+    if (isMobileLayout) {
+      const showLastFrame = () => {
+        const duration = Number.isFinite(video.duration) ? video.duration : 0;
+        // Use max(duration - tiny offset, 0) so browser can decode the final frame.
+        video.currentTime = Math.max(duration - 0.001, 0);
+        video.pause();
+      };
+
+      if (video.readyState >= 1) {
+        showLastFrame();
+      } else {
+        video.addEventListener("loadedmetadata", showLastFrame);
+      }
+
+      return () => {
+        video.removeEventListener("loadedmetadata", showLastFrame);
+      };
+    }
+
     let targetProgress = 0;
     let smoothedProgress = 0;
     let lastTimestamp = performance.now();
@@ -457,7 +476,7 @@ export default function MarianBackground3D() {
       if (seekSafetyTimer) clearTimeout(seekSafetyTimer);
       cancelAnimationFrame(rafId);
     };
-  }, []);
+  }, [isMobileLayout]);
 
   return (
     <div
@@ -496,9 +515,8 @@ export default function MarianBackground3D() {
         }}
       />
 
-      {/* Transparent 3D animation overlay — skipped entirely if WebGL is
-          unavailable or the user prefers reduced motion */}
-      {tier !== "none" && <CanvasOverlay tier={tier} />}
+      {/* Keep mobile static: no animated canvas overlay. */}
+      {tier === "full" && <CanvasOverlay tier={tier} />}
     </div>
   );
 }

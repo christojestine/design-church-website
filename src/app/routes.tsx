@@ -2,11 +2,11 @@ import { createBrowserRouter } from "react-router";
 import { lazy } from "react";
 import Layout from "./Layout";
 
-const Home = lazy(() => import("./pages/Home"));
+const Home = lazy(() => import("./pages/Home/Home"));
 const About = lazy(() => import("./pages/About/About"));
 const Programs = lazy(() => import("./pages/Programs"));
-const Ministries = lazy(() => import("./pages/Ministries"));
-const Media = lazy(() => import("./pages/Media"));
+const Ministries = lazy(() => import("./pages/Ministries/Ministries"));
+const Media = lazy(() => import("./pages/Media/Media"));
 const Contact = lazy(() => import("./pages/Contact"));
 const ParishTeam = lazy(() => import("./pages/ParishTeam/ParishTeam"));
 const NotFound = lazy(() => import("./pages/NotFound"));

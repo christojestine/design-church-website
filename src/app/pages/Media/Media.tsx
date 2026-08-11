@@ -7,10 +7,11 @@ import CardContent from "@mui/material/CardContent";
 import Chip from "@mui/material/Chip";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
-import { ScrollReveal } from "../components/ScrollReveal";
+import { ScrollReveal } from "../../components/ScrollReveal";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import PhotoLibraryIcon from "@mui/icons-material/PhotoLibrary";
 import VideocamIcon from "@mui/icons-material/Videocam";
+import { videos, photos } from "./Media.Data";
 
 const glassCard = {
   background: "rgba(255,255,255,0.6)",
@@ -27,40 +28,6 @@ const glassCard = {
     transform: "translateY(-8px) perspective(800px) rotateX(1.5deg)",
   },
 };
-
-const videos = [
-  {
-    id: "tqvVgHlAVKw",
-    title:
-      "ഓശാന തിരുക്കര്‍മ്മങ്ങള്‍ | Palm Sunday | Highlight Video | St.Mary's Forane Church Chalakudy",
-    description:
-      "Palm Sunday highlights from St.Mary's Forane Church Chalakudy.",
-  },
-  {
-    id: "Ckygkq-Zl2o",
-    title:
-      "പീഡാനുഭവ ശൂസ്രൂഷകൾ | Good Friday | Highlight Video | St.Mary's Forane Church",
-    description: "Good Friday highlights and reflections.",
-  },
-  {
-    id: "99X0Cd7O0ZY",
-    title:
-      "Beyond The Veil | Nothing on earth is greater than one Holy Mass | St.Mary's Forane Church Chalakudy",
-    description: "A feature on the significance of the Holy Mass.",
-  },
-  {
-    id: "z5gxl1B5uMw",
-    title: "ക്രിസ്തുജയന്തി - 2025 |  മഹാജൂബിലി സമാപന കരോൾ | Highlight Video",
-    description: "Highlights from the 2025 Mahajubilee closing carol.",
-  },
-];
-
-const photos = [
-  { shortcode: "DWqoDqIDyrk", caption: "Instagram Post 1" },
-  { shortcode: "DXD9hF6j1G-", caption: "Instagram Post 2" },
-  { shortcode: "DWojRfwj_zj", caption: "Instagram Post 3" },
-  { shortcode: "DWdUey8j2Hu", caption: "Instagram Post 4" },
-];
 
 export default function Media() {
   const [tab, setTab] = useState(0);
