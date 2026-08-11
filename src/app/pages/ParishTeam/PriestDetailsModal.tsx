@@ -1,0 +1,308 @@
+import React from "react";
+import {
+  Avatar,
+  Box,
+  Dialog,
+  DialogContent,
+  Divider,
+  Grid,
+  IconButton,
+  Paper,
+  Stack,
+  Typography,
+  Chip,
+  Button,
+  Zoom,
+} from "@mui/material";
+
+import CloseIcon from "@mui/icons-material/Close";
+import CakeOutlinedIcon from "@mui/icons-material/CakeOutlined";
+import ChurchOutlinedIcon from "@mui/icons-material/ChurchOutlined";
+import CalendarMonthOutlinedIcon from "@mui/icons-material/CalendarMonthOutlined";
+import VolunteerActivismOutlinedIcon from "@mui/icons-material/VolunteerActivismOutlined";
+
+export interface Priest {
+  name: string;
+  role: string;
+  color: string;
+  photo: string;
+  dateofbirth: string;
+  dateofordination: string;
+  homeparish: string;
+  feastday: string;
+  currentposition: string;
+}
+
+interface PriestProfileDialogProps {
+  open: boolean;
+  onClose: () => void;
+  onExited?: () => void;
+  priest: Priest;
+}
+
+const PriestDetailsModal = ({
+  open,
+  onClose,
+  onExited,
+  priest,
+}: PriestProfileDialogProps) => {
+  return (
+    <Dialog
+      open={open}
+      onClose={onClose}
+      maxWidth="md"
+      fullWidth
+      slots={{
+        transition: Zoom,
+      }}
+      transitionDuration={{ enter: 380, exit: 180 }}
+      slotProps={{
+        transition: { onExited } as object,
+        paper: {
+          sx: {
+            borderRadius: 4,
+            overflow: "hidden",
+            background: "rgba(255,255,255,0.97)",
+            boxShadow: "0 24px 80px rgba(20, 40, 80, 0.25)",
+          },
+        },
+      }}
+    >
+      {/* Top accent */}
+      <Box
+        sx={{
+          height: 6,
+          background: "linear-gradient(90deg, #1d4ed8, #2563eb, #60a5fa)",
+        }}
+      />
+
+      <DialogContent sx={{ p: { xs: 3, md: 5 } }}>
+        {/* Close button */}
+        <IconButton
+          onClick={onClose}
+          sx={{
+            position: "absolute",
+            right: 16,
+            top: 16,
+            backgroundColor: "#f1f5f9",
+            "&:hover": {
+              backgroundColor: "#e2e8f0",
+            },
+          }}
+        >
+          <CloseIcon />
+        </IconButton>
+
+        {/* Header */}
+        <Stack spacing={1.5} sx={{ alignItems: "center" }}>
+          <Chip
+            label="PRIEST PROFILE"
+            size="small"
+            sx={{
+              fontWeight: 700,
+              letterSpacing: 1,
+              color: "#15803d",
+              backgroundColor: "#dcfce7",
+            }}
+          />
+
+          <Avatar
+            src={priest.photo}
+            alt={priest.name}
+            sx={{
+              width: 150,
+              height: 150,
+              border: "5px solid white",
+              boxShadow: "0 8px 30px rgba(30,64,175,0.2)",
+              backgroundColor: "#dbeafe",
+            }}
+          />
+
+          <Typography
+            variant="h4"
+            sx={{
+              fontWeight: 800,
+              textAlign: "center",
+              color: "#172033",
+              fontFamily: "Georgia, serif",
+            }}
+          >
+            {priest.name}
+          </Typography>
+
+          <Typography
+            variant="subtitle1"
+            sx={{
+              color: "#2563eb",
+              fontWeight: 700,
+            }}
+          >
+            {priest.role}
+          </Typography>
+        </Stack>
+
+        <Divider sx={{ my: 4 }} />
+
+        {/* Information */}
+        <Grid container spacing={2}>
+          <Grid size={{ xs: 12, sm: 6 }}>
+            <InfoCard
+              icon={<CakeOutlinedIcon />}
+              label="Date of Birth"
+              value={priest.dateofbirth}
+            />
+          </Grid>
+
+          <Grid size={{ xs: 12, sm: 6 }}>
+            <InfoCard
+              icon={<CalendarMonthOutlinedIcon />}
+              label="Feast Day"
+              value={priest.feastday}
+            />
+          </Grid>
+
+          <Grid size={{ xs: 12, sm: 6 }}>
+            <InfoCard
+              icon={<VolunteerActivismOutlinedIcon />}
+              label="Date of Ordination"
+              value={priest.dateofordination}
+            />
+          </Grid>
+
+          <Grid size={{ xs: 12, sm: 6 }}>
+            <InfoCard
+              icon={<ChurchOutlinedIcon />}
+              label="Home Parish"
+              value={priest.homeparish}
+            />
+          </Grid>
+        </Grid>
+
+        {/* Church information */}
+        <Paper
+          elevation={0}
+          sx={{
+            mt: 3,
+            p: 2.5,
+            borderRadius: 3,
+            background: "linear-gradient(135deg, #eff6ff 0%, #f8fafc 100%)",
+            border: "1px solid #dbeafe",
+          }}
+        >
+          <Typography
+            variant="subtitle2"
+            sx={{
+              color: "#2563eb",
+              fontWeight: 800,
+              mb: 0.5,
+            }}
+          >
+            PRESENT MINISTRY
+          </Typography>
+
+          <Typography
+            variant="body1"
+            sx={{
+              color: "#334155",
+              fontWeight: 600,
+            }}
+          >
+            {priest.currentposition}
+          </Typography>
+        </Paper>
+
+        {/* Close */}
+        <Stack sx={{ mt: 4, alignItems: "center" }}>
+          <Button
+            variant="contained"
+            onClick={onClose}
+            sx={{
+              borderRadius: 3,
+              px: 5,
+              py: 1.2,
+              textTransform: "none",
+              fontWeight: 700,
+              background: "linear-gradient(135deg, #2563eb, #1d4ed8)",
+              boxShadow: "0 8px 20px rgba(37,99,235,0.25)",
+            }}
+          >
+            Close Profile
+          </Button>
+        </Stack>
+      </DialogContent>
+    </Dialog>
+  );
+};
+
+const InfoCard = ({
+  icon,
+  label,
+  value,
+}: {
+  icon: React.ReactNode;
+  label: string;
+  value: string;
+}) => {
+  return (
+    <Paper
+      elevation={0}
+      sx={{
+        p: 2.2,
+        height: "100%",
+        borderRadius: 3,
+        border: "1px solid #e2e8f0",
+        backgroundColor: "#ffffff",
+        transition: "all 0.25s ease",
+
+        "&:hover": {
+          transform: "translateY(-2px)",
+          boxShadow: "0 8px 25px rgba(15,23,42,0.08)",
+          borderColor: "#bfdbfe",
+        },
+      }}
+    >
+      <Stack direction="row" spacing={2} sx={{ alignItems: "center" }}>
+        <Box
+          sx={{
+            width: 44,
+            height: 44,
+            borderRadius: 2.5,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            color: "#2563eb",
+            backgroundColor: "#eff6ff",
+          }}
+        >
+          {icon}
+        </Box>
+
+        <Box>
+          <Typography
+            variant="caption"
+            sx={{
+              display: "block",
+              color: "#64748b",
+              fontWeight: 600,
+            }}
+          >
+            {label}
+          </Typography>
+
+          <Typography
+            variant="body1"
+            sx={{
+              color: "#172033",
+              fontWeight: 700,
+              mt: 0.3,
+            }}
+          >
+            {value}
+          </Typography>
+        </Box>
+      </Stack>
+    </Paper>
+  );
+};
+
+export default PriestDetailsModal;

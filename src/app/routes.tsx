@@ -1,13 +1,15 @@
 import { createBrowserRouter } from "react-router";
+import { lazy } from "react";
 import Layout from "./Layout";
-import Home from "./pages/Home";
-import About from "./pages/About";
-import Programs from "./pages/Programs";
-import Ministries from "./pages/Ministries";
-import Media from "./pages/Media";
-import Contact from "./pages/Contact";
-import ParishTeam from "./components/ParishTeam";
-import NotFound from "./pages/NotFound";
+
+const Home = lazy(() => import("./pages/Home"));
+const About = lazy(() => import("./pages/About/About"));
+const Programs = lazy(() => import("./pages/Programs"));
+const Ministries = lazy(() => import("./pages/Ministries"));
+const Media = lazy(() => import("./pages/Media"));
+const Contact = lazy(() => import("./pages/Contact"));
+const ParishTeam = lazy(() => import("./pages/ParishTeam/ParishTeam"));
+const NotFound = lazy(() => import("./pages/NotFound"));
 
 // In production (GitHub Pages) the app is served from /design-church-website/.
 // basename tells React Router to treat that sub-path as the root.

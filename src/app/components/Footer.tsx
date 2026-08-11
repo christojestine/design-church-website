@@ -1,5 +1,9 @@
 import { Link } from "react-router";
-import { Box, Typography, Grid, Divider, IconButton } from "@mui/material";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
+import Grid from "@mui/material/Grid";
+import Divider from "@mui/material/Divider";
+import IconButton from "@mui/material/IconButton";
 import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined";
 import PhoneIcon from "@mui/icons-material/Phone";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
@@ -73,7 +77,12 @@ export function Footer() {
                 }}
               />
               <Typography
-                sx={{ fontWeight: 800, color: "#0f172a", fontSize: "1rem" }}
+                sx={{
+                  fontFamily: '"Cinzel", "Georgia", serif',
+                  fontWeight: 800,
+                  color: "#0f172a",
+                  fontSize: "1rem",
+                }}
               >
                 St.Mary's Forane Church Chalakudy
               </Typography>
@@ -95,6 +104,7 @@ export function Footer() {
             <Typography
               sx={{
                 color: "#1d4ed8",
+                fontFamily: '"Cinzel", "Georgia", serif',
                 fontWeight: 700,
                 mb: 2.5,
                 letterSpacing: "0.1em",
@@ -141,6 +151,7 @@ export function Footer() {
             <Typography
               sx={{
                 color: "#1d4ed8",
+                fontFamily: '"Cinzel", "Georgia", serif',
                 fontWeight: 700,
                 mb: 2.5,
                 letterSpacing: "0.1em",
@@ -204,6 +215,7 @@ export function Footer() {
             <Typography
               sx={{
                 color: "#1d4ed8",
+                fontFamily: '"Cinzel", "Georgia", serif',
                 fontWeight: 700,
                 mb: 2.5,
                 letterSpacing: "0.1em",

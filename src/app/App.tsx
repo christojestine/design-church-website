@@ -1,6 +1,7 @@
 import { RouterProvider } from "react-router";
 import { router } from "./routes";
-import { ThemeProvider, createTheme, CssBaseline } from "@mui/material";
+import { ThemeProvider, createTheme } from "@mui/material/styles";
+import CssBaseline from "@mui/material/CssBaseline";
 
 const theme = createTheme({
   palette: {
@@ -12,16 +13,53 @@ const theme = createTheme({
     divider: "rgba(30,64,175,0.12)",
   },
   typography: {
-    fontFamily: '"Inter", "Roboto", sans-serif',
-    h1: { fontWeight: 800, letterSpacing: "-0.03em" },
-    h2: { fontWeight: 700, letterSpacing: "-0.02em" },
-    h3: { fontWeight: 700, letterSpacing: "-0.01em" },
-    h4: { fontWeight: 600 },
-    h5: { fontWeight: 600 },
-    h6: { fontWeight: 600 },
+    fontFamily: '"DM Sans", "Inter", "Roboto", sans-serif',
+    h1: {
+      fontFamily: '"Cinzel", "Georgia", serif',
+      fontWeight: 800,
+      letterSpacing: "-0.03em",
+    },
+    h2: {
+      fontFamily: '"Cinzel", "Georgia", serif',
+      fontWeight: 700,
+      letterSpacing: "-0.02em",
+    },
+    h3: {
+      fontFamily: '"Cinzel", "Georgia", serif',
+      fontWeight: 700,
+      letterSpacing: "-0.01em",
+    },
+    h4: {
+      fontFamily: '"Cinzel", "Georgia", serif',
+      fontWeight: 600,
+    },
+    h5: {
+      fontFamily: '"Cinzel", "Georgia", serif',
+      fontWeight: 600,
+    },
+    h6: {
+      fontFamily: '"Cinzel", "Georgia", serif',
+      fontWeight: 600,
+    },
+    body1: { fontFamily: '"DM Sans", "Inter", "Roboto", sans-serif' },
+    body2: { fontFamily: '"DM Sans", "Inter", "Roboto", sans-serif' },
+    button: { fontFamily: '"DM Sans", "Inter", "Roboto", sans-serif' },
   },
   shape: { borderRadius: 16 },
   components: {
+    MuiCssBaseline: {
+      styleOverrides: {
+        body: {
+          fontFamily: '"DM Sans", "Inter", "Roboto", sans-serif',
+        },
+        h1: { fontFamily: '"Cinzel", "Georgia", serif' },
+        h2: { fontFamily: '"Cinzel", "Georgia", serif' },
+        h3: { fontFamily: '"Cinzel", "Georgia", serif' },
+        h4: { fontFamily: '"Cinzel", "Georgia", serif' },
+        h5: { fontFamily: '"Cinzel", "Georgia", serif' },
+        h6: { fontFamily: '"Cinzel", "Georgia", serif' },
+      },
+    },
     MuiButton: {
       styleOverrides: {
         root: {
@@ -30,6 +68,7 @@ const theme = createTheme({
           borderRadius: 12,
           padding: "10px 24px",
           transition: "all 0.3s ease",
+          fontFamily: '"DM Sans", "Inter", "Roboto", sans-serif',
         },
         containedPrimary: {
           background: "linear-gradient(135deg, #1d4ed8, #2563eb)",
@@ -70,7 +109,8 @@ const theme = createTheme({
           WebkitBackdropFilter: "blur(20px)",
           border: "1px solid rgba(255,255,255,0.85)",
           borderRadius: 20,
-          boxShadow: "0 4px 24px rgba(30,64,175,0.07), 0 1px 3px rgba(0,0,0,0.06)",
+          boxShadow:
+            "0 4px 24px rgba(30,64,175,0.07), 0 1px 3px rgba(0,0,0,0.06)",
           transition: "all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)",
         },
       },

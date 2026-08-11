@@ -1,14 +1,12 @@
-import {
-  Box,
-  Typography,
-  Grid,
-  Card,
-  CardContent,
-  Chip,
-  Divider,
-  IconButton,
-  Button,
-} from "@mui/material";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
+import Grid from "@mui/material/Grid";
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
+import Chip from "@mui/material/Chip";
+import Divider from "@mui/material/Divider";
+import IconButton from "@mui/material/IconButton";
+import Button from "@mui/material/Button";
 import { ScrollReveal } from "../components/ScrollReveal";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import ChurchIcon from "@mui/icons-material/AccountBalance";
@@ -59,7 +57,7 @@ const schedule = [
 const confessions = [
   { day: "Monday to Saturday", time: "During the time of Holy Mass" },
   { day: "2nd Sunday of the Month", time: "4:00 PM to 7:00 PM" },
-  { day: "By Appointment", time: "Contact the parish office" },
+  { day: "By Appointment", time: "Contact the priest directly" },
 ];
 
 const vachabhishekaSayanam = [

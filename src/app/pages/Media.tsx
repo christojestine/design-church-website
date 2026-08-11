@@ -1,14 +1,12 @@
 import { useState, useEffect } from "react";
-import {
-  Box,
-  Typography,
-  Grid,
-  Card,
-  CardContent,
-  Chip,
-  Tabs,
-  Tab,
-} from "@mui/material";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
+import Grid from "@mui/material/Grid";
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
+import Chip from "@mui/material/Chip";
+import Tabs from "@mui/material/Tabs";
+import Tab from "@mui/material/Tab";
 import { ScrollReveal } from "../components/ScrollReveal";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import PhotoLibraryIcon from "@mui/icons-material/PhotoLibrary";

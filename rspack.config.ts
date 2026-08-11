@@ -1,6 +1,7 @@
 import path from 'path'
 import { fileURLToPath } from 'url'
-import { HtmlRspackPlugin, DefinePlugin, CopyRspackPlugin } from '@rspack/core'
+import { HtmlRspackPlugin, DefinePlugin, CopyRspackPlugin, CssExtractRspackPlugin } from '@rspack/core'
+import { ReactRefreshRspackPlugin } from '@rspack/plugin-react-refresh'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const srcPath = path.resolve(__dirname, 'src')
@@ -18,11 +19,16 @@ const config = {
     assetModuleFilename: 'assets/[name].[hash:8][ext][query]',
   },
   mode: isDev ? 'development' : 'production',
-  devtool: isDev ? 'cheap-module-source-map' : false,
+  devtool: isDev ? 'eval' : false,
+  experiments: {
+    incremental: isDev,
+  },
   resolve: {
     alias: {
       '@': srcPath,
       'figma:asset': assetsPath,
+      // Use pre-built pre-minified ESM bundle — avoids parsing 300+ source files
+      'three$': path.resolve(__dirname, 'node_modules/three/build/three.module.min.js'),
     },
     extensions: ['.tsx', '.ts', '.js', '.jsx', '.json'],
     fullySpecified: false,
@@ -41,6 +47,8 @@ const config = {
     new CopyRspackPlugin({
       patterns: [{ from: path.resolve(__dirname, '404.html'), to: '404.html' }],
     }),
+    ...(isDev ? [new ReactRefreshRspackPlugin()] : []),
+    ...(isProd ? [new CssExtractRspackPlugin({ filename: '[name].[contenthash:8].css', chunkFilename: '[name].[contenthash:8].css' })] : []),
   ],
   module: {
     rules: [
@@ -48,7 +56,7 @@ const config = {
         test: /\.[jt]sx?$/,
         exclude: /node_modules/,
         use: {
-          loader: 'swc-loader',
+          loader: 'builtin:swc-loader',
           options: {
             jsc: {
               parser: {
@@ -61,29 +69,28 @@ const config = {
                 react: {
                   runtime: 'automatic',
                   development: isDev,
-                  refresh: false,
+                  refresh: isDev,
                 },
               },
               keepClassNames: true,
               target: 'es2020',
             },
-            minify: !isDev,
-            sourceMaps: true,
+            sourceMaps: false,
           },
         },
       },
       {
         test: /\.css$/,
         use: [
-          'style-loader',
+          isProd ? CssExtractRspackPlugin.loader : 'style-loader',
           {
             loader: 'css-loader',
             options: {
-              importLoaders: 1,
+              importLoaders: 0,
               modules: false,
             },
           },
-          'postcss-loader',
+          ...(isProd ? ['postcss-loader'] : []),
         ],
         type: 'javascript/auto',
       },
@@ -143,9 +150,58 @@ const config = {
     },
   },
   target: 'web',
-  optimization: {
+  optimization: isDev ? {
+    minimize: false,
+    moduleIds: 'named',
+    chunkIds: 'named',
+    usedExports: false,
+    providedExports: false,
+    innerGraph: false,
+    runtimeChunk: false,
+    removeAvailableModules: false,
+    removeEmptyChunks: false,
+    splitChunks: false,
+  } : {
+    minimize: true,
     moduleIds: 'deterministic',
+    chunkIds: 'deterministic',
     usedExports: true,
+    runtimeChunk: 'single',
+    splitChunks: {
+      chunks: 'all',
+      cacheGroups: {
+        react: {
+          test: /[\\/]node_modules[\\/](react|react-dom|react-router)[\\/]/,
+          name: 'vendor-react',
+          chunks: 'all',
+          priority: 30,
+        },
+        mui: {
+          test: /[\\/]node_modules[\\/](@mui|@emotion)[\\/]/,
+          name: 'vendor-mui',
+          chunks: 'all',
+          priority: 20,
+        },
+        swiper: {
+          test: /[\\/]node_modules[\\/]swiper[\\/]/,
+          name: 'vendor-swiper',
+          chunks: 'all',
+          priority: 15,
+        },
+        motion: {
+          test: /[\\/]node_modules[\\/]motion[\\/]/,
+          name: 'vendor-motion',
+          chunks: 'all',
+          priority: 10,
+        },
+        vendor: {
+          test: /[\\/]node_modules[\\/]/,
+          name: 'vendor',
+          chunks: 'all',
+          priority: -10,
+        },
+      },
+    },
   },
 }
 

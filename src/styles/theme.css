@@ -1,5 +1,7 @@
 :root {
   --font-size: 16px;
+  --font-sans: "DM Sans", "Inter", "Roboto", sans-serif;
+  --font-display: "Cinzel", Georgia, serif;
   --background: #0a0e27;
   --foreground: #e8eaf6;
   --card: rgba(15, 23, 42, 0.6);
@@ -133,6 +135,27 @@ body {
   overflow-x: hidden;
   background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 50%, #0f1729 100%);
   background-attachment: fixed;
+  font-family: var(--font-sans);
+}
+
+p,
+span,
+li,
+label,
+button,
+input,
+textarea,
+select {
+  font-family: var(--font-sans);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-display);
 }
 
 @keyframes float {

@@ -1,19 +1,17 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router";
-import {
-  AppBar,
-  Toolbar,
-  Typography,
-  Button,
-  Box,
-  IconButton,
-  Drawer,
-  List,
-  ListItem,
-  ListItemButton,
-  ListItemText,
-  Divider,
-} from "@mui/material";
+import AppBar from "@mui/material/AppBar";
+import Toolbar from "@mui/material/Toolbar";
+import Typography from "@mui/material/Typography";
+import Button from "@mui/material/Button";
+import Box from "@mui/material/Box";
+import IconButton from "@mui/material/IconButton";
+import Drawer from "@mui/material/Drawer";
+import List from "@mui/material/List";
+import ListItem from "@mui/material/ListItem";
+import ListItemButton from "@mui/material/ListItemButton";
+import ListItemText from "@mui/material/ListItemText";
+import Divider from "@mui/material/Divider";
 import MenuIcon from "@mui/icons-material/Menu";
 import CloseIcon from "@mui/icons-material/Close";
 import NavigationBarLogo from "../assets/images/Navigation Bar Logo.webp";
@@ -91,6 +89,7 @@ export function Navigation() {
             <Box>
               <Typography
                 sx={{
+                  fontFamily: '"Cinzel", "Georgia", serif',
                   fontWeight: 800,
                   fontSize: "1.1rem",
                   color: "#0f172a",

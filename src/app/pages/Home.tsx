@@ -1,15 +1,13 @@
 import { useRef } from "react";
 import { Link } from "react-router";
-import {
-  Box,
-  Typography,
-  Button,
-  Grid,
-  Card,
-  CardContent,
-  Chip,
-  IconButton,
-} from "@mui/material";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
+import Button from "@mui/material/Button";
+import Grid from "@mui/material/Grid";
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
+import Chip from "@mui/material/Chip";
+import IconButton from "@mui/material/IconButton";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, EffectFade, Pagination } from "swiper/modules";
 import type { Swiper as SwiperType } from "swiper";
@@ -94,13 +92,13 @@ const ministries = [
 
 const upcomingEvents = [
   {
-    title: "Youth Group Meeting",
-    date: "June 8, 2026",
+    title: "Parish Council",
+    date: "August, 2026",
     time: "6:00 PM",
     location: "Parish Hall",
   },
   {
-    title: "Bible Study",
+    title: "Retreat for Parish",
     date: "June 10, 2026",
     time: "7:00 PM",
     location: "Community Room",
@@ -428,7 +426,7 @@ export default function Home() {
               </Button>
               <Button
                 component={Link}
-                to="/mass-times"
+                to="/programs"
                 variant="outlined"
                 size="large"
                 startIcon={<AccessTimeIcon />}
@@ -485,6 +483,8 @@ export default function Home() {
                   <Box
                     component="span"
                     sx={{
+                      fontFamily: '"Cinzel", "Georgia", serif',
+                      fontWeight: 800,
                       background: "linear-gradient(135deg, #1d4ed8, #7c3aed)",
                       WebkitBackgroundClip: "text",
                       WebkitTextFillColor: "transparent",

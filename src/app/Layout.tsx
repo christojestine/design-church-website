@@ -1,6 +1,6 @@
 import { Outlet, useLocation } from "react-router";
 import { useEffect, lazy, Suspense } from "react";
-import { Box } from "@mui/material";
+import Box from "@mui/material/Box";
 import { Navigation } from "./components/Navigation";
 import { Footer } from "./components/Footer";
 
@@ -181,7 +181,9 @@ export default function Layout() {
       >
         <Navigation />
         <Box component="main" sx={{ flex: 1 }}>
-          <Outlet />
+          <Suspense fallback={null}>
+            <Outlet />
+          </Suspense>
         </Box>
         <Footer />
       </Box>

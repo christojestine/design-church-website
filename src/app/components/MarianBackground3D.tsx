@@ -1,421 +1,358 @@
 /**
  * MarianBackground3D
  * ─────────────────────────────────────────────────────────────────────────────
- * Full-screen background video with a transparent Three.js canvas overlay
- * petals, floating doves, sparkles).
+ * Full-screen background video with a transparent Canvas 2D overlay
+ * (petals, doves, sparkles). Zero external dependencies — pure browser APIs.
  */
-import { useRef, useMemo, useEffect, useState, Suspense } from "react";
-import { Canvas, useFrame } from "@react-three/fiber";
-import { Sparkles } from "@react-three/drei";
-import * as THREE from "three";
+import { useRef, useEffect, useState } from "react";
 
-// ─── video ────────────────────────────────────────────────────────────────────
 import bgVideo from "../assets/Videos/backgroundVideo.webm";
 
-// ─── Divine Light Rays ────────────────────────────────────────────────────────
-function LightRays() {
-  const groupRef = useRef<THREE.Group>(null!);
-  const RAY = 16;
-
-  const rayShape = useMemo(() => {
-    const s = new THREE.Shape();
-    s.moveTo(-0.06, 0);
-    s.lineTo(0.06, 0);
-    s.lineTo(0.32, 11);
-    s.lineTo(-0.32, 11);
-    s.closePath();
-    return s;
-  }, []);
-
-  useFrame(({ clock }) => {
-    const t = clock.getElapsedTime();
-    if (!groupRef.current) return;
-    groupRef.current.rotation.z = t * 0.01;
-    groupRef.current.children.forEach((child, i) => {
-      const mat = (child as THREE.Mesh).material as THREE.MeshBasicMaterial;
-      mat.opacity = 0.04 + Math.sin(t * 0.5 + i * 0.7) * 0.02;
-    });
+// ─── device capability detection ───────────────────────────────────────────────
+function useDeviceTier() {
+  const [tier, setTier] = useState<"full" | "lite" | "none">(() => {
+    if (typeof window === "undefined") return "lite";
+    return detectTier();
   });
 
-  return (
-    <group ref={groupRef} position={[0, 1.5, -1.8]}>
-      {Array.from({ length: RAY }).map((_, i) => (
-        <mesh key={i} rotation={[0, 0, (i / RAY) * Math.PI * 2]}>
-          <shapeGeometry args={[rayShape]} />
-          <meshBasicMaterial
-            color="#fde68a"
-            transparent
-            opacity={0.04}
-            side={THREE.DoubleSide}
-            depthWrite={false}
-          />
-        </mesh>
-      ))}
-    </group>
-  );
-}
-
-function StarMesh({
-  idx,
-  shape,
-  basePos,
-}: {
-  idx: number;
-  shape: THREE.Shape;
-  basePos: THREE.Vector3;
-}) {
-  const ref = useRef<THREE.Mesh>(null!);
-  useFrame(({ clock }) => {
-    const t = clock.getElapsedTime();
-    if (!ref.current) return;
-    ref.current.position.x = basePos.x + Math.sin(t * 0.3 + idx * 0.8) * 0.03;
-    ref.current.position.y = basePos.y + Math.cos(t * 0.25 + idx * 0.6) * 0.04;
-    ref.current.rotation.z = t * 0.4 + idx;
-    ref.current.scale.setScalar(0.8 + Math.sin(t * 1.2 + idx) * 0.2);
-  });
-  return (
-    <mesh ref={ref} position={basePos}>
-      <extrudeGeometry args={[shape, { depth: 0.015, bevelEnabled: false }]} />
-      <meshStandardMaterial
-        color="#fbbf24"
-        emissive="#f59e0b"
-        emissiveIntensity={1.0}
-        metalness={0.5}
-        roughness={0.1}
-        transparent
-        opacity={0.82}
-      />
-    </mesh>
-  );
-}
-
-// ─── Rose Petal ───────────────────────────────────────────────────────────────
-interface PetalData {
-  pos: THREE.Vector3;
-  rot: THREE.Euler;
-  speed: number;
-  drift: number;
-  phase: number;
-}
-
-function RosePetals() {
-  const COUNT = 22;
-  const groupRef = useRef<THREE.Group>(null!);
-
-  const petalShape = useMemo(() => {
-    const s = new THREE.Shape();
-    s.moveTo(0, 0);
-    s.bezierCurveTo(0.08, 0.06, 0.14, 0.18, 0, 0.32);
-    s.bezierCurveTo(-0.14, 0.18, -0.08, 0.06, 0, 0);
-    return s;
+  useEffect(() => {
+    const mql = window.matchMedia("(max-width: 767px)");
+    const recompute = () => setTier(detectTier());
+    mql.addEventListener("change", recompute);
+    return () => mql.removeEventListener("change", recompute);
   }, []);
 
-  const petals = useMemo<PetalData[]>(() => {
-    const list: PetalData[] = [];
-    for (let i = 0; i < COUNT; i++) {
-      list.push({
-        pos: new THREE.Vector3(
-          (Math.random() - 0.5) * 18,
-          (Math.random() - 0.5) * 10 + 2,
-          (Math.random() - 0.5) * 6 - 2,
-        ),
-        rot: new THREE.Euler(
-          Math.random() * Math.PI,
-          Math.random() * Math.PI,
-          Math.random() * Math.PI,
-        ),
-        speed: 0.12 + Math.random() * 0.18,
-        drift: (Math.random() - 0.5) * 0.6,
-        phase: Math.random() * Math.PI * 2,
-      });
+  return tier;
+}
+
+function detectTier(): "full" | "lite" | "none" {
+  if (typeof window === "undefined") return "lite";
+
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches)
+    return "none";
+
+  const isNarrow = window.matchMedia("(max-width: 767px)").matches;
+  const isCoarsePointer = window.matchMedia("(pointer: coarse)").matches;
+  const cores = navigator.hardwareConcurrency || 4;
+  const lowMemory =
+    "deviceMemory" in navigator && (navigator as any).deviceMemory <= 4;
+
+  if (isNarrow || isCoarsePointer || cores <= 4 || lowMemory) return "lite";
+  return "full";
+}
+
+// ─── Canvas 2D scene builders ──────────────────────────────────────────────────
+// Each builder captures its own state and returns a per-frame draw function.
+type DrawFn = (
+  ctx: CanvasRenderingContext2D,
+  elapsed: number,
+  delta: number,
+  w: number,
+  h: number,
+) => void;
+
+function buildLightRays(count: number): DrawFn {
+  return (ctx, elapsed, _delta, w, h) => {
+    const cx = w * 0.5;
+    const cy = h * 0.3;
+    const rayLength = Math.sqrt(w * w + h * h);
+    const baseOpacity = 0.045 + Math.sin(elapsed * 0.5) * 0.015;
+
+    ctx.save();
+    ctx.translate(cx, cy);
+    ctx.rotate(elapsed * 0.01);
+    for (let i = 0; i < count; i++) {
+      ctx.save();
+      ctx.rotate((i / count) * Math.PI * 2);
+      const tipW = rayLength * 0.058;
+      const baseW = rayLength * 0.011;
+      ctx.beginPath();
+      ctx.moveTo(-baseW, 0);
+      ctx.lineTo(baseW, 0);
+      ctx.lineTo(tipW, -rayLength);
+      ctx.lineTo(-tipW, -rayLength);
+      ctx.closePath();
+      ctx.fillStyle = `rgba(253,230,138,${baseOpacity.toFixed(3)})`;
+      ctx.fill();
+      ctx.restore();
     }
-    return list;
-  }, []);
+    ctx.restore();
+  };
+}
 
-  useFrame(({ clock }, delta) => {
+interface PetalState {
+  nx: number; // normalized x [-0.9, 0.9] from center
+  ny: number; // normalized y [-0.5, 0.5] from center
+  speed: number;
+  phase: number;
+  angle: number;
+  rotSpeed: number;
+  sway: number;
+  size: number; // fraction of min(w, h)
+}
+
+function buildRosePetals(count: number): DrawFn {
+  const petals: PetalState[] = Array.from({ length: count }, () => ({
+    nx: (Math.random() - 0.5) * 1.8,
+    ny: (Math.random() - 0.5) * 1.0,
+    speed: 0.012 + Math.random() * 0.018,
+    phase: Math.random() * Math.PI * 2,
+    angle: Math.random() * Math.PI * 2,
+    rotSpeed: 0.18 + Math.random() * 0.22,
+    sway: 0.022 + Math.random() * 0.02,
+    size: 0.032 + Math.random() * 0.018,
+  }));
+
+  return (ctx, elapsed, delta, w, h) => {
     const dt = Math.min(delta, 1 / 20);
-    const t = clock.getElapsedTime();
-    if (!groupRef.current) return;
-    groupRef.current.children.forEach((child, i) => {
-      const p = petals[i];
-      const mesh = child as THREE.Mesh;
-      // drift downward and sideways, wrap when off-screen
-      let newY = p.pos.y - p.speed * dt;
-      if (newY < -6) newY = 7;
-      p.pos.y = newY;
-      mesh.position.y = newY;
-      mesh.position.x = p.pos.x + Math.sin(t * 0.3 + p.phase) * 0.4;
-      mesh.position.z = p.pos.z;
-      mesh.rotation.x = p.rot.x + t * 0.18;
-      mesh.rotation.y = p.rot.y + t * 0.12;
-      mesh.rotation.z = p.rot.z + t * 0.22 + Math.sin(t * 0.4 + p.phase) * 0.15;
-    });
-  });
+    ctx.save();
+    ctx.translate(w * 0.5, h * 0.5);
 
-  return (
-    <group ref={groupRef}>
-      {petals.map((p, i) => (
-        <mesh key={i} position={p.pos} rotation={p.rot}>
-          <shapeGeometry args={[petalShape]} />
-          <meshStandardMaterial
-            color="#fda4af"
-            emissive="#fb7185"
-            emissiveIntensity={0.22}
-            side={THREE.DoubleSide}
-            transparent
-            opacity={0.55 + Math.random() * 0.3}
-            depthWrite={false}
-          />
-        </mesh>
-      ))}
-    </group>
-  );
-}
+    for (const p of petals) {
+      p.ny += p.speed * dt;
+      if (p.ny > 0.6) p.ny = -0.6;
 
-// ─── Lily Petal ───────────────────────────────────────────────────────────────
-function LilyPetal({ idx, total }: { idx: number; total: number }) {
-  const ref = useRef<THREE.Mesh>(null!);
-  const angle = (idx / total) * Math.PI * 2;
-  const shape = useMemo(() => {
-    const s = new THREE.Shape();
-    s.moveTo(0, 0);
-    s.bezierCurveTo(0.05, 0.12, 0.12, 0.3, 0, 0.54);
-    s.bezierCurveTo(-0.12, 0.3, -0.05, 0.12, 0, 0);
-    return s;
-  }, []);
-  useFrame(({ clock }) => {
-    if (ref.current)
-      ref.current.rotation.z =
-        Math.sin(clock.getElapsedTime() * 0.4 + idx) * 0.07;
-  });
-  return (
-    <mesh ref={ref} rotation={[0, 0, angle]}>
-      <shapeGeometry args={[shape]} />
-      <meshStandardMaterial
-        color="#fefce8"
-        emissive="#fef9c3"
-        emissiveIntensity={0.22}
-        side={THREE.DoubleSide}
-        transparent
-        opacity={0.85}
-      />
-    </mesh>
-  );
-}
+      const px = p.nx * w + Math.sin(elapsed * 0.3 + p.phase) * p.sway * w;
+      const py = p.ny * h;
+      const s = p.size * Math.min(w, h);
+      const scaleX = Math.cos(elapsed * 0.18 + p.phase);
+      const angle =
+        p.angle +
+        elapsed * p.rotSpeed +
+        Math.sin(elapsed * 0.4 + p.phase) * 0.15;
 
-function LilyFlower({
-  position,
-  scale = 1,
-  delay = 0,
-}: {
-  position: [number, number, number];
-  scale?: number;
-  delay?: number;
-}) {
-  const ref = useRef<THREE.Group>(null!);
-  useFrame(({ clock }) => {
-    const t = clock.getElapsedTime() + delay;
-    if (ref.current) {
-      ref.current.position.y = position[1] + Math.sin(t * 0.28) * 0.18;
-      ref.current.rotation.y = t * 0.07;
-      ref.current.rotation.z = Math.sin(t * 0.18) * 0.06;
+      ctx.save();
+      ctx.translate(px, py);
+      ctx.rotate(angle);
+      ctx.scale(scaleX, 1);
+      ctx.beginPath();
+      ctx.moveTo(0, 0);
+      ctx.bezierCurveTo(s * 0.25, s * 0.19, s * 0.44, s * 0.56, 0, s);
+      ctx.bezierCurveTo(-s * 0.44, s * 0.56, -s * 0.25, s * 0.19, 0, 0);
+      ctx.closePath();
+      ctx.fillStyle = "rgba(253,164,175,0.6)";
+      ctx.fill();
+      ctx.restore();
     }
-  });
-  return (
-    <group ref={ref} position={position} scale={scale}>
-      {Array.from({ length: 6 }).map((_, i) => (
-        <LilyPetal key={i} idx={i} total={6} />
-      ))}
-      <mesh position={[0, 0.07, 0.01]}>
-        <circleGeometry args={[0.055, 20]} />
-        <meshStandardMaterial
-          color="#d97706"
-          emissive="#d97706"
-          emissiveIntensity={0.9}
-        />
-      </mesh>
-    </group>
-  );
+    ctx.restore();
+  };
 }
 
-// ─── Floating Doves (simple geometric) ───────────────────────────────────────
-function Dove({
-  initPos,
-  speed,
-  phase,
-}: {
-  initPos: THREE.Vector3;
-  speed: number;
-  phase: number;
-}) {
-  const groupRef = useRef<THREE.Group>(null!);
-  const wingRef1 = useRef<THREE.Mesh>(null!);
-  const wingRef2 = useRef<THREE.Mesh>(null!);
+// nx, ny: -1 to +1 (right/up) mapped to ~42% of canvas half-dimension
+function buildLilyFlower(
+  nx: number,
+  ny: number,
+  scale: number,
+  delay: number,
+): DrawFn {
+  return (ctx, elapsed, _delta, w, h) => {
+    const t = elapsed + delay;
+    const cx = w * 0.5 + nx * w * 0.42;
+    const cy = h * 0.5 - ny * h * 0.42 + Math.sin(t * 0.28) * h * 0.018;
+    const size = Math.min(w, h) * 0.065 * scale;
 
-  const wingShape = useMemo(() => {
-    const s = new THREE.Shape();
-    s.moveTo(0, 0);
-    s.bezierCurveTo(0.12, 0.08, 0.28, 0.06, 0.32, 0);
-    s.bezierCurveTo(0.22, -0.04, 0.08, -0.03, 0, 0);
-    return s;
-  }, []);
+    ctx.save();
+    ctx.translate(cx, cy);
+    ctx.rotate(t * 0.07);
+    ctx.globalAlpha = 0.85;
 
-  useFrame(({ clock }) => {
-    const t = clock.getElapsedTime() + phase;
-    if (!groupRef.current) return;
-    // Glide across the scene
-    groupRef.current.position.x = initPos.x + Math.sin(t * speed * 0.4) * 3.5;
-    groupRef.current.position.y = initPos.y + Math.sin(t * speed * 0.25) * 0.5;
-    groupRef.current.position.z = initPos.z;
-    groupRef.current.rotation.y = Math.sin(t * speed * 0.4) * 0.3;
-    // Flap wings
+    for (let i = 0; i < 6; i++) {
+      ctx.save();
+      ctx.rotate((i / 6) * Math.PI * 2 + Math.sin(t * 0.18) * 0.06);
+      const s = size;
+      ctx.beginPath();
+      ctx.moveTo(0, 0);
+      ctx.bezierCurveTo(s * 0.093, s * 0.222, s * 0.222, s * 0.556, 0, s);
+      ctx.bezierCurveTo(-s * 0.222, s * 0.556, -s * 0.093, s * 0.222, 0, 0);
+      ctx.closePath();
+      ctx.fillStyle = "rgba(254,252,232,0.85)";
+      ctx.fill();
+      ctx.restore();
+    }
+
+    ctx.beginPath();
+    ctx.arc(0, size * 0.13, size * 0.1, 0, Math.PI * 2);
+    ctx.fillStyle = "rgba(217,119,6,0.9)";
+    ctx.fill();
+
+    ctx.restore();
+  };
+}
+
+function buildDove(
+  nx: number,
+  ny: number,
+  speed: number,
+  phase: number,
+): DrawFn {
+  return (ctx, elapsed, _delta, w, h) => {
+    const t = elapsed + phase;
+    const initX = w * 0.5 + nx * w * 0.42;
+    const initY = h * 0.5 - ny * h * 0.42;
+    const cx = initX + Math.sin(t * speed * 0.4) * w * 0.19;
+    const cy = initY + Math.sin(t * speed * 0.25) * h * 0.05;
+    const size = Math.min(w, h) * 0.04;
     const flap = Math.sin(t * 3.5) * 0.35;
-    if (wingRef1.current) wingRef1.current.rotation.z = flap;
-    if (wingRef2.current) wingRef2.current.rotation.z = -flap;
-  });
 
-  return (
-    <group ref={groupRef} position={initPos} scale={0.7}>
-      {/* Body */}
-      <mesh>
-        <sphereGeometry args={[0.07, 12, 12]} />
-        <meshStandardMaterial
-          color="#f0f4ff"
-          emissive="#dbeafe"
-          emissiveIntensity={0.3}
-          transparent
-          opacity={0.72}
-        />
-      </mesh>
-      {/* Wings */}
-      <mesh ref={wingRef1} position={[0.02, 0.02, 0]}>
-        <shapeGeometry args={[wingShape]} />
-        <meshStandardMaterial
-          color="#e0eaff"
-          emissive="#bfdbfe"
-          emissiveIntensity={0.25}
-          side={THREE.DoubleSide}
-          transparent
-          opacity={0.65}
-        />
-      </mesh>
-      <mesh ref={wingRef2} position={[-0.02, 0.02, 0]} scale={[-1, 1, 1]}>
-        <shapeGeometry args={[wingShape]} />
-        <meshStandardMaterial
-          color="#e0eaff"
-          emissive="#bfdbfe"
-          emissiveIntensity={0.25}
-          side={THREE.DoubleSide}
-          transparent
-          opacity={0.65}
-        />
-      </mesh>
-    </group>
-  );
+    ctx.save();
+    ctx.translate(cx, cy);
+    ctx.rotate(Math.sin(t * speed * 0.4) * 0.3);
+    ctx.globalAlpha = 0.72;
+
+    ctx.beginPath();
+    ctx.ellipse(0, 0, size * 0.55, size * 0.38, 0, 0, Math.PI * 2);
+    ctx.fillStyle = "rgba(240,244,255,0.72)";
+    ctx.fill();
+
+    for (const flip of [1, -1] as const) {
+      ctx.save();
+      ctx.scale(flip, 1);
+      ctx.rotate(flap);
+      ctx.beginPath();
+      ctx.moveTo(size * 0.1, 0);
+      ctx.bezierCurveTo(
+        size * 0.48,
+        size * 0.22,
+        size * 1.1,
+        size * 0.17,
+        size * 1.28,
+        0,
+      );
+      ctx.bezierCurveTo(
+        size * 0.88,
+        -size * 0.11,
+        size * 0.32,
+        -size * 0.08,
+        size * 0.1,
+        0,
+      );
+      ctx.closePath();
+      ctx.fillStyle = "rgba(224,234,255,0.65)";
+      ctx.fill();
+      ctx.restore();
+    }
+
+    ctx.restore();
+  };
 }
 
-function FloatingDoves() {
-  const doves = useMemo(
-    () => [
-      { initPos: new THREE.Vector3(-6, 1.5, -3), speed: 0.55, phase: 0 },
-      { initPos: new THREE.Vector3(5, 0.8, -4), speed: 0.42, phase: 2.1 },
-      { initPos: new THREE.Vector3(-4, -0.5, -5), speed: 0.6, phase: 4.3 },
-    ],
-    [],
-  );
-  return (
-    <>
-      {doves.map((d, i) => (
-        <Dove key={i} initPos={d.initPos} speed={d.speed} phase={d.phase} />
-      ))}
-    </>
-  );
+interface SparkleState {
+  x: number; // 0–1 fraction of canvas width
+  y: number; // 0–1 fraction of canvas height
+  vx: number; // fraction/sec
+  vy: number;
 }
 
-// ─── Scene ────────────────────────────────────────────────────────────────────
-function MarianScene() {
+function buildSparkles(count: number, opacity: number): DrawFn {
+  const particles: SparkleState[] = Array.from({ length: count }, () => ({
+    x: Math.random(),
+    y: Math.random(),
+    vx: (Math.random() - 0.5) * 0.015,
+    vy: (Math.random() - 0.5) * 0.015,
+  }));
+
+  return (ctx, elapsed, delta, w, h) => {
+    const dt = Math.min(delta, 1 / 20);
+    const alpha = opacity * (0.85 + Math.sin(elapsed * 1.5) * 0.15);
+    const r = Math.min(w, h) * 0.004;
+
+    ctx.save();
+    ctx.fillStyle = `rgba(251,191,36,${alpha.toFixed(3)})`;
+    for (const p of particles) {
+      p.x += p.vx * dt;
+      p.y += p.vy * dt;
+      if (p.x < 0 || p.x > 1) p.vx *= -1;
+      if (p.y < 0 || p.y > 1) p.vy *= -1;
+      ctx.beginPath();
+      ctx.arc(p.x * w, p.y * h, r, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    ctx.restore();
+  };
+}
+
+// ─── Canvas 2D overlay component ──────────────────────────────────────────────
+function CanvasOverlay({ tier }: { tier: "full" | "lite" }) {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const isMobile = tier === "lite";
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    const setSize = () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    };
+    setSize();
+
+    // Positions mirror the original Three.js world coords mapped to [-1, 1] screen space
+    const draws: DrawFn[] = [];
+    if (!isMobile) {
+      draws.push(buildLightRays(16));
+      draws.push(buildLilyFlower(-0.71, 0.18, 1.1, 0));
+      draws.push(buildLilyFlower(0.68, 0.09, 0.95, 2.5));
+      draws.push(buildLilyFlower(-0.55, -0.28, 0.75, 5));
+      draws.push(buildLilyFlower(0.62, 0.51, 0.7, 7));
+      draws.push(buildRosePetals(22));
+      draws.push(buildDove(-0.78, 0.35, 0.55, 0));
+      draws.push(buildDove(0.65, 0.18, 0.42, 2.1));
+      draws.push(buildSparkles(60, 0.3));
+    } else {
+      draws.push(buildRosePetals(8));
+      draws.push(buildSparkles(24, 0.25));
+    }
+
+    window.addEventListener("resize", setSize);
+
+    const startTime = performance.now();
+    let lastTime = startTime;
+    let rafId: number;
+
+    const animate = (timestamp: number) => {
+      rafId = requestAnimationFrame(animate);
+      const elapsed = (timestamp - startTime) / 1000;
+      const delta = Math.min((timestamp - lastTime) / 1000, 0.05);
+      lastTime = timestamp;
+
+      const { width: w, height: h } = canvas;
+      ctx.clearRect(0, 0, w, h);
+      for (const draw of draws) draw(ctx, elapsed, delta, w, h);
+    };
+
+    rafId = requestAnimationFrame(animate);
+
+    return () => {
+      cancelAnimationFrame(rafId);
+      window.removeEventListener("resize", setSize);
+    };
+  }, [isMobile]);
+
   return (
-    <>
-      <ambientLight color="#e8f0ff" intensity={1.1} />
-      <directionalLight position={[2, 5, 4]} color="#fff8e8" intensity={1.8} />
-      <pointLight
-        position={[0, 1, 2]}
-        color="#fbbf24"
-        intensity={0.7}
-        distance={9}
-        decay={2}
-      />
-      <pointLight
-        position={[-3, 0, 1]}
-        color="#93c5fd"
-        intensity={0.4}
-        distance={8}
-        decay={2}
-      />
-      <pointLight
-        position={[3, 0, 1]}
-        color="#93c5fd"
-        intensity={0.4}
-        distance={8}
-        decay={2}
-      />
-
-      {/* ── Far back: light rays ── */}
-      <LightRays />
-
-      {/* ── Lily blossoms on the sides ── */}
-      <LilyFlower position={[-5.5, 0.8, -3.5]} scale={1.1} delay={0} />
-      <LilyFlower position={[5.2, 0.4, -3.0]} scale={0.95} delay={2.5} />
-      <LilyFlower position={[-4.2, -1.2, -4.5]} scale={0.75} delay={5} />
-      <LilyFlower position={[4.8, 2.2, -5.0]} scale={0.7} delay={7} />
-      <LilyFlower position={[-6.0, 2.8, -6.0]} scale={0.6} delay={3} />
-      <LilyFlower position={[6.2, -0.8, -6.0]} scale={0.6} delay={8} />
-
-      {/* ── Drifting rose petals ── */}
-      <RosePetals />
-
-      {/* ── Gliding doves ── */}
-      <FloatingDoves />
-
-      {/* ── Gold sparkle particles ── */}
-      <Sparkles
-        count={80}
-        scale={[14, 10, 5]}
-        size={1.1}
-        speed={0.15}
-        opacity={0.3}
-        color="#fbbf24"
-        noise={0.5}
-      />
-      <Sparkles
-        count={40}
-        scale={[10, 8, 3]}
-        size={0.7}
-        speed={0.22}
-        opacity={0.18}
-        color="#93c5fd"
-        noise={0.3}
-      />
-    </>
+    <canvas
+      ref={canvasRef}
+      style={{
+        position: "absolute",
+        inset: 0,
+        width: "100%",
+        height: "100%",
+        background: "transparent",
+      }}
+    />
   );
 }
 
 // ─── Export ───────────────────────────────────────────────────────────────────
 export default function MarianBackground3D() {
   const videoRef = useRef<HTMLVideoElement>(null);
-  const [isMobile, setIsMobile] = useState(
-    () => window.matchMedia("(max-width: 767px)").matches,
-  );
+  const tier = useDeviceTier();
+  const isMobileLayout = tier === "lite";
 
-  useEffect(() => {
-    const mql = window.matchMedia("(max-width: 767px)");
-    const handler = (e: MediaQueryListEvent) => setIsMobile(e.matches);
-    mql.addEventListener("change", handler);
-    return () => mql.removeEventListener("change", handler);
-  }, []);
+  const videoSize = isMobileLayout ? "60%" : "80%";
 
-  const videoSize = isMobile ? "60%" : "80%";
-
+  // ── Scroll-scrubbed video ──
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
@@ -423,14 +360,15 @@ export default function MarianBackground3D() {
     let targetProgress = 0;
     let smoothedProgress = 0;
     let lastTimestamp = performance.now();
-    let lastSeekTimestamp = 0;
     let duration = 0;
     let rafId: number;
 
-    // Seek cadence and delta are balanced for smoother visual progression
-    // without flooding the decoder with tiny seeks.
-    const MIN_SEEK_DELTA = 1 / 40;
-    const SEEK_INTERVAL_MS = 1000 / 24;
+    // Gate seeks on the previous seek actually finishing, instead of a fixed
+    // timer. Firing `currentTime =` again before the browser has finished
+    // decoding the last seek is what causes the "frame by frame" stepping —
+    // seeks get queued/dropped rather than smoothly scrubbed.
+    let isSeeking = false;
+    let seekSafetyTimer: ReturnType<typeof setTimeout> | null = null;
 
     const clamp01 = (v: number) => Math.max(0, Math.min(1, v));
 
@@ -445,23 +383,41 @@ export default function MarianBackground3D() {
       targetProgress = clamp01(fraction);
     };
 
+    const handleSeeking = () => {
+      isSeeking = true;
+    };
+
+    const handleSeeked = () => {
+      isSeeking = false;
+      if (seekSafetyTimer) {
+        clearTimeout(seekSafetyTimer);
+        seekSafetyTimer = null;
+      }
+    };
+
+    const requestSeek = (time: number) => {
+      video.currentTime = time;
+      isSeeking = true;
+      // Safety net: some browsers/codecs occasionally don't fire 'seeked'
+      // for very small seeks. Don't let that permanently stall scrubbing.
+      if (seekSafetyTimer) clearTimeout(seekSafetyTimer);
+      seekSafetyTimer = setTimeout(() => {
+        isSeeking = false;
+      }, 150);
+    };
+
     const animate = (timestamp: number) => {
       const dt = Math.min(timestamp - lastTimestamp, 50);
       lastTimestamp = timestamp;
 
       if (duration > 0 && video.readyState >= 2 && !document.hidden) {
-        const alpha = 1 - Math.exp((-8 * dt) / 1000);
+        const alpha = 1 - Math.exp((-14 * dt) / 1000);
         smoothedProgress += (targetProgress - smoothedProgress) * alpha;
         smoothedProgress = clamp01(smoothedProgress);
         const desiredTime = smoothedProgress * duration;
 
-        const canSeekAgain = timestamp - lastSeekTimestamp >= SEEK_INTERVAL_MS;
-        if (
-          canSeekAgain &&
-          Math.abs(desiredTime - video.currentTime) >= MIN_SEEK_DELTA
-        ) {
-          video.currentTime = desiredTime;
-          lastSeekTimestamp = timestamp;
+        if (!isSeeking && Math.abs(desiredTime - video.currentTime) > 0.008) {
+          requestSeek(desiredTime);
         }
       }
 
@@ -477,10 +433,11 @@ export default function MarianBackground3D() {
       }
     };
 
-    // Scroll is enough here; touchmove may observe stale scrollY on iOS.
     window.addEventListener("scroll", updateTarget, { passive: true });
     window.addEventListener("resize", updateTarget, { passive: true });
     video.addEventListener("loadedmetadata", handleLoadedMetadata);
+    video.addEventListener("seeking", handleSeeking);
+    video.addEventListener("seeked", handleSeeked);
 
     syncDuration();
     updateTarget();
@@ -495,6 +452,9 @@ export default function MarianBackground3D() {
       window.removeEventListener("scroll", updateTarget);
       window.removeEventListener("resize", updateTarget);
       video.removeEventListener("loadedmetadata", handleLoadedMetadata);
+      video.removeEventListener("seeking", handleSeeking);
+      video.removeEventListener("seeked", handleSeeked);
+      if (seekSafetyTimer) clearTimeout(seekSafetyTimer);
       cancelAnimationFrame(rafId);
     };
   }, []);
@@ -516,7 +476,7 @@ export default function MarianBackground3D() {
         muted
         playsInline
         disablePictureInPicture
-        preload="auto"
+        preload={isMobileLayout ? "metadata" : "auto"}
         src={bgVideo as string}
         style={{
           position: "absolute",
@@ -536,28 +496,9 @@ export default function MarianBackground3D() {
         }}
       />
 
-      {/* Transparent 3D animation overlay */}
-      <Canvas
-        dpr={isMobile ? [0.8, 1.1] : [1, 1.4]}
-        camera={{ position: [0, -0.3, 8.5], fov: 54, near: 0.1, far: 80 }}
-        gl={{
-          antialias: !isMobile,
-          alpha: true,
-          powerPreference: "high-performance",
-        }}
-        performance={{ min: 0.7 }}
-        style={{
-          position: "absolute",
-          inset: 0,
-          width: "100%",
-          height: "100%",
-          background: "transparent",
-        }}
-      >
-        <Suspense fallback={null}>
-          <MarianScene />
-        </Suspense>
-      </Canvas>
+      {/* Transparent 3D animation overlay — skipped entirely if WebGL is
+          unavailable or the user prefers reduced motion */}
+      {tier !== "none" && <CanvasOverlay tier={tier} />}
     </div>
   );
 }
