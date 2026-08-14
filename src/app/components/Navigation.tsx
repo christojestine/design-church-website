@@ -18,11 +18,11 @@ import NavigationBarLogo from "../assets/images/Navigation Bar Logo.webp";
 
 const navItems = [
   { label: "Home", path: "/" },
-  { label: "Program Schedule", path: "/programs" },
-  { label: "About", path: "/about" },
+  { label: "Spiritual Programs", path: "/programs" },
   { label: "Parish Team", path: "/parish-team" },
   { label: "Ministries", path: "/ministries" },
   { label: "Events", path: "/events" },
+  { label: "About", path: "/about" },
   { label: "Media", path: "/media" },
   { label: "Contact", path: "/contact" },
 ];
