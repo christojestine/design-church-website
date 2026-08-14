@@ -81,3 +81,43 @@
       photo: poly,
     }
   ];
+  export const ParishScarid = [
+    {
+      name: "Thomas paranilam",
+      role: "Vicar",
+      color: "#dbeafe",
+      photo: thomas,
+    },
+    {
+      name: "Shabu kuriyaparambil",
+      role: "Asst Vicar",
+      color: "#ede9fe",
+      photo: sabu,
+    },
+    {
+      name: "Sunil david chakkalakkall",
+      role: "Asst Vicar",
+      color: "#fef3c7",
+      photo: sunil,
+    },
+    {
+      name: "Poly mechery",
+      role: "Asst Vicar",
+      color: "#fef3c7",
+      photo: poly,
+    }
+  ];
+  export const Sacristan = [
+    {
+      name: "Harry Varghese",
+      role: "Sacristan",
+      color: "#dbeafe",
+      photo: thomas,
+    },
+    {
+      name: "Shabu kuriyaparambil",
+      role: "Sacristan",
+      color: "#ede9fe",
+      photo: sabu,
+    },
+  ];

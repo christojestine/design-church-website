@@ -8,7 +8,7 @@ import Chip from "@mui/material/Chip";
 import { ScrollReveal } from "../../components/ScrollReveal";
 import PriestDetailsModal from "./PriestDetailsModal";
 import type { Priest } from "./PriestDetailsModal";
-import { priest, parishCouncil } from "./Parish.Data";
+import { priest, parishCouncil, Sacristan } from "./Parish.Data";
 
 export default function ParishTeam() {
   const [open, setOpen] = useState(false);
@@ -240,13 +240,95 @@ export default function ParishTeam() {
             </Typography>
           </Box>
         </ScrollReveal>
-        {/* Row 2 — remaining staff (Asst Vicars) */}
         <Grid
           container
           spacing={4}
           sx={{ mt: 4, mx: "auto", maxWidth: 1300, justifyContent: "center" }}
         >
           {parishCouncil.map((member, i) => (
+            <Grid key={i} size={{ xs: 6, md: 2 }}>
+              <ScrollReveal delay={(i + 1) * 0.12} style={{ height: "100%" }}>
+                <Card
+                  sx={{ ...glassCard, height: "100%", textAlign: "center" }}
+                >
+                  <CardContent sx={{ p: 4 }}>
+                    <Box
+                      sx={{
+                        width: 96,
+                        height: 96,
+                        borderRadius: "50%",
+                        mx: "auto",
+                        mb: 2.5,
+                        border: "3px solid rgba(255,255,255,0.9)",
+                        boxShadow: "0 4px 16px rgba(29,78,216,0.12)",
+                        overflow: "hidden",
+                      }}
+                    >
+                      <img
+                        src={member.photo}
+                        alt={member.name}
+                        style={{
+                          width: "100%",
+                          height: "100%",
+                          objectFit: "cover",
+                          display: "block",
+                        }}
+                      />
+                    </Box>
+                    <Typography
+                      variant="h6"
+                      sx={{
+                        color: "#0f172a",
+                        fontWeight: 700,
+                        mb: 0.5,
+                        fontSize: "1rem",
+                      }}
+                    >
+                      {member.name}
+                    </Typography>
+                  </CardContent>
+                </Card>
+              </ScrollReveal>
+            </Grid>
+          ))}
+        </Grid>
+      </Box>
+      <Box sx={{ mx: "auto", mt: "8px", pt: "10px" }}>
+        <ScrollReveal>
+          <Box sx={{ textAlign: "center", mb: 7 }}>
+            <Chip
+              label="Parish Sacristans"
+              sx={{
+                background: "rgba(22,163,74,0.08)",
+                color: "#16a34a",
+                fontWeight: 600,
+                mb: 2,
+              }}
+            />
+            <Typography
+              variant="h2"
+              sx={{
+                fontSize: { xs: "2rem", md: "2.6rem" },
+                fontWeight: 800,
+                color: "#0f172a",
+                mb: 1.5,
+              }}
+            >
+              Parish Sacristans
+            </Typography>
+            <Typography sx={{ color: "#64748b", fontSize: "1.05rem" }}>
+              The Parish Sacristans of St. Mary’s Forane Church, Chalakudy, are
+              responsible for maintaining the church's sacred spaces, ensuring
+              that everything is prepared for worship and ceremonies.
+            </Typography>
+          </Box>
+        </ScrollReveal>
+        <Grid
+          container
+          spacing={4}
+          sx={{ mt: 4, mx: "auto", maxWidth: 1300, justifyContent: "center" }}
+        >
+          {Sacristan.map((member, i) => (
             <Grid key={i} size={{ xs: 6, md: 2 }}>
               <ScrollReveal delay={(i + 1) * 0.12} style={{ height: "100%" }}>
                 <Card
