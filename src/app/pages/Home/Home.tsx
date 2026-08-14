@@ -716,6 +716,17 @@ export default function Home() {
               </Grid>
             ))}
           </Grid>
+          <Box sx={{ textAlign: "center", mt: 5 }}>
+            <Button
+              component={Link}
+              to="/events"
+              variant="contained"
+              size="large"
+              sx={{ px: 4 }}
+            >
+              Explore All Upcoming Events
+            </Button>
+          </Box>
         </Box>
       </Box>
     </Box>

@@ -17,6 +17,7 @@ const quickLinks = [
   { label: "About Us", path: "/about" },
   { label: "Mass Times", path: "/programs" },
   { label: "Ministries", path: "/ministries" },
+  { label: "Events", path: "/events" },
   { label: "Media", path: "/media" },
   { label: "Contact Us", path: "/contact" },
 ];
