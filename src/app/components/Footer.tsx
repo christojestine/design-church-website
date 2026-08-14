@@ -59,7 +59,7 @@ export function Footer() {
         mt: "auto",
       }}
     >
-      <Box sx={{ maxWidth: 1280, mx: "auto", px: { xs: 3, md: 6 }, py: 7 }}>
+      <Box sx={{ maxWidth: 1400, mx: "auto", px: { xs: 3, md: 6 }, py: 7 }}>
         <Grid container spacing={5}>
           {/* Brand */}
           <Grid size={{ xs: 12, md: 3 }}>
