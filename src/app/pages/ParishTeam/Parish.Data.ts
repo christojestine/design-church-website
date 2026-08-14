@@ -7,6 +7,7 @@
   import sabu from "../../assets/images/sabu.webp";
   import thomas from "../../assets/images/thomas.webp";
   import poly from "../../assets/images/poly.webp";
+  import harry from "../../assets/images/harry.webp";
 
   
   export const priest = [
@@ -112,7 +113,7 @@
       name: "Harry Varghese",
       role: "Sacristan",
       color: "#dbeafe",
-      photo: thomas,
+      photo: harry,
     },
     {
       name: "Shabu kuriyaparambil",
