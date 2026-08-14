@@ -60,7 +60,7 @@ const PriestDetailsModal = ({
         transition: { onExited } as object,
         paper: {
           sx: {
-            borderRadius: 4,
+            borderRadius: 2,
             overflow: "hidden",
             background: "rgba(255,255,255,0.97)",
             boxShadow: "0 24px 80px rgba(20, 40, 80, 0.25)",

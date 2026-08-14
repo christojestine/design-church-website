@@ -43,7 +43,8 @@ const info = [
   {
     Icon: LocationOnIcon,
     label: "Address",
-    value: "123 Church Street\nCommunity City, ST 12345",
+    value:
+      "St. Mary's Forane Church (Shrine of the Nativity of Our Lady),\nlocated in Chalakudy, Thrissur district, Kerala 680307.",
     multiline: true,
     bg: "#dbeafe",
     color: "#1d4ed8",
@@ -51,7 +52,7 @@ const info = [
   {
     Icon: PhoneIcon,
     label: "Phone",
-    value: "(555) 123-4567",
+    value: "0480 2701614, 2701314",
     multiline: false,
     bg: "#dcfce7",
     color: "#16a34a",
@@ -59,7 +60,7 @@ const info = [
   {
     Icon: EmailOutlinedIcon,
     label: "Email",
-    value: "info@gracecommunity.org",
+    value: "stmaryscky@gmail.com",
     multiline: false,
     bg: "#fef3c7",
     color: "#b45309",
@@ -67,8 +68,8 @@ const info = [
   {
     Icon: AccessTimeIcon,
     label: "Office Hours",
-    value: "Mon–Fri: 9:00 AM – 5:00 PM\nSat–Sun: 8:00 AM – 1:00 PM",
-    multiline: true,
+    value: "9:00 AM – 5:00 PM (Mon – Sat)",
+    multiline: false,
     bg: "#ede9fe",
     color: "#7c3aed",
   },
