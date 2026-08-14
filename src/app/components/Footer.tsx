@@ -18,6 +18,7 @@ const quickLinks = [
   { label: "Mass Times", path: "/programs" },
   { label: "Ministries", path: "/ministries" },
   { label: "Events", path: "/events" },
+  { label: "Organizations", path: "/organizations" },
   { label: "Media", path: "/media" },
   { label: "Contact Us", path: "/contact" },
 ];

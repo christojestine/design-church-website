@@ -22,6 +22,7 @@ const navItems = [
   { label: "Parish Team", path: "/parish-team" },
   { label: "Ministries", path: "/ministries" },
   { label: "Events", path: "/events" },
+  { label: "Organizations", path: "/organizations" },
   { label: "About", path: "/about" },
   { label: "Media", path: "/media" },
   { label: "Contact", path: "/contact" },
@@ -52,7 +53,7 @@ export function Navigation() {
       >
         <Toolbar
           sx={{
-            maxWidth: 1280,
+            maxWidth: 1400,
             width: "100%",
             mx: "auto",
             px: { xs: 2, md: 4 },

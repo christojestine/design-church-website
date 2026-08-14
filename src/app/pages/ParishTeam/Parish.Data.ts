@@ -116,7 +116,7 @@
       photo: harry,
     },
     {
-      name: "Shabu kuriyaparambil",
+      name: "Benny",
       role: "Sacristan",
       color: "#ede9fe",
       photo: sabu,

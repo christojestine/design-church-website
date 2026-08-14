@@ -7,6 +7,7 @@ const About = lazy(() => import("./pages/About/About"));
 const Programs = lazy(() => import("./pages/Programs"));
 const Ministries = lazy(() => import("./pages/Ministries/Ministries"));
 const Events = lazy(() => import("./pages/Events/Events"));
+const Organizations = lazy(() => import("./pages/Organizations/Organizations"));
 const Media = lazy(() => import("./pages/Media/Media"));
 const Contact = lazy(() => import("./pages/Contact"));
 const ParishTeam = lazy(() => import("./pages/ParishTeam/ParishTeam"));
@@ -29,6 +30,7 @@ export const router = createBrowserRouter(
         { path: "programs", Component: Programs },
         { path: "ministries", Component: Ministries },
         { path: "events", Component: Events },
+        { path: "organizations", Component: Organizations },
         { path: "media", Component: Media },
         { path: "contact", Component: Contact },
         { path: "*", Component: NotFound },
