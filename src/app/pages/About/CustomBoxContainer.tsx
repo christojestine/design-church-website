@@ -40,23 +40,47 @@ export default function CustomBoxContainer({
   description,
   image,
   imageAlt,
+  secondaryImage,
+  secondaryImageAlt,
+  tertiaryImage,
+  tertiaryImageAlt,
   imageOnRight,
   py,
 }: AboutSectionData) {
+  const images = [
+    { src: image, alt: imageAlt, height: 400 },
+    ...(secondaryImage
+      ? [
+          {
+            src: secondaryImage,
+            alt: secondaryImageAlt ?? imageAlt,
+            height: 240,
+          },
+        ]
+      : []),
+    ...(tertiaryImage
+      ? [{ src: tertiaryImage, alt: tertiaryImageAlt ?? imageAlt, height: 200 }]
+      : []),
+  ];
+
   const imageColumn = (
     <Grid size={{ xs: 12, md: 3 }}>
       <ScrollReveal direction="left" style={{ height: "100%" }}>
-        <Box sx={imageBox}>
-          <ImageWithFallback
-            src={image}
-            alt={imageAlt}
-            style={{
-              width: "100%",
-              height: 400,
-              objectFit: "cover",
-              display: "block",
-            }}
-          />
+        <Box sx={{ display: "flex", flexDirection: "column", gap: 2.5 }}>
+          {images.map(({ src, alt, height }) => (
+            <Box key={`${alt}-${src}`} sx={imageBox}>
+              <ImageWithFallback
+                src={src}
+                alt={alt}
+                style={{
+                  width: "100%",
+                  height,
+                  objectFit: "cover",
+                  display: "block",
+                }}
+              />
+            </Box>
+          ))}
         </Box>
       </ScrollReveal>
     </Grid>

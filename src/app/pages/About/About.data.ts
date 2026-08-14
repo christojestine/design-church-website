@@ -3,6 +3,9 @@ import HolyLand from "../../assets/images/HolyLand.webp";
 import SwayamvaraAltar from "../../assets/images/SwayamvaraAltar.webp";
 import GrottoBlessedVirginMary from "../../assets/images/GrottoBlessedVirginMary.webp";
 import churchBell from "../../assets/images/churchBell.webp";
+import altarfull from "../../assets/images/altarfull.webp";
+import alterbelowregion from "../../assets/images/alterbelowregion.webp";
+import oldalter from "../../assets/images/oldalter.webp";
 
 export interface AboutSectionData {
   chipLabel: string;
@@ -10,14 +13,18 @@ export interface AboutSectionData {
   description: string;
   image: string;
   imageAlt: string;
+  secondaryImage?: string;
+  secondaryImageAlt?: string;
+  tertiaryImage?: string;
+  tertiaryImageAlt?: string;
   imageOnRight: boolean;
   py: { xs: number; md: number };
 }
 
 export const aboutSections: AboutSectionData[] = [
   {
-    chipLabel: "Our Mission",
-    title: "Glorifying God Together",
+    chipLabel: "Our Church",
+    title: "Our Church",
     description: 
     ` The origin of Christian faith in Chalakudy can be traced back to the time when St. Thomas, one of the twelve apostles of Jesus Christ, set foot in India with his mission shortly after Jesus Christ’s death and resurrection. According to tradition, Apostle Thomas landed in Kodungallur, formerly known as Musiris, in the year 52 AD. At that time Kodungallur was a busy commercial center and an important port. St. Thomas traveled about various parts of Kerala preaching the Gospel and forming Christian communities, which began to grow at several places. The early Christian community in Chalakudy, who were privileged to receive the faith directly from the Apostle, established the parish and built their first church in the year in 600 AD. The church was built in an area predominantly occupied by Brahmins, and the permission to build the church at that location explains the communal harmony that existed in those days and continued even today in this multi-religious town. The church was then situated in the Palace Road, a few hundred meters from its present location where it remained until about 1300 AD when it was shifted to the present site.
     The church is famous from time immemorial for the intercession of Blessed Virgin Mary. The original altar is known as “Swayamvara Altar” — a title rarely bestowed by the Holy Father. It is believed that those who pray at this altar with complete self-surrender would surely receive special blessings. When the church was rebuilt in 1987 the original altar made of wood with intricate carvings was left intact and is preserved as such till this day. On the solemn occasion of the consecration of the remodeled church, His Eminence Cardinal Lourdusamy declared this ancient Church as a Marian Pilgrim Centre in consideration of its contributions to the history of the Church in Kerala and its significance as a centre of pilgrimage and a spiritual powerhouse. The colossal belfry built in gothic style almost a century ago with a huge statue of Mother Mary on the top is of monumental importance and still remains the tallest structure in the vicinity.
@@ -26,6 +33,10 @@ export const aboutSections: AboutSectionData[] = [
     Beginning with the Old Testament incident of the bronze serpent put up by Moses — a symbolic precursor of the Crucified Jesus — the stations in the Holy Land depict all the important events from the life of Jesus, especially His nativity, public ministry, passion, crucifixion, resurrection & ascension and concludes with the scene of Holy Mother Mary being crowned as the Queen of heaven and earth. The Holy Land museum has on display several relics as well as other objects of religious and historical importance. Holy Land is open to the public throughout the day. However, it is most enjoyable in the evenings when the lights are turned on.`,
     image: churchExterior,
     imageAlt: "Church exterior",
+    secondaryImage: altarfull,
+    secondaryImageAlt: "Altar of the church",
+    tertiaryImage: alterbelowregion,
+    tertiaryImageAlt: "Altar",
     imageOnRight: false,
     py: { xs: 8, md: 12 },
   },
@@ -44,7 +55,7 @@ export const aboutSections: AboutSectionData[] = [
     title: "Swayamvara Altar",
     description:
       "The church has been renowned from time immemorial for the intercession of Blessed Virgin Mary. The original altar is known as Swayamvara Altar – a rare title bestowed by the Holy Father. It is believed that those who pray at this altar with complete self-surrender would surely receive special blessings. When the church was reconstructed again in 1987, the original altar, made of wood with intricate carvings and murals depicting the glories of Blessed Virgin Mary, was kept intact and is still presesrved as a historical monument. On the occasion of the consecration of the fourth remodeled Church, His Eminence Cardinal Lourdswamy declared this ancient shrine as a Marian Pilgrim Centre, in consideration of its contributions to the history of the Church in Kerala and the significant role it played as a centre of pilgrimage and a spiritual powerhouse. The colossal belfry built in gothic style almost a century ago with a huge statue of Mother Mary on the top, is of monumental importance and still remains as the tallest structure in the vicinity.",
-    image: SwayamvaraAltar,
+    image: oldalter,
     imageAlt: "Old Altar",
     imageOnRight: false,
      py: { xs: 8, md: 12 }
