@@ -6,6 +6,7 @@ import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import Chip from "@mui/material/Chip";
 import { ScrollReveal } from "../../components/ScrollReveal";
+import { glassCard } from "../../../styles/style";
 import PriestDetailsModal from "./PriestDetailsModal";
 import type { Priest } from "./PriestDetailsModal";
 import { priest, parishCouncil, Sacristan } from "./Parish.Data";
@@ -19,22 +20,6 @@ export default function ParishTeam() {
     setOpen(true);
   };
   const closeModal = () => setOpen(false);
-
-  const glassCard = {
-    background: "rgba(255,255,255,0.6)",
-    backdropFilter: "blur(20px)",
-    WebkitBackdropFilter: "blur(20px)",
-    border: "1px solid rgba(255,255,255,0.85)",
-    borderRadius: "20px",
-    boxShadow: "0 4px 24px rgba(30,64,175,0.07)",
-    transition: "all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)",
-    "&:hover": {
-      background: "rgba(255,255,255,0.8)",
-      border: "1px solid rgba(29,78,216,0.2)",
-      boxShadow: "0 16px 48px rgba(29,78,216,0.13)",
-      transform: "translateY(-8px) perspective(800px) rotateX(1.5deg)",
-    },
-  };
 
   return (
     <Box sx={{ py: { xs: 4, md: 5 }, px: 3, pb: { xs: 10, md: 14 } }}>

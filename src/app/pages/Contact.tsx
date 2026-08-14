@@ -14,30 +14,9 @@ import PhoneIcon from "@mui/icons-material/Phone";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import SendIcon from "@mui/icons-material/Send";
+import { glassCard, inputFieldSx } from "../../styles/style";
 
-const glassCard = {
-  background: "rgba(255,255,255,0.6)",
-  backdropFilter: "blur(20px)",
-  WebkitBackdropFilter: "blur(20px)",
-  border: "1px solid rgba(255,255,255,0.85)",
-  borderRadius: "20px",
-  boxShadow: "0 4px 24px rgba(30,64,175,0.07)",
-};
-
-const inputSx = {
-  "& .MuiOutlinedInput-root": {
-    background: "rgba(255,255,255,0.5)",
-    "& fieldset": { borderColor: "rgba(29,78,216,0.18)" },
-    "&:hover fieldset": { borderColor: "rgba(29,78,216,0.35)" },
-    "&.Mui-focused fieldset": {
-      borderColor: "#1d4ed8",
-      boxShadow: "0 0 0 3px rgba(29,78,216,0.08)",
-    },
-  },
-  "& .MuiInputLabel-root": { color: "#94a3b8" },
-  "& .MuiInputLabel-root.Mui-focused": { color: "#1d4ed8" },
-  "& .MuiOutlinedInput-input": { color: "#0f172a" },
-};
+const inputSx = inputFieldSx;
 
 const info = [
   {

@@ -10,23 +10,8 @@ import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import { ScrollReveal } from "../../components/ScrollReveal";
+import { glassCard } from "../../../styles/style";
 import { events } from "./Events.Data";
-
-const glassCard = {
-  background: "rgba(255,255,255,0.6)",
-  backdropFilter: "blur(20px)",
-  WebkitBackdropFilter: "blur(20px)",
-  border: "1px solid rgba(255,255,255,0.85)",
-  borderRadius: "20px",
-  boxShadow: "0 4px 24px rgba(30,64,175,0.07)",
-  transition: "all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)",
-  "&:hover": {
-    background: "rgba(255,255,255,0.82)",
-    border: "1px solid rgba(29,78,216,0.2)",
-    boxShadow: "0 20px 50px rgba(29,78,216,0.14)",
-    transform: "translateY(-10px) perspective(800px) rotateX(2deg)",
-  },
-};
 
 export default function EventsPage() {
   return (

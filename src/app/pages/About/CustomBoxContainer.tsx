@@ -4,35 +4,8 @@ import Chip from "@mui/material/Chip";
 import Typography from "@mui/material/Typography";
 import { ImageWithFallback } from "../../components/figma/ImageWithFallback";
 import { ScrollReveal } from "../../components/ScrollReveal";
+import { glassCard, imageBox } from "../../../styles/style";
 import type { AboutSectionData } from "./About.data";
-
-const glassCard = {
-  background: "rgba(255,255,255,0.6)",
-  backdropFilter: "blur(20px)",
-  WebkitBackdropFilter: "blur(20px)",
-  border: "1px solid rgba(255,255,255,0.85)",
-  borderRadius: "20px",
-  boxShadow: "0 4px 24px rgba(30,64,175,0.07)",
-  transition: "all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)",
-  "&:hover": {
-    background: "rgba(255,255,255,0.8)",
-    border: "1px solid rgba(29,78,216,0.2)",
-    boxShadow: "0 16px 48px rgba(29,78,216,0.13)",
-    transform: "translateY(-8px) perspective(800px) rotateX(1.5deg)",
-  },
-};
-
-const imageBox = {
-  borderRadius: "20px",
-  overflow: "hidden",
-  border: "1px solid rgba(255,255,255,0.85)",
-  boxShadow: "0 12px 40px rgba(29,78,216,0.12)",
-  transition: "all 0.4s ease",
-  "&:hover": {
-    boxShadow: "0 20px 60px rgba(29,78,216,0.2)",
-    transform: "scale(1.02) perspective(1000px) rotateY(2deg)",
-  },
-};
 
 export default function CustomBoxContainer({
   chipLabel,

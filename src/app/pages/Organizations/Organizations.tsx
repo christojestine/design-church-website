@@ -11,79 +11,8 @@ import ListItemText from "@mui/material/ListItemText";
 import CircleIcon from "@mui/icons-material/Circle";
 import { ScrollReveal } from "../../components/ScrollReveal";
 import ChurchFrontView from "../../assets/images/3.webp";
-
-const glassCard = {
-  background: "rgba(255,255,255,0.6)",
-  backdropFilter: "blur(20px)",
-  WebkitBackdropFilter: "blur(20px)",
-  border: "1px solid rgba(255,255,255,0.85)",
-  borderRadius: "22px",
-  boxShadow: "0 4px 24px rgba(30,64,175,0.07)",
-  transition: "all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)",
-  "&:hover": {
-    background: "rgba(255,255,255,0.8)",
-    border: "1px solid rgba(29,78,216,0.2)",
-    boxShadow: "0 16px 48px rgba(29,78,216,0.13)",
-    transform: "translateY(-8px) perspective(800px) rotateX(1.5deg)",
-  },
-};
-
-const organizationSections = [
-  {
-    title: "Parish Under Forane",
-    items: [
-      "St. Antony’s Church, Perambra",
-      "St. Joseph’s Church, Aloor",
-      "Our Lady of Grace Church, Aloor (West)",
-      "Little Flower Church, Potta",
-      "Our Lady of Rosary Church, Karoor",
-      "Our Lady of Fathima Church, Vellanchira",
-      "Our Lady of Grace Church, Thuruthiparambu",
-      "Our Lady of Perpetual Help Church, West Chalakudy",
-      "St. Sebastian’s Church, Thachudaparambu",
-      "St. Joseph’s Church, North Chalakudy",
-      "St. Antony’s Church, Kottatt",
-      "Our Lady of Perpetual Help Church, Koodapuzha",
-      "Our Lady of Lourdes Church, Elinjipra",
-      "St. Francis Assisi Church, Bethlehem-Elinjipra",
-      "St. Joseph’s Church, Mettipadam",
-      "St. George Church, Pariyaram",
-      "St. Mary’s, Thessery",
-    ],
-    accent: "#f59e0b",
-  },
-  {
-    title: "Main Chapels (Kurishe Palli)",
-    items: [
-      "St. Mary's Chapel, Chenathunad",
-      "Our Lady of Lourdes Chapel, Mariyapuram",
-    ],
-    accent: "#1d4ed8",
-  },
-  {
-    title: "Chapels",
-    items: [
-      "Sacred Heart Chapel (Church Compound)",
-      "St. Mary's Chapel (South Bazaar)",
-      "St. Mary's Chapel (Chenathunad)",
-      "St. Roch's Chapel (Govt. Hospital)",
-      "St. Sebastian's Chapel (Vettukadavu)",
-      "St. Sebastian's Chapel (Idukoodu)",
-      "St. Sebastian's Chapel (Market Road)",
-      "St. Joseph's Chapel (Koodapuzha)",
-      "St. Sebastian's Chapel (Near ITI Puthuparambu)",
-      "St. Antony's Chapel (Opposite KSRTC)",
-      "Cross Chapel - West Bazaar",
-      "Holy Cross - Railway Station",
-    ],
-    accent: "#7c3aed",
-  },
-  {
-    title: "Schools Under Church",
-    items: ["St.Mary's LP School Chalakudy"],
-    accent: "#16a34a",
-  },
-];
+import { glassCard } from "../../../styles/style";
+import { organizationSections } from "./Organization.data";
 
 export default function Organizations() {
   return (
