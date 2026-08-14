@@ -3,6 +3,11 @@
   import frAlbin from "../../assets/images/Fr.Albin.webp";
   import frJoyal from "../../assets/images/Fr.Joyal.webp";
   import frSinto from "../../assets/images/Fr.Sinto.webp";
+  import sunil from "../../assets/images/Sunil.webp";
+  import sabu from "../../assets/images/Sabu.webp";
+  import thomas from "../../assets/images/Thomas.webp";
+  import poly from "../../assets/images/Poly.webp";
+
   
   export const priest = [
     {
@@ -52,33 +57,27 @@
   ];
   export const parishCouncil = [
     {
-      name: "Fr. Varghese Pathadan",
+      name: "Thomas paranilam",
       role: "Vicar",
       color: "#dbeafe",
-      photo: frVarghese,
+      photo: thomas,
     },
     {
-      name: "Fr. Albin",
+      name: "Shabu kuriyaparambil",
       role: "Asst Vicar",
       color: "#ede9fe",
-      photo: frAlbin,
+      photo: sabu,
     },
     {
-      name: "Fr. Joyal",
+      name: "Sunil david chakkalakkall",
       role: "Asst Vicar",
       color: "#fef3c7",
-      photo: frJoyal,
+      photo: sunil,
     },
     {
-      name: "Fr. Sinto",
+      name: "Poly mechery",
       role: "Asst Vicar",
       color: "#fef3c7",
-      photo: frSinto,
-    },
-    {
-      name: "Fr. Sinto",
-      role: "Asst Vicar",
-      color: "#fef3c7",
-      photo: frSinto,
-    },
+      photo: poly,
+    }
   ];
