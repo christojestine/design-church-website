@@ -3,10 +3,10 @@
   import frAlbin from "../../assets/images/Fr.Albin.webp";
   import frJoyal from "../../assets/images/Fr.Joyal.webp";
   import frSinto from "../../assets/images/Fr.Sinto.webp";
-  import sunil from "../../assets/images/Sunil.webp";
-  import sabu from "../../assets/images/Sabu.webp";
-  import thomas from "../../assets/images/Thomas.webp";
-  import poly from "../../assets/images/Poly.webp";
+  import sunil from "../../assets/images/sunil.webp";
+  import sabu from "../../assets/images/sabu.webp";
+  import thomas from "../../assets/images/thomas.webp";
+  import poly from "../../assets/images/poly.webp";
 
   
   export const priest = [
