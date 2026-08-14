@@ -45,7 +45,7 @@
       currentposition: "Asst. Vicar of St. Mary’s Forane Church Chalakudy",
     },
     {
-      name: "Fr. Sinto",
+      name: "Fr.Sinto Pozholiparambil RCJ",
       role: "Asst Vicar",
       color: "#fef3c7",
       photo: frSinto,
