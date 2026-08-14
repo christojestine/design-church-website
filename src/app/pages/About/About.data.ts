@@ -1,8 +1,7 @@
 import churchExterior from "@/imports/118A1922.jpg";
 import HolyLand from "../../assets/images/HolyLand.webp";
-import SwayamvaraAltar from "../../assets/images/SwayamvaraAltar.webp";
 import GrottoBlessedVirginMary from "../../assets/images/GrottoBlessedVirginMary.webp";
-import churchBell from "../../assets/images/churchBell.webp";
+import churchbell from "../../assets/images/churchbell.webp";
 import altarfull from "../../assets/images/altarfull.webp";
 import alterbelowregion from "../../assets/images/alterbelowregion.webp";
 import oldalter from "../../assets/images/oldalter.webp";
@@ -65,7 +64,7 @@ export const aboutSections: AboutSectionData[] = [
     title: "Church Bell",
     description:
       "Our Church Bell was built in 1887. But, our church bell Fry was built in 1913 under the leadership of Rev. Fr. Devassy Avaran. It has seven steps or flour to denote seven sacraments which leads a Christian person to the perfection. Our Bell Fry is standing higher than the height of the church. On the top of the Bell Fry, there is a statue of Blessed Virgin Mary which installed on 1965 done by Rev. Fr. Antony Thekkiniyath. There is an awesome history behind the Church Bell Fry and The Bell. This Church Bell was built at France. This splendid history is written in the language of Latin, Arabic and Malayalam.",
-    image: churchBell,
+    image: churchbell,
     imageAlt: "Church Bell",
     imageOnRight: true,
     py: { xs: 1, md: 2 },
