@@ -177,58 +177,6 @@ const PriestDetailsModal = ({
             />
           </Grid>
         </Grid>
-
-        {/* Church information */}
-        <Paper
-          elevation={0}
-          sx={{
-            mt: 3,
-            p: 2.5,
-            borderRadius: 3,
-            background: "linear-gradient(135deg, #eff6ff 0%, #f8fafc 100%)",
-            border: "1px solid #dbeafe",
-          }}
-        >
-          <Typography
-            variant="subtitle2"
-            sx={{
-              color: "#2563eb",
-              fontWeight: 800,
-              mb: 0.5,
-            }}
-          >
-            PRESENT MINISTRY
-          </Typography>
-
-          <Typography
-            variant="body1"
-            sx={{
-              color: "#334155",
-              fontWeight: 600,
-            }}
-          >
-            {priest.currentposition}
-          </Typography>
-        </Paper>
-
-        {/* Close */}
-        <Stack sx={{ mt: 4, alignItems: "center" }}>
-          <Button
-            variant="contained"
-            onClick={onClose}
-            sx={{
-              borderRadius: 3,
-              px: 5,
-              py: 1.2,
-              textTransform: "none",
-              fontWeight: 700,
-              background: "linear-gradient(135deg, #2563eb, #1d4ed8)",
-              boxShadow: "0 8px 20px rgba(37,99,235,0.25)",
-            }}
-          >
-            Close Profile
-          </Button>
-        </Stack>
       </DialogContent>
     </Dialog>
   );
