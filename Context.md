@@ -52,6 +52,7 @@ Production routing uses basename `/design-church-website` for GitHub Pages (conf
 - All events live in `src/app/pages/Events/Events.Data.ts` (translated from the weekly parish announcements). Each has an ISO `date` ("YYYY-MM-DD"), an optional `endDate` for multi-day events, and a `category` that sets its icon/colours via `categoryStyles`.
 - `src/app/pages/Events/eventDates.ts` → `getUpcomingEvents()` hides events whose last day has passed (visitor's local date, evaluated in the browser, so no rebuild is needed), sorts by date and formats `displayDate`.
 - The Events page shows all upcoming events; the Home page shows the next 3 from the same source.
+- To update events from a weekly Malayalam announcement PDF, use the `/event-update` Claude Code skill (`.claude/skills/event-update/`). It covers translation, event rules and a validator script.
 
 ## Shared Components
 - `Navigation.tsx`: Sticky top navigation + mobile drawer.
