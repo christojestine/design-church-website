@@ -1,3 +1,4 @@
+/// <reference types="@rspack/core/module" />
 declare module '*.mp4';
 declare module '*.webm';
 declare module '*.avif';

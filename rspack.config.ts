@@ -96,8 +96,15 @@ const config = {
         test: /\.css$/,
         type: 'css',
       },
+      // Scroll-animation frames: always separate files (never inlined), loaded progressively at runtime.
+      {
+        test: /[\\/]backgroundFrames[\\/].+\.webp$/i,
+        type: 'asset/resource',
+        generator: { filename: 'assets/frames/[name].[hash:8][ext]' },
+      },
       {
         test: /\.(png|jpe?g|gif|webp|avif)$/i,
+        exclude: /[\\/]backgroundFrames[\\/]/,
         type: 'asset',
         parser: {
           dataUrlCondition: {

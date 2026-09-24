@@ -1,12 +1,10 @@
 /**
  * MarianBackground3D
  * ─────────────────────────────────────────────────────────────────────────────
- * Full-screen background video with a transparent Canvas 2D overlay
+ * Full-screen scroll-scrubbed frame sequence with a transparent Canvas 2D overlay
  * (petals, doves, sparkles). Zero external dependencies — pure browser APIs.
  */
 import { useRef, useEffect, useState } from "react";
-
-import bgVideo from "../assets/Videos/backgroundVideo.webm";
 
 // ─── device capability detection ───────────────────────────────────────────────
 function useDeviceTier() {
@@ -344,139 +342,176 @@ function CanvasOverlay({ tier }: { tier: "full" | "lite" }) {
   );
 }
 
-// ─── Export ───────────────────────────────────────────────────────────────────
-export default function MarianBackground3D() {
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const tier = useDeviceTier();
-  const isMobileLayout = tier === "lite";
+// ─── Scroll-scrubbed frame sequence ───────────────────────────────────────────
+// The background animation is a sequence of pre-extracted WebP frames drawn to a
+// canvas, instead of seeking a <video>. The source video had a single keyframe,
+// so every seek decoded up to 120 VP9 frames, which froze mobile browsers.
+// Drawing an already-decoded image is constant-time on every device.
+// Regenerate frames (from backgroundVideo.webm) with:
+//   ffmpeg -i backgroundVideo.webm -vf scale=800:-2 -c:v libwebp -quality 55 backgroundFrames/f%03d.webp
+const frameContext = import.meta.webpackContext(
+  "../assets/Videos/backgroundFrames",
+  { recursive: false, regExp: /\.webp$/ },
+);
+const frameUrls: string[] = frameContext
+  .keys()
+  .sort()
+  .map((key) => {
+    const mod = frameContext(key) as string | { default: string };
+    return typeof mod === "string" ? mod : mod.default;
+  });
 
-  const videoSize = isMobileLayout ? "60%" : "80%";
+/** Every `step`-th frame, always including the last one. */
+function pickFrames(step: number) {
+  const picked = frameUrls.filter((_, i) => i % step === 0);
+  const last = frameUrls[frameUrls.length - 1];
+  if (picked[picked.length - 1] !== last) picked.push(last);
+  return picked;
+}
 
-  // ── Scroll-scrubbed video ──
+/** Load order: coarse to fine, so the whole scroll range is covered early. */
+function loadOrder(count: number, first: number) {
+  const order = [first];
+  const seen = new Set(order);
+  for (let stride = 32; stride >= 1; stride /= 2) {
+    for (let i = 0; i < count; i += stride) {
+      if (!seen.has(i)) {
+        seen.add(i);
+        order.push(i);
+      }
+    }
+  }
+  if (!seen.has(count - 1)) order.push(count - 1);
+  return order;
+}
+
+const scrollProgress = () => {
+  const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+  return maxScroll > 0 ? Math.max(0, Math.min(1, window.scrollY / maxScroll)) : 0;
+};
+
+function FrameSequence({
+  step,
+  isStatic,
+  style,
+}: {
+  /** Use every `step`-th frame (2 on mobile halves the download). */
+  step: number;
+  /** Reduced motion: show only the final frame and ignore scrolling. */
+  isStatic: boolean;
+  style: React.CSSProperties;
+}) {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+
   useEffect(() => {
-    const video = videoRef.current;
-    if (!video) return;
+    const canvas = canvasRef.current;
+    const ctx = canvas?.getContext("2d");
+    if (!canvas || !ctx) return;
 
-    if (isMobileLayout) {
-      const showLastFrame = () => {
-        const duration = Number.isFinite(video.duration) ? video.duration : 0;
-        // Use max(duration - tiny offset, 0) so browser can decode the final frame.
-        video.currentTime = Math.max(duration - 0.001, 0);
-        video.pause();
-      };
+    const urls = isStatic ? [frameUrls[frameUrls.length - 1]] : pickFrames(step);
+    const images: (HTMLImageElement | null)[] = urls.map(() => null);
+    let target = isStatic ? 1 : scrollProgress();
+    let smoothed = target;
+    let drawnIndex = -1;
+    let rafId = 0;
+    let disposed = false;
 
-      if (video.readyState >= 1) {
-        showLastFrame();
-      } else {
-        video.addEventListener("loadedmetadata", showLastFrame);
+    const nearestLoaded = (wanted: number) => {
+      for (let d = 0; d < images.length; d++) {
+        if (images[wanted - d]) return wanted - d;
+        if (images[wanted + d]) return wanted + d;
       }
+      return -1;
+    };
 
-      return () => {
-        video.removeEventListener("loadedmetadata", showLastFrame);
-      };
+    const draw = (force = false) => {
+      const index = nearestLoaded(Math.round(smoothed * (urls.length - 1)));
+      if (index < 0 || (index === drawnIndex && !force)) return;
+      const img = images[index]!;
+      const { width: cw, height: ch } = canvas;
+      // Same framing as object-fit: cover.
+      const scale = Math.max(cw / img.naturalWidth, ch / img.naturalHeight);
+      const w = img.naturalWidth * scale;
+      const h = img.naturalHeight * scale;
+      ctx.clearRect(0, 0, cw, ch);
+      ctx.drawImage(img, (cw - w) / 2, (ch - h) / 2, w, h);
+      drawnIndex = index;
+    };
+
+    // Runs only while the smoothed position is catching up with the scroll position.
+    const tick = () => {
+      smoothed += (target - smoothed) * 0.2;
+      if (Math.abs(target - smoothed) < 0.0005) smoothed = target;
+      draw();
+      rafId = smoothed === target ? 0 : requestAnimationFrame(tick);
+    };
+    const kick = () => {
+      if (!rafId) rafId = requestAnimationFrame(tick);
+    };
+
+    const onScroll = () => {
+      target = scrollProgress();
+      kick();
+    };
+
+    // Resize the drawing buffer only when the box really changes (mobile URL-bar
+    // show/hide fires frequent resizes), and redraw immediately to avoid a blank flash.
+    const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+    const resize = () => {
+      const w = Math.round(canvas.clientWidth * dpr);
+      const h = Math.round(canvas.clientHeight * dpr);
+      if (w === canvas.width && h === canvas.height) return;
+      canvas.width = w;
+      canvas.height = h;
+      draw(true);
+    };
+    const observer = new ResizeObserver(resize);
+    observer.observe(canvas);
+    resize();
+
+    // Load a few frames at a time; `decode()` keeps image decoding off the scroll path.
+    const queue = loadOrder(urls.length, Math.round(target * (urls.length - 1)));
+    const loadNext = async (): Promise<void> => {
+      const index = queue.shift();
+      if (index === undefined || disposed) return;
+      const img = new Image();
+      img.src = urls[index];
+      try {
+        await img.decode();
+        if (disposed) return;
+        images[index] = img;
+        draw(); // a closer frame may now be available
+      } catch {
+        // Skip a frame that fails to load; neighbours are used instead.
+      }
+      return loadNext();
+    };
+    for (let i = 0; i < 4; i++) void loadNext();
+
+    if (!isStatic) {
+      window.addEventListener("scroll", onScroll, { passive: true });
+      window.addEventListener("resize", onScroll, { passive: true });
     }
-
-    let targetProgress = 0;
-    let smoothedProgress = 0;
-    let lastTimestamp = performance.now();
-    let duration = 0;
-    let rafId: number;
-
-    // Gate seeks on the previous seek actually finishing, instead of a fixed
-    // timer. Firing `currentTime =` again before the browser has finished
-    // decoding the last seek is what causes the "frame by frame" stepping —
-    // seeks get queued/dropped rather than smoothly scrubbed.
-    let isSeeking = false;
-    let seekSafetyTimer: ReturnType<typeof setTimeout> | null = null;
-
-    const clamp01 = (v: number) => Math.max(0, Math.min(1, v));
-
-    const syncDuration = () => {
-      duration = Number.isFinite(video.duration) ? video.duration : 0;
-    };
-
-    const updateTarget = () => {
-      const maxScroll =
-        document.documentElement.scrollHeight - window.innerHeight;
-      const fraction = maxScroll > 0 ? window.scrollY / maxScroll : 0;
-      targetProgress = clamp01(fraction);
-    };
-
-    const handleSeeking = () => {
-      isSeeking = true;
-    };
-
-    const handleSeeked = () => {
-      isSeeking = false;
-      if (seekSafetyTimer) {
-        clearTimeout(seekSafetyTimer);
-        seekSafetyTimer = null;
-      }
-    };
-
-    const requestSeek = (time: number) => {
-      video.currentTime = time;
-      isSeeking = true;
-      // Safety net: some browsers/codecs occasionally don't fire 'seeked'
-      // for very small seeks. Don't let that permanently stall scrubbing.
-      if (seekSafetyTimer) clearTimeout(seekSafetyTimer);
-      seekSafetyTimer = setTimeout(() => {
-        isSeeking = false;
-      }, 150);
-    };
-
-    const animate = (timestamp: number) => {
-      const dt = Math.min(timestamp - lastTimestamp, 50);
-      lastTimestamp = timestamp;
-
-      if (duration > 0 && video.readyState >= 2 && !document.hidden) {
-        const alpha = 1 - Math.exp((-14 * dt) / 1000);
-        smoothedProgress += (targetProgress - smoothedProgress) * alpha;
-        smoothedProgress = clamp01(smoothedProgress);
-        const desiredTime = smoothedProgress * duration;
-
-        if (!isSeeking && Math.abs(desiredTime - video.currentTime) > 0.008) {
-          requestSeek(desiredTime);
-        }
-      }
-
-      rafId = requestAnimationFrame(animate);
-    };
-
-    const handleLoadedMetadata = () => {
-      syncDuration();
-      updateTarget();
-      smoothedProgress = targetProgress;
-      if (duration > 0) {
-        video.currentTime = smoothedProgress * duration;
-      }
-    };
-
-    window.addEventListener("scroll", updateTarget, { passive: true });
-    window.addEventListener("resize", updateTarget, { passive: true });
-    video.addEventListener("loadedmetadata", handleLoadedMetadata);
-    video.addEventListener("seeking", handleSeeking);
-    video.addEventListener("seeked", handleSeeked);
-
-    syncDuration();
-    updateTarget();
-    if (duration > 0) {
-      smoothedProgress = targetProgress;
-      video.currentTime = smoothedProgress * duration;
-    }
-
-    rafId = requestAnimationFrame(animate);
 
     return () => {
-      window.removeEventListener("scroll", updateTarget);
-      window.removeEventListener("resize", updateTarget);
-      video.removeEventListener("loadedmetadata", handleLoadedMetadata);
-      video.removeEventListener("seeking", handleSeeking);
-      video.removeEventListener("seeked", handleSeeked);
-      if (seekSafetyTimer) clearTimeout(seekSafetyTimer);
+      disposed = true;
+      observer.disconnect();
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
       cancelAnimationFrame(rafId);
     };
-  }, [isMobileLayout]);
+  }, [step, isStatic]);
+
+  return <canvas ref={canvasRef} style={style} />;
+}
+
+// ─── Export ───────────────────────────────────────────────────────────────────
+export default function MarianBackground3D() {
+  const tier = useDeviceTier();
+  const isMobileLayout = tier === "lite";
+  const frameSize = isMobileLayout ? "60%" : "80%";
+  const radialMask =
+    "radial-gradient(ellipse at center, black 0%, rgba(0,0,0,0.92) 18%, rgba(0,0,0,0.65) 34%, rgba(0,0,0,0.28) 48%, rgba(0,0,0,0.06) 58%, transparent 63%)";
 
   return (
     <div
@@ -489,33 +524,25 @@ export default function MarianBackground3D() {
         transform: "scale(1.01)",
       }}
     >
-      {/* Full-screen background video — scroll-scrubbed, no borders */}
-      <video
-        ref={videoRef}
-        muted
-        playsInline
-        disablePictureInPicture
-        preload={isMobileLayout ? "metadata" : "auto"}
-        src={bgVideo as string}
+      {/* Full-screen background animation, scrubbed by scroll position */}
+      <FrameSequence
+        step={isMobileLayout ? 2 : 1}
+        isStatic={tier === "none"}
         style={{
           position: "absolute",
           top: "50%",
           left: "50%",
           transform: "translate(-50%, -50%)",
-          width: videoSize,
-          height: videoSize,
-          objectFit: "cover",
+          width: frameSize,
+          height: frameSize,
           display: "block",
           opacity: 0.38,
-          willChange: "transform, opacity",
-          maskImage:
-            "radial-gradient(ellipse at center, black 0%, rgba(0,0,0,0.92) 18%, rgba(0,0,0,0.65) 34%, rgba(0,0,0,0.28) 48%, rgba(0,0,0,0.06) 58%, transparent 63%)",
-          WebkitMaskImage:
-            "radial-gradient(ellipse at center, black 0%, rgba(0,0,0,0.92) 18%, rgba(0,0,0,0.65) 34%, rgba(0,0,0,0.28) 48%, rgba(0,0,0,0.06) 58%, transparent 63%)",
+          maskImage: radialMask,
+          WebkitMaskImage: radialMask,
         }}
       />
 
-      {/* Keep mobile static: no animated canvas overlay. */}
+      {/* Keep mobile light: no animated canvas overlay. */}
       {tier === "full" && <CanvasOverlay tier={tier} />}
     </div>
   );

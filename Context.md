@@ -58,12 +58,12 @@ Production routing uses basename `/design-church-website` for GitHub Pages (conf
 - `Navigation.tsx`: Sticky top navigation + mobile drawer.
 - `Footer.tsx`: Quick links, contact details, social links.
 - `ScrollReveal.tsx`: In-view reveal wrapper used across pages.
-- `MarianBackground3D.tsx`: Lazy-loaded decorative 3D background layer.
+- `MarianBackground3D.tsx`: Lazy-loaded decorative background. A scroll-scrubbed WebP frame sequence (`src/app/assets/Videos/backgroundFrames/`, 120 frames; mobile loads every 2nd) is drawn to a canvas, with a Canvas 2D overlay on desktop. Do not go back to seeking a `<video>` on scroll: `backgroundVideo.webm` has a single keyframe, so each seek decoded up to 120 frames and froze on phones. The .webm is kept only as the source for regenerating frames (ffmpeg command is in the component).
 - `ParishTeam.tsx`: Team listing component used as routed page content.
 - `figma/ImageWithFallback.tsx`: Image fallback rendering helper.
 
 ## Assets and Styling
-- Assets: `src/app/assets/` (images + one background video).
+- Assets: `src/app/assets/` (images, background animation frames, and the source background video).
 - Additional imported images: `src/imports/`.
 - Global style entry: `src/styles/index.css` (imports fonts + theme).
 - Theme variables: `src/styles/theme.css`.
