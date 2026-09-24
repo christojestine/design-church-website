@@ -40,27 +40,6 @@ export const ministries = [
   },
 ];
 
-export const upcomingEvents = [
-  {
-    title: "Parish Council",
-    date: "August, 2026",
-    time: "6:00 PM",
-    location: "Parish Hall",
-  },
-  {
-    title: "Retreat for Parish",
-    date: "June 10, 2026",
-    time: "7:00 PM",
-    location: "Community Room",
-  },
-  {
-    title: "Choir Practice",
-    date: "June 11, 2026",
-    time: "7:30 PM",
-    location: "Church",
-  },
-];
-
 export const heroSlides = [
   { src: ChurchHelicamView, alt: "Slide 1", label: "House of God" },
   { src: ChurchAltar, alt: "Slide 2", label: "Sacred Interior" },

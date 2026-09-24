@@ -21,13 +21,15 @@ import { ScrollReveal } from "../../components/ScrollReveal";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
-import { ministries, upcomingEvents, heroSlides } from "./Home.Data";
+import { ministries, heroSlides } from "./Home.Data";
+import { getUpcomingEvents } from "../Events/eventDates";
 import ChurchAltar from "../../assets/images/2.webp";
 import ChurchFrontView from "../../assets/images/3.webp";
 import { glassCard } from "../../../styles/style";
 
 export default function Home() {
   const swiperRef = useRef<SwiperType | null>(null);
+  const upcomingEvents = getUpcomingEvents().slice(0, 3);
   return (
     <Box>
       {/* Hero Section */}
@@ -671,7 +673,7 @@ export default function Home() {
                         <Typography
                           sx={{ color: "#64748b", fontSize: "0.875rem" }}
                         >
-                          {event.date}
+                          {event.displayDate}
                         </Typography>
                         <Typography
                           sx={{ color: "#64748b", fontSize: "0.875rem" }}

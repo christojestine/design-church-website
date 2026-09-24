@@ -30,6 +30,7 @@ Defined in `src/app/routes.tsx`:
 - `/about` → About
 - `/parish-team` → Parish team
 - `/programs` → Program schedule / mass times
+- `/events` → Upcoming events
 - `/ministries` → Ministries
 - `/media` → Media (videos + Instagram embeds)
 - `/contact` → Contact form/info
@@ -41,10 +42,16 @@ Production routing uses basename `/design-church-website` for GitHub Pages (conf
 - `Home.tsx`: Hero image carousel, welcome story, ministry cards, upcoming events.
 - `About.tsx`: Church story/mission with media-rich sections.
 - `Programs.tsx`: Mass times, confession times, and special program timings.
+- `Events/Events.tsx`: Upcoming events grid with a quick filter bar (date range + category) at the top right.
 - `Ministries.tsx`: Ministry catalog with CTA to contact page.
 - `Media.tsx`: YouTube embeds and Instagram embed tab view.
 - `Contact.tsx`: Client-side form UI and static contact cards.
 - `NotFound.tsx`: 404 page with link back home.
+
+## Events Data
+- All events live in `src/app/pages/Events/Events.Data.ts` (translated from the weekly parish announcements). Each has an ISO `date` ("YYYY-MM-DD"), an optional `endDate` for multi-day events, and a `category` that sets its icon/colours via `categoryStyles`.
+- `src/app/pages/Events/eventDates.ts` → `getUpcomingEvents()` hides events whose last day has passed (visitor's local date, evaluated in the browser, so no rebuild is needed), sorts by date and formats `displayDate`.
+- The Events page shows all upcoming events; the Home page shows the next 3 from the same source.
 
 ## Shared Components
 - `Navigation.tsx`: Sticky top navigation + mobile drawer.
@@ -71,7 +78,7 @@ From `package.json`:
 ## Build/Deploy Notes
 - Bundler config: `rspack.config.ts`
 - `publicPath` is `/design-church-website/` in production.
-- `404.html` is copied to `dist/` for GitHub Pages route fallback behavior.
+- `404.html` is emitted to `dist/` by a small inline plugin in `rspack.config.ts` for GitHub Pages route fallback. Do not switch back to `CopyRspackPlugin`: its glob scanned the whole project (incl. `node_modules`) and added ~15s to every build.
 - Router basename and bundler public path must stay aligned.
 
 ## Practical Change Guidelines
