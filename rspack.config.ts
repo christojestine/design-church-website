@@ -1,6 +1,7 @@
 import path from 'path'
 import { fileURLToPath } from 'url'
-import { HtmlRspackPlugin, DefinePlugin, CopyRspackPlugin, CssExtractRspackPlugin } from '@rspack/core'
+import fs from 'fs'
+import { HtmlRspackPlugin, DefinePlugin, CssExtractRspackPlugin, sources, type Compiler } from '@rspack/core'
 import { ReactRefreshRspackPlugin } from '@rspack/plugin-react-refresh'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
@@ -43,10 +44,19 @@ const config = {
       'process.env.NODE_ENV': JSON.stringify(isDev ? 'development' : 'production'),
       '__REACT_DEVTOOLS_GLOBAL_HOOK__': '(typeof window !== "undefined" ? window.__REACT_DEVTOOLS_GLOBAL_HOOK__ : undefined)',
     }),
-    // Copy 404.html to dist so GitHub Pages serves it for unknown routes
-    new CopyRspackPlugin({
-      patterns: [{ from: path.resolve(__dirname, '404.html'), to: '404.html' }],
-    }),
+    // Emit 404.html to dist so GitHub Pages serves it for unknown routes.
+    // Not using CopyRspackPlugin: its glob walked the whole project (incl. node_modules) and added ~15s per build.
+    {
+      apply(compiler: Compiler) {
+        const file = path.resolve(__dirname, '404.html')
+        compiler.hooks.thisCompilation.tap('Emit404Plugin', (compilation) => {
+          compilation.hooks.processAssets.tap('Emit404Plugin', () => {
+            compilation.fileDependencies.add(file)
+            compilation.emitAsset('404.html', new sources.RawSource(fs.readFileSync(file)))
+          })
+        })
+      },
+    },
     ...(isDev ? [new ReactRefreshRspackPlugin()] : []),
     ...(isProd ? [new CssExtractRspackPlugin({ filename: '[name].[contenthash:8].css', chunkFilename: '[name].[contenthash:8].css' })] : []),
   ],
