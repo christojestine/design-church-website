@@ -8,6 +8,7 @@
   import thomas from "../../assets/images/thomas.webp";
   import poly from "../../assets/images/poly.webp";
   import harry from "../../assets/images/harry.webp";
+  import benny from "../../assets/images/benny.webp";
 
   
   export const priest = [
@@ -119,6 +120,6 @@
       name: "Benny",
       role: "Sacristan",
       color: "#ede9fe",
-      photo: sabu,
+      photo: benny,
     },
   ];
