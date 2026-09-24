@@ -26,10 +26,59 @@ import { getUpcomingEvents } from "../Events/eventDates";
 import ChurchAltar from "../../assets/images/2.webp";
 import ChurchFrontView from "../../assets/images/3.webp";
 import { glassCard } from "../../../styles/style";
+import { useLanguage, type Text } from "../../i18n/LanguageContext";
+
+const text = {
+  welcomeTo: { en: "Welcome to", ml: "സ്വാഗതം" },
+  heroName: { en: "St.Mary's Forane Church", ml: "സെന്റ് മേരീസ് ഫൊറോന പള്ളി" },
+  heroPlace: { en: "Chalakudy", ml: "ചാലക്കുടി" },
+  shrine: {
+    en: "SHRINE OF THE NATIVITY OF OUR LADY,",
+    ml: "പരിശുദ്ധ ദൈവമാതാവിന്റെ പിറവിത്തിരുനാൾ ദേവാലയം,",
+  },
+  pilgrimCentre: { en: "MARIAN PILGRIM CENTER", ml: "മരിയൻ തീർത്ഥാടന കേന്ദ്രം" },
+  learnMore: { en: "Learn More About Us →", ml: "കൂടുതൽ അറിയാം →" },
+  massTimes: { en: "View Mass Times", ml: "കുർബാന സമയങ്ങൾ" },
+  ourStory: { en: "Our Story", ml: "ഞങ്ങളുടെ ചരിത്രം" },
+  planVisit: { en: "Plan Your Visit", ml: "സന്ദർശനത്തിനുള്ള വഴി" },
+  altarAlt: { en: "Church altar", ml: "പള്ളിയിലെ അൾത്താര" },
+  frontAlt: { en: "Church front view", ml: "പള്ളിയുടെ മുൻവശം" },
+  getInvolved: { en: "Get Involved", ml: "പങ്കുചേരാം" },
+  ourMinistries: { en: "Our Ministries", ml: "ഞങ്ങളുടെ ശുശ്രൂഷകൾ" },
+  ministriesIntro: {
+    en: "Discover ways to connect and serve",
+    ml: "ഒത്തുചേരാനും സേവിക്കാനുമുള്ള വഴികൾ കണ്ടെത്തൂ",
+  },
+  allMinistries: { en: "Explore All Ministries", ml: "എല്ലാ ശുശ്രൂഷകളും കാണുക" },
+  whatsOn: { en: "What's On", ml: "പരിപാടികൾ" },
+  upcomingEvents: { en: "Upcoming Events", ml: "വരാനിരിക്കുന്ന പരിപാടികൾ" },
+  eventsIntro: {
+    en: "Mark your calendar and join us",
+    ml: "തീയതികൾ കുറിച്ചുവെച്ച് ഞങ്ങളോടൊപ്പം ചേരൂ",
+  },
+  allEvents: { en: "Explore All Upcoming Events", ml: "എല്ലാ പരിപാടികളും കാണുക" },
+} satisfies Record<string, Text>;
+
+// Gradient word in the "Welcome Home" heading.
+const gradientWord = {
+  fontFamily: '"Cinzel", "Noto Serif Malayalam", "Georgia", serif',
+  fontWeight: 800,
+  background: "linear-gradient(135deg, #1d4ed8, #7c3aed)",
+  WebkitBackgroundClip: "text",
+  WebkitTextFillColor: "transparent",
+  backgroundClip: "text",
+};
+
+const bold = (children: string) => (
+  <Box component="span" sx={{ fontWeight: "bold" }}>
+    {children}
+  </Box>
+);
 
 export default function Home() {
   const swiperRef = useRef<SwiperType | null>(null);
-  const upcomingEvents = getUpcomingEvents().slice(0, 3);
+  const { lang, tr } = useLanguage();
+  const upcomingEvents = getUpcomingEvents(lang).slice(0, 3);
   return (
     <Box>
       {/* Hero Section */}
@@ -102,7 +151,7 @@ export default function Home() {
                   <Box
                     component="img"
                     src={slide.src}
-                    alt={slide.alt}
+                    alt={tr(slide.alt)}
                     sx={{
                       width: "100%",
                       height: "100%",
@@ -136,7 +185,7 @@ export default function Home() {
                         textTransform: "uppercase",
                       }}
                     >
-                      {slide.label}
+                      {tr(slide.label)}
                     </Typography>
                   </Box>
                 </Box>
@@ -255,7 +304,7 @@ export default function Home() {
                   fontWeight: 600,
                 }}
               >
-                Welcome to
+                {tr(text.welcomeTo)}
               </Typography>
             </Box>
 
@@ -275,7 +324,7 @@ export default function Home() {
                 backgroundClip: "text",
               }}
             >
-              St.Mary's Forane Church
+              {tr(text.heroName)}
             </Typography>
             <Typography
               variant="h1"
@@ -289,7 +338,7 @@ export default function Home() {
                 textShadow: "0 4px 32px rgba(0,0,0,0.35)",
               }}
             >
-              Chalakudy
+              {tr(text.heroPlace)}
             </Typography>
 
             {/* — Divider line — */}
@@ -313,9 +362,9 @@ export default function Home() {
                 maxWidth: 420,
               }}
             >
-              SHRINE OF THE NATIVITY OF OUR LADY,
+              {tr(text.shrine)}
               <br />
-              MARIAN PILGRIM CENTER
+              {tr(text.pilgrimCentre)}
             </Typography>
 
             {/* — Buttons — */}
@@ -344,7 +393,7 @@ export default function Home() {
                   transition: "all 0.3s ease",
                 }}
               >
-                Learn More About Us →
+                {tr(text.learnMore)}
               </Button>
               <Button
                 component={Link}
@@ -369,7 +418,7 @@ export default function Home() {
                   transition: "all 0.3s ease",
                 }}
               >
-                View Mass Times
+                {tr(text.massTimes)}
               </Button>
             </Box>
           </Box>
@@ -383,7 +432,7 @@ export default function Home() {
             <ScrollReveal direction="left" style={{ height: "100%" }}>
               <Box sx={{ ...glassCard, p: { xs: 4, md: 5 } }}>
                 <Chip
-                  label="Our Story"
+                  label={tr(text.ourStory)}
                   size="small"
                   sx={{
                     background: "rgba(29,78,216,0.08)",
@@ -401,20 +450,21 @@ export default function Home() {
                     mb: 2.5,
                   }}
                 >
-                  Welcome{" "}
-                  <Box
-                    component="span"
-                    sx={{
-                      fontFamily: '"Cinzel", "Georgia", serif',
-                      fontWeight: 800,
-                      background: "linear-gradient(135deg, #1d4ed8, #7c3aed)",
-                      WebkitBackgroundClip: "text",
-                      WebkitTextFillColor: "transparent",
-                      backgroundClip: "text",
-                    }}
-                  >
-                    Home
-                  </Box>
+                  {lang === "ml" ? (
+                    <>
+                      <Box component="span" sx={gradientWord}>
+                        സ്വന്തം ഭവനത്തിലേക്ക്
+                      </Box>{" "}
+                      സ്വാഗതം
+                    </>
+                  ) : (
+                    <>
+                      Welcome{" "}
+                      <Box component="span" sx={gradientWord}>
+                        Home
+                      </Box>
+                    </>
+                  )}
                 </Typography>
                 <Typography
                   sx={{
@@ -424,31 +474,48 @@ export default function Home() {
                     fontSize: "1.02rem",
                   }}
                 >
-                  St. Mary's Forane Church, Chalakudy, traces its origins to the
-                  early Christian community founded through the mission of St.
-                  Thomas the Apostle, who arrived in India in 52 AD. The first
-                  church was established around 600 AD and later relocated to
-                  its present site in the 13th century, reflecting centuries of
-                  faith and communal harmony. Renowned for the miraculous{" "}
-                  <Box component="span" sx={{ fontWeight: "bold" }}>
-                    Swayamvara Altar
-                  </Box>
-                  , the church has long been a center of Marian devotion. In
-                  1987, it was declared a{" "}
-                  <Box component="span" sx={{ fontWeight: "bold" }}>
-                    Marian Pilgrim Centre
-                  </Box>{" "}
-                  in recognition of its spiritual and historical significance.
-                  The church is also known for its majestic Gothic-style belfry,
-                  the Marian Grotto built in 2000, and the Perpetual Adoration
-                  Centre established in 2001. A major attraction is the{" "}
-                  <Box component="span" sx={{ fontWeight: "bold" }}>
-                    Holy Land
-                  </Box>{" "}
-                  , inaugurated in 2006, featuring life-size biblical replicas,
-                  sacred relics, and artistic recreations of key events from the
-                  life of Jesus, offering pilgrims a profound spiritual
-                  experience.
+                  {lang === "ml" ? (
+                    <>
+                      ക്രിസ്തുവർഷം 52-ൽ ഭാരതത്തിലെത്തിയ മാർ തോമാശ്ലീഹായുടെ
+                      പ്രേഷിതപ്രവർത്തനത്തിലൂടെ രൂപംകൊണ്ട ആദിമ ക്രൈസ്തവ
+                      സമൂഹത്തിലാണ് ചാലക്കുടി സെന്റ് മേരീസ് ഫൊറോന പള്ളിയുടെ
+                      വേരുകൾ. ഏകദേശം എ.ഡി. 600-ൽ സ്ഥാപിതമായ ആദ്യ ദേവാലയം 13-ാം
+                      നൂറ്റാണ്ടിൽ ഇന്നത്തെ സ്ഥലത്തേക്ക് മാറ്റി സ്ഥാപിച്ചു.
+                      നൂറ്റാണ്ടുകൾ നീണ്ട വിശ്വാസത്തിന്റെയും മതസൗഹാർദ്ദത്തിന്റെയും
+                      സാക്ഷ്യമാണിത്. അത്ഭുതകരമായ {bold("സ്വയംവര അൾത്താര")}യാൽ
+                      പ്രസിദ്ധമായ ഈ ദേവാലയം ഏറെക്കാലമായി മരിയഭക്തിയുടെ
+                      കേന്ദ്രമാണ്. ആത്മീയവും ചരിത്രപരവുമായ പ്രാധാന്യം
+                      കണക്കിലെടുത്ത് 1987-ൽ ഇതിനെ{" "}
+                      {bold("മരിയൻ തീർത്ഥാടന കേന്ദ്ര")}മായി പ്രഖ്യാപിച്ചു. ഗോഥിക്
+                      ശൈലിയിലുള്ള പ്രൗഢമായ മണിമാളിക, 2000-ൽ നിർമ്മിച്ച മരിയൻ
+                      ഗ്രോട്ടോ, 2001-ൽ ആരംഭിച്ച നിത്യാരാധന കേന്ദ്രം എന്നിവയും
+                      ഇവിടത്തെ സവിശേഷതകളാണ്. 2006-ൽ ഉദ്ഘാടനം ചെയ്ത{" "}
+                      {bold("ഹോളി ലാൻഡ്")} ആണ് പ്രധാന ആകർഷണം. യേശുവിന്റെ
+                      ജീവിതത്തിലെ പ്രധാന സംഭവങ്ങളുടെ യഥാർത്ഥ വലുപ്പത്തിലുള്ള
+                      ബൈബിൾ ശില്പാവിഷ്കാരങ്ങളും തിരുശേഷിപ്പുകളും ഉൾക്കൊള്ളുന്ന
+                      ഇത് തീർത്ഥാടകർക്ക് ആഴമേറിയ ആത്മീയാനുഭവം പകരുന്നു.
+                    </>
+                  ) : (
+                    <>
+                      St. Mary's Forane Church, Chalakudy, traces its origins to
+                      the early Christian community founded through the mission
+                      of St. Thomas the Apostle, who arrived in India in 52 AD.
+                      The first church was established around 600 AD and later
+                      relocated to its present site in the 13th century,
+                      reflecting centuries of faith and communal harmony.
+                      Renowned for the miraculous {bold("Swayamvara Altar")}, the
+                      church has long been a center of Marian devotion. In 1987,
+                      it was declared a {bold("Marian Pilgrim Centre")} in
+                      recognition of its spiritual and historical significance.
+                      The church is also known for its majestic Gothic-style
+                      belfry, the Marian Grotto built in 2000, and the Perpetual
+                      Adoration Centre established in 2001. A major attraction is
+                      the {bold("Holy Land")}, inaugurated in 2006, featuring
+                      life-size biblical replicas, sacred relics, and artistic
+                      recreations of key events from the life of Jesus, offering
+                      pilgrims a profound spiritual experience.
+                    </>
+                  )}
                 </Typography>
                 <Button
                   href="https://maps.app.goo.gl/NCCH7mXPgpeR62P67"
@@ -457,7 +524,7 @@ export default function Home() {
                   size="large"
                   sx={{ px: 4 }}
                 >
-                  Plan Your Visit
+                  {tr(text.planVisit)}
                 </Button>
               </Box>
             </ScrollReveal>
@@ -485,7 +552,7 @@ export default function Home() {
               >
                 <ImageWithFallback
                   src={ChurchAltar}
-                  alt="Church altar"
+                  alt={tr(text.altarAlt)}
                   style={{
                     width: "100%",
                     height: 340,
@@ -495,7 +562,7 @@ export default function Home() {
                 />
                 <ImageWithFallback
                   src={ChurchFrontView}
-                  alt="Church front view"
+                  alt={tr(text.frontAlt)}
                   style={{
                     width: "100%",
                     height: 340,
@@ -515,7 +582,7 @@ export default function Home() {
           <ScrollReveal>
             <Box sx={{ textAlign: "center", mb: 7 }}>
               <Chip
-                label="Get Involved"
+                label={tr(text.getInvolved)}
                 sx={{
                   background: "rgba(180,83,9,0.08)",
                   color: "#b45309",
@@ -532,10 +599,10 @@ export default function Home() {
                   mb: 1.5,
                 }}
               >
-                Our Ministries
+                {tr(text.ourMinistries)}
               </Typography>
               <Typography sx={{ color: "#64748b", fontSize: "1.05rem" }}>
-                Discover ways to connect and serve
+                {tr(text.ministriesIntro)}
               </Typography>
             </Box>
           </ScrollReveal>
@@ -571,7 +638,7 @@ export default function Home() {
                             fontSize: "1.1rem",
                           }}
                         >
-                          {title}
+                          {tr(title)}
                         </Typography>
                         <Typography
                           sx={{
@@ -580,7 +647,7 @@ export default function Home() {
                             fontSize: "0.92rem",
                           }}
                         >
-                          {description}
+                          {tr(description)}
                         </Typography>
                       </CardContent>
                     </Card>
@@ -597,7 +664,7 @@ export default function Home() {
               size="large"
               sx={{ px: 4 }}
             >
-              Explore All Ministries
+              {tr(text.allMinistries)}
             </Button>
           </Box>
         </Box>
@@ -609,7 +676,7 @@ export default function Home() {
           <ScrollReveal>
             <Box sx={{ textAlign: "center", mb: 7 }}>
               <Chip
-                label="What's On"
+                label={tr(text.whatsOn)}
                 sx={{
                   background: "rgba(124,58,237,0.08)",
                   color: "#7c3aed",
@@ -626,10 +693,10 @@ export default function Home() {
                   mb: 1.5,
                 }}
               >
-                Upcoming Events
+                {tr(text.upcomingEvents)}
               </Typography>
               <Typography sx={{ color: "#64748b", fontSize: "1.05rem" }}>
-                Mark your calendar and join us
+                {tr(text.eventsIntro)}
               </Typography>
             </Box>
           </ScrollReveal>
@@ -716,7 +783,7 @@ export default function Home() {
               size="large"
               sx={{ px: 4 }}
             >
-              Explore All Upcoming Events
+              {tr(text.allEvents)}
             </Button>
           </Box>
         </Box>

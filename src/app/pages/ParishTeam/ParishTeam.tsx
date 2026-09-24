@@ -10,8 +10,30 @@ import { glassCard } from "../../../styles/style";
 import PriestDetailsModal from "./PriestDetailsModal";
 import type { Priest } from "./PriestDetailsModal";
 import { priest, parishCouncil, Sacristan } from "./Parish.Data";
+import { useLanguage, type Text } from "../../i18n/LanguageContext";
+
+const text = {
+  priestChip: { en: "Our Priest Team", ml: "ഞങ്ങളുടെ വൈദികർ" },
+  priestTitle: { en: "Priest", ml: "വൈദികർ" },
+  priestIntro: {
+    en: "Priest team of St. Mary’s Forane Church Chalakudy, who are dedicated to serving the spiritual needs of the parish community.",
+    ml: "ഇടവക സമൂഹത്തിന്റെ ആത്മീയ ആവശ്യങ്ങൾക്കായി സമർപ്പിതരായ ചാലക്കുടി സെന്റ് മേരീസ് ഫൊറോന പള്ളിയിലെ വൈദികർ.",
+  },
+  councilChip: { en: "Our Parish Council", ml: "ഞങ്ങളുടെ ഇടവക സമിതി" },
+  councilTitle: { en: "Parish Council", ml: "ഇടവക സമിതി" },
+  councilIntro: {
+    en: "The Parish Council of St. Mary’s Forane Church, Chalakudy, works hard to manage daily tasks and support the community's spiritual and practical needs",
+    ml: "ഇടവകയുടെ ദൈനംദിന കാര്യങ്ങൾ നിർവഹിക്കുകയും സമൂഹത്തിന്റെ ആത്മീയവും പ്രായോഗികവുമായ ആവശ്യങ്ങളിൽ പിന്തുണ നൽകുകയും ചെയ്യുന്നത് ചാലക്കുടി സെന്റ് മേരീസ് ഫൊറോന പള്ളിയുടെ ഇടവക സമിതിയാണ്.",
+  },
+  sacristanTitle: { en: "Parish Sacristans", ml: "ഇടവക കപ്യാർമാർ" },
+  sacristanIntro: {
+    en: "The Parish Sacristans of St. Mary’s Forane Church, Chalakudy, are responsible for maintaining the church's sacred spaces, ensuring that everything is prepared for worship and ceremonies.",
+    ml: "ദേവാലയത്തിന്റെ വിശുദ്ധ ഇടങ്ങൾ പരിപാലിക്കുന്നതും ആരാധനയ്ക്കും തിരുക്കർമ്മങ്ങൾക്കുമായി എല്ലാം ഒരുക്കുന്നതും ചാലക്കുടി സെന്റ് മേരീസ് ഫൊറോന പള്ളിയിലെ കപ്യാർമാരാണ്.",
+  },
+} satisfies Record<string, Text>;
 
 export default function ParishTeam() {
+  const { tr } = useLanguage();
   const [open, setOpen] = useState(false);
   const [selectedPriest, setSelectedPriest] = useState<Priest | null>(null);
 
@@ -35,7 +57,7 @@ export default function ParishTeam() {
         <ScrollReveal>
           <Box sx={{ textAlign: "center", mb: 7 }}>
             <Chip
-              label="Our Priest Team"
+              label={tr(text.priestChip)}
               sx={{
                 background: "rgba(22,163,74,0.08)",
                 color: "#16a34a",
@@ -52,11 +74,10 @@ export default function ParishTeam() {
                 mb: 1.5,
               }}
             >
-              Priest
+              {tr(text.priestTitle)}
             </Typography>
             <Typography sx={{ color: "#64748b", fontSize: "1.05rem" }}>
-              Priest team of St. Mary’s Forane Church Chalakudy, who are
-              dedicated to serving the spiritual needs of the parish community.
+              {tr(text.priestIntro)}
             </Typography>
           </Box>
         </ScrollReveal>
@@ -88,7 +109,7 @@ export default function ParishTeam() {
                     >
                       <img
                         src={member.photo}
-                        alt={member.name}
+                        alt={tr(member.name)}
                         style={{
                           width: "100%",
                           height: "100%",
@@ -106,7 +127,7 @@ export default function ParishTeam() {
                         fontSize: "1rem",
                       }}
                     >
-                      {member.name}
+                      {tr(member.name)}
                     </Typography>
                     <Typography
                       sx={{
@@ -118,7 +139,7 @@ export default function ParishTeam() {
                         textTransform: "uppercase",
                       }}
                     >
-                      {member.role}
+                      {tr(member.role)}
                     </Typography>
                   </CardContent>
                 </Card>
@@ -156,7 +177,7 @@ export default function ParishTeam() {
                     >
                       <img
                         src={member.photo}
-                        alt={member.name}
+                        alt={tr(member.name)}
                         style={{
                           width: "100%",
                           height: "100%",
@@ -174,7 +195,7 @@ export default function ParishTeam() {
                         fontSize: "1rem",
                       }}
                     >
-                      {member.name}
+                      {tr(member.name)}
                     </Typography>
                     <Typography
                       sx={{
@@ -186,7 +207,7 @@ export default function ParishTeam() {
                         textTransform: "uppercase",
                       }}
                     >
-                      {member.role}
+                      {tr(member.role)}
                     </Typography>
                   </CardContent>
                 </Card>
@@ -199,7 +220,7 @@ export default function ParishTeam() {
         <ScrollReveal>
           <Box sx={{ textAlign: "center", mb: 7 }}>
             <Chip
-              label="Our Parish Council"
+              label={tr(text.councilChip)}
               sx={{
                 background: "rgba(22,163,74,0.08)",
                 color: "#16a34a",
@@ -216,12 +237,10 @@ export default function ParishTeam() {
                 mb: 1.5,
               }}
             >
-              Parish Council
+              {tr(text.councilTitle)}
             </Typography>
             <Typography sx={{ color: "#64748b", fontSize: "1.05rem" }}>
-              The Parish Council of St. Mary’s Forane Church, Chalakudy, works
-              hard to manage daily tasks and support the community's spiritual
-              and practical needs
+              {tr(text.councilIntro)}
             </Typography>
           </Box>
         </ScrollReveal>
@@ -251,7 +270,7 @@ export default function ParishTeam() {
                     >
                       <img
                         src={member.photo}
-                        alt={member.name}
+                        alt={tr(member.name)}
                         style={{
                           width: "100%",
                           height: "100%",
@@ -272,7 +291,7 @@ export default function ParishTeam() {
                         hyphens: "auto",
                       }}
                     >
-                      {member.name}
+                      {tr(member.name)}
                     </Typography>
                   </CardContent>
                 </Card>
@@ -285,7 +304,7 @@ export default function ParishTeam() {
         <ScrollReveal>
           <Box sx={{ textAlign: "center", mb: 7 }}>
             <Chip
-              label="Parish Sacristans"
+              label={tr(text.sacristanTitle)}
               sx={{
                 background: "rgba(22,163,74,0.08)",
                 color: "#16a34a",
@@ -302,12 +321,10 @@ export default function ParishTeam() {
                 mb: 1.5,
               }}
             >
-              Parish Sacristans
+              {tr(text.sacristanTitle)}
             </Typography>
             <Typography sx={{ color: "#64748b", fontSize: "1.05rem" }}>
-              The Parish Sacristans of St. Mary’s Forane Church, Chalakudy, are
-              responsible for maintaining the church's sacred spaces, ensuring
-              that everything is prepared for worship and ceremonies.
+              {tr(text.sacristanIntro)}
             </Typography>
           </Box>
         </ScrollReveal>
@@ -337,7 +354,7 @@ export default function ParishTeam() {
                     >
                       <img
                         src={member.photo}
-                        alt={member.name}
+                        alt={tr(member.name)}
                         style={{
                           width: "100%",
                           height: "100%",
@@ -358,7 +375,7 @@ export default function ParishTeam() {
                         hyphens: "auto",
                       }}
                     >
-                      {member.name}
+                      {tr(member.name)}
                     </Typography>
                   </CardContent>
                 </Card>

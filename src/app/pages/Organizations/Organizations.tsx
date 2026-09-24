@@ -13,8 +13,19 @@ import { ScrollReveal } from "../../components/ScrollReveal";
 import ChurchFrontView from "../../assets/images/3.webp";
 import { glassCard } from "../../../styles/style";
 import { organizationSections } from "./Organization.data";
+import { useLanguage, type Text } from "../../i18n/LanguageContext";
+
+const text = {
+  church: { en: "St. Mary's Forane Church", ml: "സെന്റ് മേരീസ് ഫൊറോന പള്ളി" },
+  chip: { en: "Our Organisation", ml: "ഞങ്ങളുടെ സ്ഥാപനങ്ങൾ" },
+  tagline: {
+    en: "A community rooted in faith, service, and pastoral care.",
+    ml: "വിശ്വാസത്തിലും സേവനത്തിലും അജപാലന കരുതലിലും വേരൂന്നിയ സമൂഹം.",
+  },
+} satisfies Record<string, Text>;
 
 export default function Organizations() {
+  const { tr } = useLanguage();
   return (
     <Box>
       <Box
@@ -33,7 +44,7 @@ export default function Organizations() {
           <Box
             component="img"
             src={ChurchFrontView}
-            alt="St. Mary's Forane Church"
+            alt={tr(text.church)}
             sx={{
               width: "100%",
               height: "100%",
@@ -68,7 +79,7 @@ export default function Organizations() {
           }}
         >
           <Chip
-            label="Our Organisation"
+            label={tr(text.chip)}
             sx={{
               background: "rgba(29,78,216,0.08)",
               color: "#1d4ed8",
@@ -85,7 +96,7 @@ export default function Organizations() {
               letterSpacing: "-0.03em",
             }}
           >
-            St. Mary's Forane Church
+            {tr(text.church)}
           </Typography>
           <Typography
             sx={{
@@ -95,7 +106,7 @@ export default function Organizations() {
               lineHeight: 1.7,
             }}
           >
-            A community rooted in faith, service, and pastoral care.
+            {tr(text.tagline)}
           </Typography>
         </Box>
       </Box>
@@ -126,7 +137,7 @@ export default function Organizations() {
               sx={{ position: "relative", zIndex: 1 }}
             >
               {organizationSections.map((section, index) => (
-                <Grid key={section.title} size={{ xs: 12, md: 3 }}>
+                <Grid key={section.title.en} size={{ xs: 12, md: 3 }}>
                   <ScrollReveal delay={index * 0.12} style={{ height: "100%" }}>
                     <Card
                       sx={{
@@ -174,13 +185,13 @@ export default function Organizations() {
                             fontSize: { xs: "1.15rem", md: "1.3rem" },
                           }}
                         >
-                          {section.title}
+                          {tr(section.title)}
                         </Typography>
 
                         <List disablePadding sx={{ m: 0 }}>
                           {section.items.map((item) => (
                             <ListItem
-                              key={item}
+                              key={item.en}
                               disableGutters
                               sx={{
                                 alignItems: "flex-start",
@@ -197,7 +208,7 @@ export default function Organizations() {
                                 />
                               </ListItemIcon>
                               <ListItemText
-                                primary={item}
+                                primary={tr(item)}
                                 slotProps={{
                                   primary: {
                                     sx: {

@@ -6,6 +6,7 @@ import { ImageWithFallback } from "../../components/figma/ImageWithFallback";
 import { ScrollReveal } from "../../components/ScrollReveal";
 import { glassCard, imageBox } from "../../../styles/style";
 import type { AboutSectionData } from "./About.data";
+import { useLanguage } from "../../i18n/LanguageContext";
 
 export default function CustomBoxContainer({
   chipLabel,
@@ -20,19 +21,20 @@ export default function CustomBoxContainer({
   imageOnRight,
   py,
 }: AboutSectionData) {
+  const { tr } = useLanguage();
   const images = [
-    { src: image, alt: imageAlt, height: 400 },
+    { src: image, alt: tr(imageAlt), height: 400 },
     ...(secondaryImage
       ? [
           {
             src: secondaryImage,
-            alt: secondaryImageAlt ?? imageAlt,
+            alt: tr(secondaryImageAlt ?? imageAlt),
             height: 240,
           },
         ]
       : []),
     ...(tertiaryImage
-      ? [{ src: tertiaryImage, alt: tertiaryImageAlt ?? imageAlt, height: 200 }]
+      ? [{ src: tertiaryImage, alt: tr(tertiaryImageAlt ?? imageAlt), height: 200 }]
       : []),
   ];
 
@@ -64,7 +66,7 @@ export default function CustomBoxContainer({
       <ScrollReveal direction="right" delay={0.2} style={{ height: "100%" }}>
         <Box sx={{ ...glassCard, p: { xs: 4, md: 5 } }}>
           <Chip
-            label={chipLabel}
+            label={tr(chipLabel)}
             size="small"
             sx={{
               background: "rgba(29,78,216,0.08)",
@@ -83,10 +85,10 @@ export default function CustomBoxContainer({
               letterSpacing: "-0.02em",
             }}
           >
-            {title}
+            {tr(title)}
           </Typography>
           <Typography sx={{ color: "#475569", lineHeight: 1.85 }}>
-            {description}
+            {tr(description)}
           </Typography>
         </Box>
       </ScrollReveal>

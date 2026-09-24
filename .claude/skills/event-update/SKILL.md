@@ -1,11 +1,11 @@
 ---
 name: event-update
-description: Update the church website's events from a weekly parish announcement PDF (ariyippukal) written in Malayalam. Translates the notice into proper English, extracts every dated program into src/app/pages/Events/Events.Data.ts, removes finished events, and validates the result. Use when the user shares an announcement / ariyippu / notice PDF, or asks to update the events from a PDF.
+description: Update the church website's events from a weekly parish announcement PDF (ariyippukal) written in Malayalam. Translates the notice into proper English, extracts every dated program (in English and Malayalam, since the site has a Malayalam mode) into src/app/pages/Events/Events.Data.ts, removes finished events, and validates the result. Use when the user shares an announcement / ariyippu / notice PDF, or asks to update the events from a PDF.
 ---
 
 # Event Update
 
-Turn a Malayalam parish announcement PDF (St. Mary's Forane Church, Chalakudy) into English entries in the events data file.
+Turn a Malayalam parish announcement PDF (St. Mary's Forane Church, Chalakudy) into entries in the events data file. The site has an English/Malayalam switch, so every event carries both languages: English in the main fields and Malayalam in `ml`.
 
 ## Files
 
@@ -26,6 +26,8 @@ Read `Events.Data.ts` first. Follow its current shape, which may have changed si
    - Check every computed date against its weekday with `node -e "console.log(new Date(2026,8,25).toDateString())"`. The PDF usually gives both, and if they disagree, flag it.
 
 2. **Translate each numbered item into proper English.** Write natural sentences, not word-for-word. Use the glossary below, keep proper names, and don't invent details the notice doesn't give.
+
+   For the Malayalam version, stay close to the notice's own wording, since it's the original. Tidy it into short, complete sentences addressed to website readers: drop "ഇന്ന്"/"ഇന്നുകൂടി" phrasing that only makes sense when read aloud on Sunday, and use the same place and name spellings as the existing `ml` entries.
 
 3. **Decide what becomes an event.** Anything with a date, or a date you can work out, and something to attend or take part in becomes an event:
    - Masses, feasts and special days (the `ഈയാഴ്ചയിലെ വിശേഷ ദിവസങ്ങൾ` list)
@@ -50,6 +52,7 @@ Read `Events.Data.ts` first. Follow its current shape, which may have changed si
    - `date` / `endDate`: `"YYYY-MM-DD"` strings.
    - `time`: `"6:00 PM"`, `"2:00 PM – 3:30 PM"`, `"After the 7:30 AM Holy Mass"`. If the notice gives no time, use the weekday or `"Evening"` or `"As arranged by each unit"`. Never make up a clock time.
    - `location`: use the `MAIN_CHURCH` constant for the parish church. Use the chapel, school or family unit names otherwise.
+   - `ml`: required. `{ title, description, time, location }` in Malayalam. Times are written the Malayalam way (`"വൈകിട്ട് 6:00"`, `"രാവിലെ 7:30-ന്റെ വി. കുർബാനയ്ക്കു ശേഷം"`), and the parish church is `"സെന്റ് മേരീസ് ഫൊറോന പള്ളി"`. Dates are formatted in Malayalam automatically, so don't put dates in `ml.time`.
 
 5. **Update the array.**
    - Remove events whose `endDate ?? date` is before the new notice date. They're hidden already, and removing them keeps the file short.
@@ -63,7 +66,7 @@ Read `Events.Data.ts` first. Follow its current shape, which may have changed si
    npx tsc --noEmit -p . 2>&1 | grep "pages/Events"
    NODE_ENV=production npx rspack build 2>&1 | tail -1
    ```
-   The validator checks date formats, date order, categories and duplicate keys, then prints what is visible today. Fix anything it reports. Ignore any errors `tsc` shows in `App.tsx` and `main.tsx`, which aren't part of the events code. The `grep` shows only errors in the events files.
+   The validator checks date formats, date order, categories, duplicate keys and that every event has all four Malayalam fields, then prints what is visible today. Fix anything it reports. Ignore any errors `tsc` shows in `App.tsx` and `main.tsx`, which aren't part of the events code. The `grep` shows only errors in the events files.
 
 7. **Reply** with:
    - how many events you added, updated and removed

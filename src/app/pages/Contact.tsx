@@ -15,39 +15,69 @@ import LocationOnIcon from "@mui/icons-material/LocationOn";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import SendIcon from "@mui/icons-material/Send";
 import { glassCard, inputFieldSx } from "../../styles/style";
+import { useLanguage, type Text } from "../i18n/LanguageContext";
+
+const text = {
+  chip: { en: "Get In Touch", ml: "ബന്ധപ്പെടാം" },
+  title: { en: "Contact Us", ml: "ഞങ്ങളെ ബന്ധപ്പെടുക" },
+  intro: {
+    en: "We'd love to hear from you. Reach out and we'll get back to you soon.",
+    ml: "നിങ്ങളുടെ സന്ദേശങ്ങൾ ഞങ്ങൾ സന്തോഷത്തോടെ സ്വീകരിക്കുന്നു. ബന്ധപ്പെടൂ, ഞങ്ങൾ എത്രയും വേഗം മറുപടി നൽകാം.",
+  },
+  formTitle: { en: "Send a Message", ml: "സന്ദേശം അയയ്ക്കുക" },
+  thanks: {
+    en: "Thank you! Your message has been sent. We'll get back to you within 1–2 business days.",
+    ml: "നന്ദി! നിങ്ങളുടെ സന്ദേശം ലഭിച്ചു. 1–2 പ്രവൃത്തി ദിവസങ്ങൾക്കുള്ളിൽ ഞങ്ങൾ മറുപടി നൽകും.",
+  },
+  name: { en: "Full Name", ml: "പൂർണ്ണ നാമം" },
+  email: { en: "Email Address", ml: "ഇമെയിൽ വിലാസം" },
+  phone: { en: "Phone (optional)", ml: "ഫോൺ (ആവശ്യമെങ്കിൽ)" },
+  subject: { en: "Subject", ml: "വിഷയം" },
+  message: { en: "Message", ml: "സന്ദേശം" },
+  send: { en: "Send Message", ml: "സന്ദേശം അയയ്ക്കുക" },
+} satisfies Record<string, Text>;
 
 const inputSx = inputFieldSx;
 
-const info = [
+const info: {
+  Icon: typeof LocationOnIcon;
+  label: Text;
+  value: Text;
+  multiline: boolean;
+  bg: string;
+  color: string;
+}[] = [
   {
     Icon: LocationOnIcon,
-    label: "Address",
-    value:
-      "St. Mary's Forane Church (Shrine of the Nativity of Our Lady),\nlocated in Chalakudy, Thrissur district, Kerala 680307.",
+    label: { en: "Address", ml: "വിലാസം" },
+    value: {
+      en: "St. Mary's Forane Church (Shrine of the Nativity of Our Lady),\nlocated in Chalakudy, Thrissur district, Kerala 680307.",
+      ml: "സെന്റ് മേരീസ് ഫൊറോന പള്ളി (പരിശുദ്ധ ദൈവമാതാവിന്റെ പിറവിത്തിരുനാൾ ദേവാലയം),\nചാലക്കുടി, തൃശ്ശൂർ ജില്ല, കേരളം 680307.",
+    },
     multiline: true,
     bg: "#dbeafe",
     color: "#1d4ed8",
   },
   {
     Icon: PhoneIcon,
-    label: "Phone",
-    value: "0480 2701614, 2701314",
+    label: { en: "Phone", ml: "ഫോൺ" },
+    value: { en: "0480 2701614, 2701314", ml: "0480 2701614, 2701314" },
     multiline: false,
     bg: "#dcfce7",
     color: "#16a34a",
   },
   {
     Icon: EmailOutlinedIcon,
-    label: "Email",
-    value: "stmaryscky@gmail.com",
+    label: { en: "Email", ml: "ഇമെയിൽ" },
+    value: { en: "stmaryscky@gmail.com", ml: "stmaryscky@gmail.com" },
     multiline: false,
     bg: "#fef3c7",
     color: "#b45309",
   },
   {
     Icon: AccessTimeIcon,
-    label: "Office Hours",
-    value: "9:00 AM – 5:00 PM (Mon – Sat)",
+    label: { en: "Office Hours", ml: "ഓഫീസ് സമയം" },
+    value: { en: "9:00 AM – 5:00 PM (Mon – Sat)", ml: "രാവിലെ 9:00 – വൈകിട്ട് 5:00 (തിങ്കൾ – ശനി)" },
     multiline: false,
     bg: "#ede9fe",
     color: "#7c3aed",
@@ -55,6 +85,7 @@ const info = [
 ];
 
 export default function Contact() {
+  const { tr } = useLanguage();
   const [submitted, setSubmitted] = useState(false);
   const [form, setForm] = useState({
     name: "",
@@ -74,7 +105,7 @@ export default function Contact() {
       <Box sx={{ textAlign: "center", py: { xs: 8, md: 10 }, px: 3 }}>
         <ScrollReveal>
           <Chip
-            label="Get In Touch"
+            label={tr(text.chip)}
             sx={{
               background: "rgba(29,78,216,0.08)",
               color: "#1d4ed8",
@@ -92,11 +123,10 @@ export default function Contact() {
               letterSpacing: "-0.03em",
             }}
           >
-            Contact Us
+            {tr(text.title)}
           </Typography>
           <Typography sx={{ color: "#475569", fontSize: "1.15rem" }}>
-            We'd love to hear from you. Reach out and we'll get back to you
-            soon.
+            {tr(text.intro)}
           </Typography>
         </ScrollReveal>
       </Box>
@@ -118,7 +148,7 @@ export default function Contact() {
                         fontSize: { xs: "1.5rem", md: "1.8rem" },
                       }}
                     >
-                      Send a Message
+                      {tr(text.formTitle)}
                     </Typography>
 
                     {submitted ? (
@@ -132,8 +162,7 @@ export default function Contact() {
                           "& .MuiAlert-icon": { color: "#16a34a" },
                         }}
                       >
-                        Thank you! Your message has been sent. We'll get back to
-                        you within 1–2 business days.
+                        {tr(text.thanks)}
                       </Alert>
                     ) : (
                       <Box
@@ -149,7 +178,7 @@ export default function Contact() {
                           <Grid size={{ xs: 12, sm: 6 }}>
                             <TextField
                               fullWidth
-                              label="Full Name"
+                              label={tr(text.name)}
                               required
                               value={form.name}
                               onChange={(e) =>
@@ -161,7 +190,7 @@ export default function Contact() {
                           <Grid size={{ xs: 12, sm: 6 }}>
                             <TextField
                               fullWidth
-                              label="Email Address"
+                              label={tr(text.email)}
                               type="email"
                               required
                               value={form.email}
@@ -176,7 +205,7 @@ export default function Contact() {
                           <Grid size={{ xs: 12, sm: 6 }}>
                             <TextField
                               fullWidth
-                              label="Phone (optional)"
+                              label={tr(text.phone)}
                               value={form.phone}
                               onChange={(e) =>
                                 setForm({ ...form, phone: e.target.value })
@@ -187,7 +216,7 @@ export default function Contact() {
                           <Grid size={{ xs: 12, sm: 6 }}>
                             <TextField
                               fullWidth
-                              label="Subject"
+                              label={tr(text.subject)}
                               required
                               value={form.subject}
                               onChange={(e) =>
@@ -199,7 +228,7 @@ export default function Contact() {
                         </Grid>
                         <TextField
                           fullWidth
-                          label="Message"
+                          label={tr(text.message)}
                           multiline
                           rows={5}
                           required
@@ -216,7 +245,7 @@ export default function Contact() {
                           endIcon={<SendIcon />}
                           sx={{ alignSelf: "flex-start", px: 4 }}
                         >
-                          Send Message
+                          {tr(text.send)}
                         </Button>
                       </Box>
                     )}
@@ -229,7 +258,7 @@ export default function Contact() {
             <Grid size={{ xs: 12, md: 5 }}>
               <Box sx={{ display: "flex", flexDirection: "column", gap: 2.5 }}>
                 {info.map(({ Icon, label, value, multiline, bg, color }, i) => (
-                  <ScrollReveal key={label} direction="right" delay={i * 0.1}>
+                  <ScrollReveal key={label.en} direction="right" delay={i * 0.1}>
                     <Card
                       sx={{
                         ...glassCard,
@@ -277,7 +306,7 @@ export default function Contact() {
                               mb: 0.5,
                             }}
                           >
-                            {label}
+                            {tr(label)}
                           </Typography>
                           <Typography
                             sx={{
@@ -287,7 +316,7 @@ export default function Contact() {
                               whiteSpace: "pre-line",
                             }}
                           >
-                            {value}
+                            {tr(value)}
                           </Typography>
                         </Box>
                       </CardContent>

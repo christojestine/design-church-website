@@ -5,6 +5,7 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import CelebrationIcon from "@mui/icons-material/Celebration";
 import LocalFloristIcon from "@mui/icons-material/LocalFlorist";
 import VolunteerActivismIcon from "@mui/icons-material/VolunteerActivism";
+import type { Text } from "../../i18n/LanguageContext";
 
 // Icon + colours per category, so each event only needs to name its category.
 export const categoryStyles = {
@@ -19,6 +20,16 @@ export const categoryStyles = {
 
 export type EventCategory = keyof typeof categoryStyles;
 
+export const categoryLabels: Record<EventCategory, Text> = {
+  Liturgy: { en: "Liturgy", ml: "ആരാധനക്രമം" },
+  Feast: { en: "Feast", ml: "തിരുനാൾ" },
+  Devotion: { en: "Devotion", ml: "ഭക്താനുഷ്ഠാനം" },
+  Meeting: { en: "Meeting", ml: "യോഗം" },
+  Formation: { en: "Formation", ml: "വിശ്വാസപരിശീലനം" },
+  Service: { en: "Service", ml: "സേവനം" },
+  Remembrance: { en: "Remembrance", ml: "അനുസ്മരണം" },
+};
+
 export interface ChurchEvent {
   title: string;
   category: EventCategory;
@@ -29,6 +40,8 @@ export interface ChurchEvent {
   endDate?: string;
   time: string;
   location: string;
+  /** Malayalam versions of the text fields; any field left out is shown in English. */
+  ml?: Partial<Pick<ChurchEvent, "title" | "description" | "time" | "location">>;
 }
 
 const MAIN_CHURCH = "St. Mary's Forane Church";
@@ -44,6 +57,12 @@ export const events: ChurchEvent[] = [
     date: "2026-09-20",
     time: "All Sunday Masses",
     location: MAIN_CHURCH,
+    ml: {
+      title: "ഏലിയാ–സ്ലീവാ–മൂശെ കാലം നാലാം ഞായർ",
+      description: "ഇന്നത്തെ വി. കുർബാനകൾക്ക് 47, 48, 49 കുടുംബയൂണിറ്റുകൾ നേതൃത്വം നൽകുന്നു.",
+      time: "എല്ലാ ഞായറാഴ്ച കുർബാനകളും",
+      location: "സെന്റ് മേരീസ് ഫൊറോന പള്ളി",
+    },
   },
   {
     title: "Parish Council Meeting",
@@ -52,6 +71,12 @@ export const events: ChurchEvent[] = [
     date: "2026-09-20",
     time: "After the 7:30 AM Holy Mass",
     location: MAIN_CHURCH,
+    ml: {
+      title: "പള്ളി പ്രതിനിധിയോഗം",
+      description: "ഇടവക പ്രതിനിധിയോഗ അംഗങ്ങളുടെ യോഗം.",
+      time: "രാവിലെ 7:30-ന്റെ വി. കുർബാനയ്ക്കു ശേഷം",
+      location: "സെന്റ് മേരീസ് ഫൊറോന പള്ളി",
+    },
   },
   {
     title: "AKCC Executive Meeting",
@@ -61,6 +86,12 @@ export const events: ChurchEvent[] = [
     date: "2026-09-20",
     time: "After the 7:30 AM Holy Mass",
     location: MAIN_CHURCH,
+    ml: {
+      title: "എകെസിസി എക്സിക്യൂട്ടീവ് മീറ്റിംഗ്",
+      description: "ഓൾ കേരള കാത്തലിക് കോൺഗ്രസ് (എകെസിസി) എക്സിക്യൂട്ടീവ് കമ്മിറ്റിയുടെ യോഗം.",
+      time: "രാവിലെ 7:30-ന്റെ വി. കുർബാനയ്ക്കു ശേഷം",
+      location: "സെന്റ് മേരീസ് ഫൊറോന പള്ളി",
+    },
   },
   {
     title: "Jesus Youth Prayer Meeting",
@@ -69,6 +100,12 @@ export const events: ChurchEvent[] = [
     date: "2026-09-20",
     time: "After the third Holy Mass",
     location: MAIN_CHURCH,
+    ml: {
+      title: "ജീസസ് യൂത്ത് പ്രാർത്ഥനാ യോഗം",
+      description: "ഇടവകയിലെ ജീസസ് യൂത്ത് കൂട്ടായ്മയുടെ പ്രാർത്ഥനാ യോഗം.",
+      time: "മൂന്നാമത്തെ വി. കുർബാനയ്ക്കു ശേഷം",
+      location: "സെന്റ് മേരീസ് ഫൊറോന പള്ളി",
+    },
   },
   {
     title: "KCYM General Body Meeting",
@@ -77,6 +114,12 @@ export const events: ChurchEvent[] = [
     date: "2026-09-20",
     time: "After the third Holy Mass",
     location: MAIN_CHURCH,
+    ml: {
+      title: "കെസിവൈഎം ജനറൽബോഡി മീറ്റിംഗ്",
+      description: "കെസിവൈഎം യുവജന പ്രസ്ഥാനത്തിന്റെ ജനറൽബോഡി യോഗം.",
+      time: "മൂന്നാമത്തെ വി. കുർബാനയ്ക്കു ശേഷം",
+      location: "സെന്റ് മേരീസ് ഫൊറോന പള്ളി",
+    },
   },
   {
     title: "Family Unit Gatherings",
@@ -86,6 +129,12 @@ export const events: ChurchEvent[] = [
     date: "2026-09-20",
     time: "As arranged by each unit",
     location: "Family Units 31–45",
+    ml: {
+      title: "കുടുംബസമ്മേളനങ്ങൾ",
+      description: "31 മുതൽ 45 വരെയുള്ള കുടുംബയൂണിറ്റുകളിൽ കുടുംബസമ്മേളനങ്ങൾ. യൂണിറ്റ് 37-ൽ ഇത്തവണ സമ്മേളനം ഉണ്ടായിരിക്കുകയില്ല.",
+      time: "ഓരോ യൂണിറ്റും നിശ്ചയിക്കുന്ന സമയത്ത്",
+      location: "കുടുംബയൂണിറ്റുകൾ 31–45",
+    },
   },
   {
     title: "KCYM Scrap Collection",
@@ -95,6 +144,12 @@ export const events: ChurchEvent[] = [
     date: "2026-09-20",
     time: "Evening",
     location: "Family Units 1, 2 & 3",
+    ml: {
+      title: "കെസിവൈഎം സ്ക്രാപ്പ് ശേഖരണം",
+      description: "1, 2, 3 കുടുംബയൂണിറ്റുകളിലെ വീടുകളിൽ നിന്ന് സ്ക്രാപ്പ് ശേഖരിക്കാൻ കെസിവൈഎം അംഗങ്ങൾ എത്തുന്നു.",
+      time: "വൈകുന്നേരം",
+      location: "കുടുംബയൂണിറ്റുകൾ 1, 2, 3",
+    },
   },
 
   // ── This week ──
@@ -105,6 +160,12 @@ export const events: ChurchEvent[] = [
     date: "2026-09-21",
     time: "All Holy Masses",
     location: MAIN_CHURCH,
+    ml: {
+      title: "വി. മത്തായി സുവിശേഷകന്റെ തിരുനാൾ",
+      description: "ശ്ലീഹായും സുവിശേഷകനുമായ വി. മത്തായിയുടെ തിരുനാൾ സഭ ആഘോഷിക്കുന്നു.",
+      time: "എല്ലാ വി. കുർബാനകളിലും",
+      location: "സെന്റ് മേരീസ് ഫൊറോന പള്ളി",
+    },
   },
   {
     title: "Priests' Five-Day Camp",
@@ -115,6 +176,12 @@ export const events: ChurchEvent[] = [
     endDate: "2026-09-25",
     time: "Monday to Friday",
     location: "Pax, Kallettumkara",
+    ml: {
+      title: "വൈദികരുടെ പഞ്ചദിന ക്യാമ്പ്",
+      description: "വൈദികരുടെ പഞ്ചദിന ക്യാമ്പിന്റെ രണ്ടാമത്തെ ബാച്ചിൽ വികാരിയച്ചൻ പങ്കെടുക്കുന്നു.",
+      time: "തിങ്കൾ മുതൽ വെള്ളി വരെ",
+      location: "പാക്സ്, കല്ലേറ്റുംകര",
+    },
   },
   {
     title: "Litany and Novena – St. Antony's Chapel",
@@ -123,6 +190,12 @@ export const events: ChurchEvent[] = [
     date: "2026-09-22",
     time: "6:00 PM",
     location: "St. Antony's Chapel, near the KSRTC bus station",
+    ml: {
+      title: "ലദീഞ്ഞും നൊവേനയും – സെന്റ് ആന്റണീസ് കപ്പേള",
+      description: "എല്ലാ ചൊവ്വാഴ്ചയുമുള്ള ലദീഞ്ഞും നൊവേനയും.",
+      time: "വൈകിട്ട് 6:00",
+      location: "സെന്റ് ആന്റണീസ് കപ്പേള, കെ.എസ്.ആർ.ടി.സി. ബസ് സ്റ്റേഷനു സമീപം",
+    },
   },
   {
     title: "Mathruvedi General Body Meeting",
@@ -131,6 +204,12 @@ export const events: ChurchEvent[] = [
     date: "2026-09-23",
     time: "10:00 AM",
     location: MAIN_CHURCH,
+    ml: {
+      title: "മാതൃവേദി ജനറൽബോഡി മീറ്റിംഗ്",
+      description: "ഇടവകയിലെ അമ്മമാരുടെ സംഘടനയായ മാതൃവേദിയുടെ ജനറൽബോഡി യോഗം.",
+      time: "രാവിലെ 10:00",
+      location: "സെന്റ് മേരീസ് ഫൊറോന പള്ളി",
+    },
   },
   {
     title: "Feast of St. Padre Pio",
@@ -139,6 +218,12 @@ export const events: ChurchEvent[] = [
     date: "2026-09-23",
     time: "All Holy Masses",
     location: MAIN_CHURCH,
+    ml: {
+      title: "വി. പാദ്രേ പിയോയുടെ തിരുനാൾ",
+      description: "വി. പാദ്രേ പിയോയുടെ തിരുനാൾ സഭ ആഘോഷിക്കുന്നു.",
+      time: "എല്ലാ വി. കുർബാനകളിലും",
+      location: "സെന്റ് മേരീസ് ഫൊറോന പള്ളി",
+    },
   },
   {
     title: "Litany and Novena – St. Roch's Chapel",
@@ -147,6 +232,12 @@ export const events: ChurchEvent[] = [
     date: "2026-09-24",
     time: "6:00 PM",
     location: "St. Roch's Chapel",
+    ml: {
+      title: "ലദീഞ്ഞും നൊവേനയും – വി. റോക്കിയുടെ കപ്പേള",
+      description: "എല്ലാ വ്യാഴാഴ്ചയുമുള്ള ലദീഞ്ഞും നൊവേനയും.",
+      time: "വൈകിട്ട് 6:00",
+      location: "വി. റോക്കിയുടെ കപ്പേള",
+    },
   },
   {
     title: "Holy Mass and Novena – Lourdes Matha Chapel, Mariyapuram",
@@ -155,6 +246,12 @@ export const events: ChurchEvent[] = [
     date: "2026-09-24",
     time: "5:30 PM",
     location: "Lourdes Matha Chapel, Mariyapuram",
+    ml: {
+      title: "വി. കുർബാനയും നൊവേനയും – ലൂർദ് മാതാ കുരിശുപള്ളി, മരിയാപുരം",
+      description: "എല്ലാ വ്യാഴാഴ്ചയുമുള്ള വി. കുർബാന, ലദീഞ്ഞ്, നൊവേന.",
+      time: "വൈകിട്ട് 5:30",
+      location: "ലൂർദ് മാതാ കുരിശുപള്ളി, മരിയാപുരം",
+    },
   },
   {
     title: "Church Cleaning",
@@ -164,6 +261,12 @@ export const events: ChurchEvent[] = [
     date: "2026-09-25",
     time: "Friday",
     location: MAIN_CHURCH,
+    ml: {
+      title: "പള്ളി ക്ലീനിങ്",
+      description: "47, 48, 49 കുടുംബയൂണിറ്റുകൾ പള്ളി വൃത്തിയാക്കും. കഴിഞ്ഞ ആഴ്ച 44, 45, 46 യൂണിറ്റുകളാണ് ക്ലീനിങ് നടത്തിയത്; അവർക്ക് ഇടവകയുടെ പേരിലുള്ള നന്ദി.",
+      time: "വെള്ളിയാഴ്ച",
+      location: "സെന്റ് മേരീസ് ഫൊറോന പള്ളി",
+    },
   },
   {
     title: "Priests' House Visit and Blessing – Unit 35",
@@ -173,6 +276,12 @@ export const events: ChurchEvent[] = [
     date: "2026-09-25",
     time: "Friday",
     location: "Family Unit 35",
+    ml: {
+      title: "വൈദികരുടെ ഭവന സന്ദർശനവും ആശീർവാദവും – യൂണിറ്റ് 35",
+      description: "ദൈവകരുണയ്ക്കായി പ്രാർത്ഥിക്കാനും കുടുംബങ്ങളെ ആശീർവദിക്കാനുമായി വൈദികർ കുടുംബയൂണിറ്റ് 35-ലെ വീടുകൾ സന്ദർശിക്കുന്നു.",
+      time: "വെള്ളിയാഴ്ച",
+      location: "കുടുംബയൂണിറ്റ് 35",
+    },
   },
   {
     title: "Litany and Novena – Market Chapel",
@@ -181,6 +290,12 @@ export const events: ChurchEvent[] = [
     date: "2026-09-25",
     time: "6:00 PM",
     location: "Market Chapel",
+    ml: {
+      title: "ലദീഞ്ഞും നൊവേനയും – മാർക്കറ്റ് കപ്പേള",
+      description: "എല്ലാ വെള്ളിയാഴ്ചയുമുള്ള ലദീഞ്ഞും നൊവേനയും.",
+      time: "വൈകിട്ട് 6:00",
+      location: "മാർക്കറ്റ് കപ്പേള",
+    },
   },
   {
     title: "Holy Mass and Novena – Chenathunad Chapel",
@@ -189,6 +304,12 @@ export const events: ChurchEvent[] = [
     date: "2026-09-26",
     time: "6:00 PM",
     location: "Chenathunad Chapel",
+    ml: {
+      title: "വി. കുർബാനയും നൊവേനയും – ചേനത്തുനാട് കുരിശുപള്ളി",
+      description: "എല്ലാ ശനിയാഴ്ചയുമുള്ള വി. കുർബാന, ലദീഞ്ഞ്, നൊവേന.",
+      time: "വൈകിട്ട് 6:00",
+      location: "ചേനത്തുനാട് കുരിശുപള്ളി",
+    },
   },
 
   // ── Sunday, 27 September ──
@@ -200,6 +321,12 @@ export const events: ChurchEvent[] = [
     date: "2026-09-27",
     time: "5:00 PM",
     location: MAIN_CHURCH,
+    ml: {
+      title: "വി. വിൻസെന്റ് ഡി പോളിന്റെ തിരുനാൾ",
+      description: "ഇടവകയിലെ വിൻസെന്റ് ഡി പോൾ സൊസൈറ്റിയുടെ നേതൃത്വത്തിൽ ആഘോഷമായ തിരുനാൾ കുർബാന. ഈ ദിവസത്തെ വി. കുർബാനകൾക്ക് 50, 51 കുടുംബയൂണിറ്റുകളും സെന്റ് വിൻസെന്റ് ഡി പോൾ സംഘടനയും നേതൃത്വം നൽകും.",
+      time: "വൈകിട്ട് 5:00",
+      location: "സെന്റ് മേരീസ് ഫൊറോന പള്ളി",
+    },
   },
   {
     title: "Logos Quiz",
@@ -209,6 +336,12 @@ export const events: ChurchEvent[] = [
     date: "2026-09-27",
     time: "2:00 PM – 3:30 PM",
     location: "S.H. School",
+    ml: {
+      title: "ലോഗോസ് ക്വിസ്",
+      description: "പേര് രജിസ്റ്റർ ചെയ്ത എല്ലാവരും നന്നായി ഒരുങ്ങി പരീക്ഷ എഴുതാൻ ശ്രദ്ധിക്കുക. ഹാൾടിക്കറ്റ് മതബോധന ഓഫീസിൽ എത്തിയിട്ടുണ്ട്; യൂണിറ്റ് ഭാരവാഹികൾ അത് വാങ്ങി യൂണിറ്റുകളിൽ വിതരണം ചെയ്യണം.",
+      time: "ഉച്ചയ്ക്ക് 2:00 – 3:30",
+      location: "എസ്.എച്ച്. സ്കൂൾ",
+    },
   },
   {
     title: "Rupatha Animators' Visit to Catechism",
@@ -218,6 +351,12 @@ export const events: ChurchEvent[] = [
     date: "2026-09-27",
     time: "During catechism classes",
     location: "Parish Catechism School",
+    ml: {
+      title: "രൂപത ആനിമേറ്റേഴ്സ് ടീമിന്റെ മതബോധന സന്ദർശനം",
+      description: "രൂപത ആനിമേറ്റേഴ്സ് ടീം നമ്മുടെ മതബോധന യൂണിറ്റ് സന്ദർശിക്കുന്നു. മാതാപിതാക്കൾ കുട്ടികളെ കൃത്യസമയത്ത് എത്തിക്കാൻ ശ്രദ്ധിക്കുക.",
+      time: "മതബോധന ക്ലാസ് സമയത്ത്",
+      location: "ഇടവക മതബോധന വിദ്യാലയം",
+    },
   },
 
   // ── Upcoming house visits ──
@@ -229,6 +368,12 @@ export const events: ChurchEvent[] = [
     date: "2026-09-28",
     time: "Monday",
     location: "Family Unit 48",
+    ml: {
+      title: "വൈദികരുടെ ഭവന സന്ദർശനവും ആശീർവാദവും – യൂണിറ്റ് 48",
+      description: "ദൈവകരുണയ്ക്കായി പ്രാർത്ഥിക്കാനും കുടുംബങ്ങളെ ആശീർവദിക്കാനുമായി വൈദികർ കുടുംബയൂണിറ്റ് 48-ലെ വീടുകൾ സന്ദർശിക്കുന്നു.",
+      time: "തിങ്കളാഴ്ച",
+      location: "കുടുംബയൂണിറ്റ് 48",
+    },
   },
   {
     title: "Priests' House Visit and Blessing – Unit 64",
@@ -238,6 +383,12 @@ export const events: ChurchEvent[] = [
     date: "2026-09-30",
     time: "Wednesday",
     location: "Family Unit 64",
+    ml: {
+      title: "വൈദികരുടെ ഭവന സന്ദർശനവും ആശീർവാദവും – യൂണിറ്റ് 64",
+      description: "ദൈവകരുണയ്ക്കായി പ്രാർത്ഥിക്കാനും കുടുംബങ്ങളെ ആശീർവദിക്കാനുമായി വൈദികർ കുടുംബയൂണിറ്റ് 64-ലെ വീടുകൾ സന്ദർശിക്കുന്നു.",
+      time: "ബുധനാഴ്ച",
+      location: "കുടുംബയൂണിറ്റ് 64",
+    },
   },
 
   // ── October: Rosary Month ──
@@ -250,6 +401,12 @@ export const events: ChurchEvent[] = [
     endDate: "2026-10-20",
     time: "As arranged by each unit",
     location: "Family Units",
+    ml: {
+      title: "വീടുകളിൽ ജപമാല",
+      description: "ഒക്ടോബർ ജപമാല മാസമാണ്. കുടുംബയൂണിറ്റുകളിൽ സൗകര്യമനുസരിച്ച് ഗ്രൂപ്പ് അടിസ്ഥാനത്തിൽ വീടുകളിൽ ജപമാല. ചേനത്തുനാട്, മരിയാപുരം കുരിശുപള്ളികൾക്ക് സമീപമുള്ള യൂണിറ്റുകൾ അവിടങ്ങളിൽ ആഘോഷമായ ജപമാല നടക്കാത്ത ദിവസങ്ങളിൽ വീടുകളിലെ ജപമാല ക്രമീകരിക്കണം.",
+      time: "ഓരോ യൂണിറ്റും നിശ്ചയിക്കുന്ന സമയത്ത്",
+      location: "കുടുംബയൂണിറ്റുകൾ",
+    },
   },
   {
     title: "Rosary Month – Chenathunad Chapel",
@@ -260,6 +417,12 @@ export const events: ChurchEvent[] = [
     endDate: "2026-10-10",
     time: "6:00 PM",
     location: "Chenathunad Chapel",
+    ml: {
+      title: "ജപമാല മാസം – ചേനത്തുനാട് കുരിശുപള്ളി",
+      description: "എല്ലാ ദിവസവും വൈകിട്ട് വി. കുർബാന, ആരാധന, ജപമാല. ഇടവകാംഗങ്ങൾ ഏതെങ്കിലും ഒരു കേന്ദ്രത്തിലെ പത്തുദിവസത്തെ ആഘോഷമായ ജപമാലയിൽ പങ്കെടുക്കണം.",
+      time: "വൈകിട്ട് 6:00",
+      location: "ചേനത്തുനാട് കുരിശുപള്ളി",
+    },
   },
   {
     title: "Rosary Month – Mariyapuram Chapel",
@@ -270,6 +433,12 @@ export const events: ChurchEvent[] = [
     endDate: "2026-10-20",
     time: "6:00 PM",
     location: "Mariyapuram Chapel",
+    ml: {
+      title: "ജപമാല മാസം – മരിയാപുരം കുരിശുപള്ളി",
+      description: "എല്ലാ ദിവസവും വൈകിട്ട് വി. കുർബാന, ആരാധന, ജപമാല. ഇടവകാംഗങ്ങൾ ഏതെങ്കിലും ഒരു കേന്ദ്രത്തിലെ പത്തുദിവസത്തെ ആഘോഷമായ ജപമാലയിൽ പങ്കെടുക്കണം.",
+      time: "വൈകിട്ട് 6:00",
+      location: "മരിയാപുരം കുരിശുപള്ളി",
+    },
   },
   {
     title: "Rosary Month – Parish Church",
@@ -280,6 +449,12 @@ export const events: ChurchEvent[] = [
     endDate: "2026-10-30",
     time: "5:00 PM",
     location: MAIN_CHURCH,
+    ml: {
+      title: "ജപമാല മാസം – ഇടവക പള്ളി",
+      description: "വി. കുർബാനയും ആരാധനയും; ഭക്തസംഘടനകളുടെ നേതൃത്വത്തിൽ ജപമാല. ഇടവകാംഗങ്ങൾ ഏതെങ്കിലും ഒരു കേന്ദ്രത്തിലെ പത്തുദിവസത്തെ ആഘോഷമായ ജപമാലയിൽ പങ്കെടുക്കണം.",
+      time: "വൈകിട്ട് 5:00",
+      location: "സെന്റ് മേരീസ് ഫൊറോന പള്ളി",
+    },
   },
   {
     title: "Rosary Month Closing Celebration",
@@ -289,6 +464,12 @@ export const events: ChurchEvent[] = [
     date: "2026-10-31",
     time: "5:00 PM",
     location: MAIN_CHURCH,
+    ml: {
+      title: "ജപമാല മാസ സമാപനം",
+      description: "ആഘോഷമായ വി. കുർബാന, ടൗൺ ചുറ്റി ജപമാല പ്രദക്ഷിണം, ആരാധന, സമാപന ആശീർവാദം. 10 മേഖലകളിൽ നിന്നും മാതാവിന്റെ ഓരോ ടാബ്ലോ ഉണ്ടായിരിക്കും.",
+      time: "വൈകിട്ട് 5:00",
+      location: "സെന്റ് മേരീസ് ഫൊറോന പള്ളി",
+    },
   },
   {
     title: "Mission Month Auction",
@@ -299,6 +480,12 @@ export const events: ChurchEvent[] = [
     endDate: "2026-10-31",
     time: "Zone dates to be announced",
     location: "Parish zones",
+    ml: {
+      title: "മിഷൻ മാസം – ലേലം",
+      description: "ഒക്ടോബർ മിഷൻ പ്രവർത്തനങ്ങളെ സഹായിക്കുന്ന മാസം കൂടിയാണ്. കുടുംബയൂണിറ്റുകളിൽ നിന്നും വ്യാപാര സ്ഥാപനങ്ങളിൽ നിന്നും ലഭിക്കുന്ന ഉൽപ്പന്നങ്ങളുടെ ലേലം മേഖല അടിസ്ഥാനത്തിൽ നടക്കും. ലഭിക്കുന്ന തുകയുടെ 75% ഷംഷാബാദ് മിഷനെ സഹായിക്കാനും 25% ഇടവകയിലെ കേന്ദ്ര സമിതി പ്രവർത്തനങ്ങൾക്കുമാണ്. മേഖലകൾക്ക് നിശ്ചയിച്ചിട്ടുള്ള ദിവസം അടുത്ത ഞായറാഴ്ച അറിയിക്കും.",
+      time: "മേഖലാ തീയതികൾ പിന്നീട് അറിയിക്കും",
+      location: "ഇടവക മേഖലകൾ",
+    },
   },
 
   // ── November: Raza Qurbana for the departed, by zone ──
@@ -323,6 +510,12 @@ export const events: ChurchEvent[] = [
       date,
       time: "10:30 AM",
       location: `${MAIN_CHURCH} & Cemetery`,
+      ml: {
+        title: `മരിച്ചവർക്കായുള്ള റാസ കുർബാന – മേഖല ${zone}`,
+        description: `മരണംമൂലം വേർപെട്ടുപോയ മേഖല ${zone}-ലെ ഇടവകാംഗങ്ങൾക്കായുള്ള റാസ കുർബാന; തുടർന്ന് സിമിത്തേരിയിൽ പൊതു ഒപ്പീസും മേഖലയിലെ കുടുംബങ്ങളുടെ കബറിടങ്ങളിൽ വിശുദ്ധജലം തളിച്ചുള്ള പ്രാർത്ഥനയും. ഇവിടത്തെ നാല് വൈദികരും മേഖലയിലുൾപ്പെട്ട ഇടവക വൈദികരുമായിരിക്കും കാർമികർ; ഈ വൈദികരെ അവരുടെ കുടുംബാംഗങ്ങൾ മുൻകൂട്ടി ക്ഷണിക്കണം. റാസ കുർബാനയ്ക്കായി ഓരോ യൂണിറ്റിനും ₹500 ചെലവ് വരും; യൂണിറ്റ് ഭാരവാഹികൾ ഈ തുക എത്രയും വേഗം പള്ളി ഓഫീസിലോ കേന്ദ്രസമിതി ഭാരവാഹികൾ വഴിയോ നൽകണം.`,
+        time: "രാവിലെ 10:30",
+        location: "സെന്റ് മേരീസ് ഫൊറോന പള്ളിയും സിമിത്തേരിയും",
+      },
     }),
   ),
 ];

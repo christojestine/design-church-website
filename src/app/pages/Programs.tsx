@@ -14,24 +14,42 @@ import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
 import WhatsappIcon from "@mui/icons-material/WhatsApp";
 import { glassCard } from "../../styles/style";
+import { useLanguage, type Text } from "../i18n/LanguageContext";
+import { formatClock } from "../i18n/common";
+
+const secondSunday: Text = { en: "2nd Sunday of the Month", ml: "മാസത്തിലെ രണ്ടാം ഞായറാഴ്ച" };
+
+const text = {
+  chip: { en: "Worship Schedule", ml: "ആരാധനാ സമയക്രമം" },
+  title: { en: "Mass Times", ml: "കുർബാന സമയങ്ങൾ" },
+  specialMasses: {
+    en: "Apart from the regular timings, some special masses will also be held on certain days. For updates, please join our WhatsApp community.",
+    ml: "പതിവ് സമയങ്ങൾക്കു പുറമേ ചില ദിവസങ്ങളിൽ പ്രത്യേക കുർബാനകളും ഉണ്ടായിരിക്കും. പുതിയ വിവരങ്ങൾക്കായി ഞങ്ങളുടെ വാട്ട്സ്ആപ്പ് കൂട്ടായ്മയിൽ ചേരൂ.",
+  },
+  joinLabel: { en: "Join WhatsApp Community", ml: "വാട്ട്സ്ആപ്പ് കൂട്ടായ്മയിൽ ചേരുക" },
+  join: { en: "Join", ml: "ചേരുക" },
+  sacrament: { en: "Sacrament", ml: "കൂദാശ" },
+  confessionTitle: { en: "Confession Times", ml: "കുമ്പസാര സമയങ്ങൾ" },
+  vachabhishekaTitle: { en: "Vachabhisheka Sayanam", ml: "വചനാഭിഷേക ശയനം" },
+} satisfies Record<string, Text>;
 
 const schedule = [
   {
-    category: "Sunday",
+    category: { en: "Sunday", ml: "ഞായറാഴ്ച" } as Text,
     icon: ChurchIcon,
     bgColor: "#dbeafe",
     iconColor: "#1d4ed8",
     services: ["6:00 AM", "7:30 AM", "9:30 AM", "5:00 PM", "7:00 PM"],
   },
   {
-    category: "2nd Sunday of the Month",
+    category: secondSunday,
     icon: CalendarTodayIcon,
     bgColor: "#ede9fe",
     iconColor: "#7c3aed",
     services: ["6:00 AM", "7:30 AM", "9:30 AM", "5:00 PM"],
   },
   {
-    category: "Monday - Saturday",
+    category: { en: "Monday - Saturday", ml: "തിങ്കൾ – ശനി" },
     icon: AccessTimeIcon,
     bgColor: "#fef3c7",
     iconColor: "#b45309",
@@ -39,23 +57,36 @@ const schedule = [
   },
 ];
 
-const confessions = [
-  { day: "Monday to Saturday", time: "During the time of Holy Mass" },
-  { day: "2nd Sunday of the Month", time: "4:00 PM to 7:00 PM" },
-  { day: "By Appointment", time: "Contact the priest directly" },
+const confessions: { day: Text; time: Text }[] = [
+  {
+    day: { en: "Monday to Saturday", ml: "തിങ്കൾ മുതൽ ശനി വരെ" },
+    time: { en: "During the time of Holy Mass", ml: "വി. കുർബാനയുടെ സമയത്ത്" },
+  },
+  {
+    day: secondSunday,
+    time: { en: "4:00 PM to 7:00 PM", ml: "വൈകിട്ട് 4:00 മുതൽ 7:00 വരെ" },
+  },
+  {
+    day: { en: "By Appointment", ml: "മുൻകൂട്ടി അറിയിച്ച്" },
+    time: { en: "Contact the priest directly", ml: "വൈദികനെ നേരിട്ട് ബന്ധപ്പെടുക" },
+  },
 ];
 
-const vachabhishekaSayanam = [
-  { day: "2nd Sunday of the Month", time: "5:00 PM to 9:00 PM" },
+const vachabhishekaSayanam: { day: Text; time: Text }[] = [
+  {
+    day: secondSunday,
+    time: { en: "5:00 PM to 9:00 PM", ml: "വൈകിട്ട് 5:00 മുതൽ രാത്രി 9:00 വരെ" },
+  },
 ];
 
 export default function Programs() {
+  const { lang, tr } = useLanguage();
   return (
     <Box>
       <Box sx={{ textAlign: "center", py: { xs: 4, md: 4 }, px: 3 }}>
         <ScrollReveal>
           <Chip
-            label="Worship Schedule"
+            label={tr(text.chip)}
             sx={{
               background: "rgba(29,78,216,0.08)",
               color: "#1d4ed8",
@@ -73,7 +104,7 @@ export default function Programs() {
               letterSpacing: "-0.03em",
             }}
           >
-            Mass Times
+            {tr(text.title)}
           </Typography>
         </ScrollReveal>
       </Box>
@@ -118,7 +149,7 @@ export default function Programs() {
                               fontSize: "1.1rem",
                             }}
                           >
-                            {category}
+                            {tr(category)}
                           </Typography>
                         </Box>
                         <Box
@@ -132,7 +163,7 @@ export default function Programs() {
                           {services.map((t, j) => (
                             <Chip
                               key={j}
-                              label={t}
+                              label={formatClock(t, lang)}
                               size="small"
                               sx={{
                                 background: bgColor,
@@ -184,12 +215,10 @@ export default function Programs() {
                 minWidth: 0,
               }}
             >
-              Apart from the regular timings, some special masses will also be
-              held on certain days. For updates, please join our WhatsApp
-              community.
+              {tr(text.specialMasses)}
             </Typography>
             <Button
-              aria-label="Join WhatsApp Community"
+              aria-label={tr(text.joinLabel)}
               href="#"
               target="_blank"
               startIcon={<WhatsappIcon />}
@@ -214,7 +243,7 @@ export default function Programs() {
                   fontWeight: 600,
                 }}
               >
-                Join
+                {tr(text.join)}
               </Typography>
             </Button>
           </Box>
@@ -226,7 +255,7 @@ export default function Programs() {
           <ScrollReveal>
             <Box sx={{ textAlign: "center", mb: 5 }}>
               <Chip
-                label="Sacrament"
+                label={tr(text.sacrament)}
                 sx={{
                   background: "rgba(124,58,237,0.08)",
                   color: "#7c3aed",
@@ -242,7 +271,7 @@ export default function Programs() {
                   color: "#0f172a",
                 }}
               >
-                Confession Times
+                {tr(text.confessionTitle)}
               </Typography>
             </Box>
           </ScrollReveal>
@@ -261,12 +290,12 @@ export default function Programs() {
                       }}
                     >
                       <Typography sx={{ color: "#334155", fontWeight: 500 }}>
-                        {c.day}
+                        {tr(c.day)}
                       </Typography>
                       <Typography
                         sx={{ color: "#1d4ed8", fontWeight: 600, textAlign: "right" }}
                       >
-                        {c.time}
+                        {tr(c.time)}
                       </Typography>
                     </Box>
                     {i < confessions.length - 1 && (
@@ -285,7 +314,7 @@ export default function Programs() {
           <ScrollReveal>
             <Box sx={{ textAlign: "center", mb: 5 }}>
               <Chip
-                label="Sacrament"
+                label={tr(text.sacrament)}
                 sx={{
                   background: "rgba(124,58,237,0.08)",
                   color: "#7c3aed",
@@ -301,7 +330,7 @@ export default function Programs() {
                   color: "#0f172a",
                 }}
               >
-                Vachabhisheka Sayanam
+                {tr(text.vachabhishekaTitle)}
               </Typography>
             </Box>
           </ScrollReveal>
@@ -320,12 +349,12 @@ export default function Programs() {
                       }}
                     >
                       <Typography sx={{ color: "#334155", fontWeight: 500 }}>
-                        {c.day}
+                        {tr(c.day)}
                       </Typography>
                       <Typography
                         sx={{ color: "#1d4ed8", fontWeight: 600, textAlign: "right" }}
                       >
-                        {c.time}
+                        {tr(c.time)}
                       </Typography>
                     </Box>
                     {i < vachabhishekaSayanam.length - 1 && (

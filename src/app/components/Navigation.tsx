@@ -15,22 +15,29 @@ import Divider from "@mui/material/Divider";
 import MenuIcon from "@mui/icons-material/Menu";
 import CloseIcon from "@mui/icons-material/Close";
 import NavigationBarLogo from "../assets/images/Navigation Bar Logo.webp";
+import { useLanguage, type Text } from "../i18n/LanguageContext";
+import { churchName } from "../i18n/common";
+import { LanguageToggle } from "./LanguageToggle";
 
-const navItems = [
-  { label: "Home", path: "/" },
-  { label: "Spiritual Programs", path: "/programs" },
-  { label: "Parish Team", path: "/parish-team" },
-  { label: "Ministries", path: "/ministries" },
-  { label: "Events", path: "/events" },
-  { label: "Organizations", path: "/organizations" },
-  { label: "About", path: "/about" },
-  { label: "Media", path: "/media" },
-  { label: "Contact", path: "/contact" },
+const navItems: { label: Text; path: string }[] = [
+  { label: { en: "Home", ml: "ഹോം" }, path: "/" },
+  { label: { en: "Spiritual Programs", ml: "തിരുക്കർമ്മങ്ങൾ" }, path: "/programs" },
+  { label: { en: "Parish Team", ml: "ഇടവക നേതൃത്വം" }, path: "/parish-team" },
+  { label: { en: "Ministries", ml: "ശുശ്രൂഷകൾ" }, path: "/ministries" },
+  { label: { en: "Events", ml: "പരിപാടികൾ" }, path: "/events" },
+  { label: { en: "Organizations", ml: "സ്ഥാപനങ്ങൾ" }, path: "/organizations" },
+  { label: { en: "About", ml: "ഞങ്ങളെക്കുറിച്ച്" }, path: "/about" },
+  { label: { en: "Media", ml: "മീഡിയ" }, path: "/media" },
+  { label: { en: "Contact", ml: "ബന്ധപ്പെടുക" }, path: "/contact" },
 ];
 
 export function Navigation() {
   const location = useLocation();
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const { lang, tr } = useLanguage();
+  // Screen width from which the full menu fits on one line (measured); below it the
+  // drawer menu is used. Malayalam labels are longer, so they need a wider screen.
+  const desktop = `@media (min-width:${lang === "ml" ? 1500 : 1280}px)`;
 
   const isActive = (path: string) =>
     path === "/"
@@ -53,7 +60,7 @@ export function Navigation() {
       >
         <Toolbar
           sx={{
-            maxWidth: 1400,
+            maxWidth: lang === "ml" ? 1600 : 1400,
             width: "100%",
             mx: "auto",
             px: { xs: 2, md: 4 },
@@ -79,33 +86,33 @@ export function Navigation() {
             <Box
               component="img"
               src={NavigationBarLogo}
-              alt="Church Logo"
+              alt={tr({ en: "Church Logo", ml: "പള്ളിയുടെ ലോഗോ" })}
               className="logo-icon"
               sx={{
-                height: 68,
+                height: { xs: 52, sm: 68 },
                 width: "auto",
                 transition: "all 0.4s ease",
                 filter: "drop-shadow(0 2px 6px rgba(29,78,216,0.25))",
               }}
             />
-            <Box>
+            <Box sx={{ flexShrink: 1, [desktop]: { flexShrink: 0, width: 220 } }}>
               <Typography
                 sx={{
-                  fontFamily: '"Cinzel", "Georgia", serif',
+                  fontFamily: '"Cinzel", "Noto Serif Malayalam", "Georgia", serif',
                   fontWeight: 800,
-                  fontSize: "1.1rem",
+                  fontSize: { xs: "0.95rem", md: "1.1rem" },
                   color: "#0f172a",
                   letterSpacing: "-0.01em",
                   lineHeight: 1.2,
                 }}
               >
-                St.Mary's Forane Church Chalakudy
+                {tr(churchName)}
               </Typography>
             </Box>
           </Box>
 
           {/* Desktop nav */}
-          <Box sx={{ display: { xs: "none", md: "flex" }, gap: 0.25 }}>
+          <Box sx={{ display: "none", [desktop]: { display: "flex" }, gap: 0.25 }}>
             {navItems.map((item) => {
               const active = isActive(item.path);
               return (
@@ -120,8 +127,9 @@ export function Navigation() {
                             "linear-gradient(135deg, #1d4ed8, #2563eb)",
                           color: "white",
                           boxShadow: "0 4px 16px rgba(29,78,216,0.35)",
-                          px: 2,
+                          px: 1,
                           py: 0.8,
+                          whiteSpace: "nowrap",
                           borderRadius: "10px",
                           "&:hover": {
                             background:
@@ -131,8 +139,9 @@ export function Navigation() {
                         }
                       : {
                           color: "#475569",
-                          px: 2,
+                          px: 1,
                           py: 0.8,
+                          whiteSpace: "nowrap",
                           borderRadius: "10px",
                           "&:hover": {
                             color: "#1d4ed8",
@@ -141,7 +150,7 @@ export function Navigation() {
                         }
                   }
                 >
-                  {item.label}
+                  {tr(item.label)}
                 </Button>
               );
             })}
@@ -149,11 +158,13 @@ export function Navigation() {
 
           {/* Mobile hamburger */}
           <IconButton
-            sx={{ display: { md: "none" }, color: "#1d4ed8" }}
+            sx={{ color: "#1d4ed8", [desktop]: { display: "none" } }}
             onClick={() => setDrawerOpen(true)}
           >
             <MenuIcon />
           </IconButton>
+
+          <LanguageToggle />
         </Toolbar>
       </AppBar>
 
@@ -185,7 +196,7 @@ export function Navigation() {
           <Typography
             sx={{ color: "#1d4ed8", fontWeight: 700, fontSize: "0.9rem" }}
           >
-            Menu
+            {tr({ en: "Menu", ml: "മെനു" })}
           </Typography>
           <IconButton
             onClick={() => setDrawerOpen(false)}
@@ -216,7 +227,7 @@ export function Navigation() {
                   }}
                 >
                   <ListItemText
-                    primary={item.label}
+                    primary={tr(item.label)}
                     slotProps={{
                       primary: {
                         sx: {

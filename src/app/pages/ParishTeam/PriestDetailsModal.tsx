@@ -20,17 +20,26 @@ import CakeOutlinedIcon from "@mui/icons-material/CakeOutlined";
 import ChurchOutlinedIcon from "@mui/icons-material/ChurchOutlined";
 import CalendarMonthOutlinedIcon from "@mui/icons-material/CalendarMonthOutlined";
 import VolunteerActivismOutlinedIcon from "@mui/icons-material/VolunteerActivismOutlined";
+import { useLanguage, type Text } from "../../i18n/LanguageContext";
+
+const labels = {
+  profile: { en: "PRIEST PROFILE", ml: "വൈദിക വിവരങ്ങൾ" },
+  birth: { en: "Date of Birth", ml: "ജനനത്തീയതി" },
+  feast: { en: "Feast Day", ml: "നാമഹേതുക തിരുനാൾ" },
+  ordination: { en: "Date of Ordination", ml: "പൗരോഹിത്യ സ്വീകരണം" },
+  homeParish: { en: "Home Parish", ml: "സ്വന്തം ഇടവക" },
+} satisfies Record<string, Text>;
 
 export interface Priest {
-  name: string;
-  role: string;
+  name: Text;
+  role: Text;
   color: string;
   photo: string;
   dateofbirth: string;
   dateofordination: string;
-  homeparish: string;
-  feastday: string;
-  currentposition: string;
+  homeparish: Text;
+  feastday: Text;
+  currentposition: Text;
 }
 
 interface PriestProfileDialogProps {
@@ -46,6 +55,7 @@ const PriestDetailsModal = ({
   onExited,
   priest,
 }: PriestProfileDialogProps) => {
+  const { tr } = useLanguage();
   return (
     <Dialog
       open={open}
@@ -96,7 +106,7 @@ const PriestDetailsModal = ({
         {/* Header */}
         <Stack spacing={1.5} sx={{ alignItems: "center" }}>
           <Chip
-            label="PRIEST PROFILE"
+            label={tr(labels.profile)}
             size="small"
             sx={{
               fontWeight: 700,
@@ -108,7 +118,7 @@ const PriestDetailsModal = ({
 
           <Avatar
             src={priest.photo}
-            alt={priest.name}
+            alt={tr(priest.name)}
             sx={{
               width: 150,
               height: 150,
@@ -124,10 +134,10 @@ const PriestDetailsModal = ({
               fontWeight: 800,
               textAlign: "center",
               color: "#172033",
-              fontFamily: "Georgia, serif",
+              fontFamily: '"Noto Serif Malayalam", Georgia, serif',
             }}
           >
-            {priest.name}
+            {tr(priest.name)}
           </Typography>
 
           <Typography
@@ -137,7 +147,7 @@ const PriestDetailsModal = ({
               fontWeight: 700,
             }}
           >
-            {priest.role}
+            {tr(priest.role)}
           </Typography>
         </Stack>
 
@@ -148,7 +158,7 @@ const PriestDetailsModal = ({
           <Grid size={{ xs: 12, sm: 6 }}>
             <InfoCard
               icon={<CakeOutlinedIcon />}
-              label="Date of Birth"
+              label={tr(labels.birth)}
               value={priest.dateofbirth}
             />
           </Grid>
@@ -156,15 +166,15 @@ const PriestDetailsModal = ({
           <Grid size={{ xs: 12, sm: 6 }}>
             <InfoCard
               icon={<CalendarMonthOutlinedIcon />}
-              label="Feast Day"
-              value={priest.feastday}
+              label={tr(labels.feast)}
+              value={tr(priest.feastday)}
             />
           </Grid>
 
           <Grid size={{ xs: 12, sm: 6 }}>
             <InfoCard
               icon={<VolunteerActivismOutlinedIcon />}
-              label="Date of Ordination"
+              label={tr(labels.ordination)}
               value={priest.dateofordination}
             />
           </Grid>
@@ -172,8 +182,8 @@ const PriestDetailsModal = ({
           <Grid size={{ xs: 12, sm: 6 }}>
             <InfoCard
               icon={<ChurchOutlinedIcon />}
-              label="Home Parish"
-              value={priest.homeparish}
+              label={tr(labels.homeParish)}
+              value={tr(priest.homeparish)}
             />
           </Grid>
         </Grid>

@@ -16,20 +16,40 @@ import LocationOnIcon from "@mui/icons-material/LocationOn";
 import { ScrollReveal } from "../../components/ScrollReveal";
 import { glassCard } from "../../../styles/style";
 import { getUpcomingEvents, isInRange, type DateRange } from "./eventDates";
-import { categoryStyles, type EventCategory } from "./Events.Data";
+import { categoryLabels, categoryStyles, type EventCategory } from "./Events.Data";
+import { useLanguage, type Text } from "../../i18n/LanguageContext";
 
 // shortLabel is shown on phones so all four options fit on one line.
-const dateRanges: { value: DateRange; label: string; shortLabel: string }[] = [
-  { value: "all", label: "All", shortLabel: "All" },
-  { value: "today", label: "Today", shortLabel: "Today" },
-  { value: "week", label: "Next 7 Days", shortLabel: "7 Days" },
-  { value: "month", label: "This Month", shortLabel: "Month" },
+const dateRanges: { value: DateRange; label: Text; shortLabel: Text }[] = [
+  { value: "all", label: { en: "All", ml: "എല്ലാം" }, shortLabel: { en: "All", ml: "എല്ലാം" } },
+  { value: "today", label: { en: "Today", ml: "ഇന്ന്" }, shortLabel: { en: "Today", ml: "ഇന്ന്" } },
+  { value: "week", label: { en: "Next 7 Days", ml: "അടുത്ത 7 ദിവസം" }, shortLabel: { en: "7 Days", ml: "7 ദിവസം" } },
+  { value: "month", label: { en: "This Month", ml: "ഈ മാസം" }, shortLabel: { en: "Month", ml: "മാസം" } },
 ];
+
+const text = {
+  chip: { en: "What’s On", ml: "പരിപാടികൾ" },
+  title: { en: "Upcoming Events", ml: "വരാനിരിക്കുന്ന പരിപാടികൾ" },
+  intro: {
+    en: "Join us for fellowship, worship, service, and community moments throughout the year.",
+    ml: "വർഷം മുഴുവൻ നടക്കുന്ന കൂട്ടായ്മയിലും ആരാധനയിലും സേവനത്തിലും ഞങ്ങളോടൊപ്പം ചേരൂ.",
+  },
+  filterLabel: { en: "Filter events by date", ml: "തീയതി അനുസരിച്ച് പരിപാടികൾ തിരയുക" },
+  category: { en: "Category", ml: "വിഭാഗം" },
+  allCategories: { en: "All Categories", ml: "എല്ലാ വിഭാഗങ്ങളും" },
+  noMatch: { en: "No events match this filter.", ml: "ഈ തിരഞ്ഞെടുപ്പിന് ചേരുന്ന പരിപാടികളില്ല." },
+  none: {
+    en: "There are no upcoming events right now. Please check back soon.",
+    ml: "ഇപ്പോൾ വരാനിരിക്കുന്ന പരിപാടികളൊന്നുമില്ല. പിന്നീട് വീണ്ടും നോക്കുക.",
+  },
+  clear: { en: "Clear filters", ml: "ഫിൽട്ടറുകൾ മാറ്റുക" },
+} satisfies Record<string, Text>;
 
 export default function EventsPage() {
   const [range, setRange] = useState<DateRange>("all");
   const [category, setCategory] = useState<EventCategory | "all">("all");
-  const upcoming = getUpcomingEvents();
+  const { lang, tr } = useLanguage();
+  const upcoming = getUpcomingEvents(lang);
   // Only offer categories that currently have upcoming events.
   const categories = (Object.keys(categoryStyles) as EventCategory[]).filter(
     (c) => upcoming.some((e) => e.category === c),
@@ -44,7 +64,7 @@ export default function EventsPage() {
       <Box sx={{ textAlign: "center", py: { xs: 8, md: 10 }, px: 3 }}>
         <ScrollReveal>
           <Chip
-            label="What’s On"
+            label={tr(text.chip)}
             sx={{
               background: "rgba(124,58,237,0.08)",
               color: "#7c3aed",
@@ -62,7 +82,7 @@ export default function EventsPage() {
               letterSpacing: "-0.03em",
             }}
           >
-            Upcoming Events
+            {tr(text.title)}
           </Typography>
           <Typography
             sx={{
@@ -72,8 +92,7 @@ export default function EventsPage() {
               mx: "auto",
             }}
           >
-            Join us for fellowship, worship, service, and community moments
-            throughout the year.
+            {tr(text.intro)}
           </Typography>
         </ScrollReveal>
       </Box>
@@ -92,7 +111,9 @@ export default function EventsPage() {
               }}
             >
               <Typography sx={{ color: "#64748b", fontSize: "0.9rem" }}>
-                Showing {events.length} of {upcoming.length} events
+                {lang === "ml"
+                  ? `${upcoming.length} പരിപാടികളിൽ ${events.length} എണ്ണം`
+                  : `Showing ${events.length} of ${upcoming.length} events`}
               </Typography>
               <Box
                 sx={{
@@ -108,7 +129,7 @@ export default function EventsPage() {
                   size="small"
                   value={range}
                   onChange={(_, value: DateRange | null) => value && setRange(value)}
-                  aria-label="Filter events by date"
+                  aria-label={tr(text.filterLabel)}
                   sx={{
                     background: "rgba(255,255,255,0.7)",
                     backdropFilter: "blur(20px)",
@@ -132,12 +153,12 @@ export default function EventsPage() {
                   }}
                 >
                   {dateRanges.map(({ value, label, shortLabel }) => (
-                    <ToggleButton key={value} value={value} aria-label={label}>
+                    <ToggleButton key={value} value={value} aria-label={tr(label)}>
                       <Box component="span" sx={{ display: { xs: "none", sm: "inline" } }}>
-                        {label}
+                        {tr(label)}
                       </Box>
                       <Box component="span" sx={{ display: { xs: "inline", sm: "none" } }}>
-                        {shortLabel}
+                        {tr(shortLabel)}
                       </Box>
                     </ToggleButton>
                   ))}
@@ -145,7 +166,7 @@ export default function EventsPage() {
                 <TextField
                   select
                   size="small"
-                  label="Category"
+                  label={tr(text.category)}
                   value={category}
                   onChange={(e) =>
                     setCategory(e.target.value as EventCategory | "all")
@@ -159,10 +180,10 @@ export default function EventsPage() {
                     },
                   }}
                 >
-                  <MenuItem value="all">All Categories</MenuItem>
+                  <MenuItem value="all">{tr(text.allCategories)}</MenuItem>
                   {categories.map((c) => (
                     <MenuItem key={c} value={c}>
-                      {c}
+                      {tr(categoryLabels[c])}
                     </MenuItem>
                   ))}
                 </TextField>
@@ -173,8 +194,8 @@ export default function EventsPage() {
             <Box sx={{ textAlign: "center", color: "#64748b" }}>
               <Typography>
                 {isFiltered
-                  ? "No events match this filter."
-                  : "There are no upcoming events right now. Please check back soon."}
+                  ? tr(text.noMatch)
+                  : tr(text.none)}
               </Typography>
               {isFiltered && (
                 <Button
@@ -184,7 +205,7 @@ export default function EventsPage() {
                     setCategory("all");
                   }}
                 >
-                  Clear filters
+                  {tr(text.clear)}
                 </Button>
               )}
             </Box>
@@ -241,7 +262,7 @@ export default function EventsPage() {
                             <Icon sx={{ fontSize: 28, color }} />
                           </Box>
                           <Chip
-                            label={category}
+                            label={tr(categoryLabels[category])}
                             size="small"
                             sx={{
                               background: `${color}1A`,

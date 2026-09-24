@@ -3,8 +3,19 @@ import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import { Link } from "react-router";
 import HomeIcon from "@mui/icons-material/Home";
+import { useLanguage, type Text } from "../i18n/LanguageContext";
+
+const text = {
+  title: { en: "Page Not Found", ml: "പേജ് കണ്ടെത്താനായില്ല" },
+  body: {
+    en: "The page you're looking for doesn't exist or has been moved. Let's get you back home.",
+    ml: "നിങ്ങൾ തിരയുന്ന പേജ് നിലവിലില്ല, അല്ലെങ്കിൽ മാറ്റിയിരിക്കുന്നു. ഹോം പേജിലേക്ക് മടങ്ങാം.",
+  },
+  back: { en: "Back to Home", ml: "ഹോം പേജിലേക്ക്" },
+} satisfies Record<string, Text>;
 
 export default function NotFound() {
+  const { tr } = useLanguage();
   return (
     <Box
       sx={{
@@ -35,7 +46,7 @@ export default function NotFound() {
         variant="h4"
         sx={{ color: "#0f172a", fontWeight: 700, mb: 2 }}
       >
-        Page Not Found
+        {tr(text.title)}
       </Typography>
       <Typography
         sx={{
@@ -46,8 +57,7 @@ export default function NotFound() {
           lineHeight: 1.75,
         }}
       >
-        The page you're looking for doesn't exist or has been moved. Let's get
-        you back home.
+        {tr(text.body)}
       </Typography>
       <Button
         component={Link}
@@ -57,7 +67,7 @@ export default function NotFound() {
         startIcon={<HomeIcon />}
         sx={{ px: 4 }}
       >
-        Back to Home
+        {tr(text.back)}
       </Button>
     </Box>
   );

@@ -12,16 +12,37 @@ import InstagramIcon from "@mui/icons-material/Instagram";
 import YouTubeIcon from "@mui/icons-material/YouTube";
 import WhatsappIcon from "@mui/icons-material/WhatsApp";
 import NavigationBarLogo from "../assets/images/Navigation Bar Logo.webp";
+import { useLanguage, type Text } from "../i18n/LanguageContext";
+import { churchName } from "../i18n/common";
 
-const quickLinks = [
-  { label: "About Us", path: "/about" },
-  { label: "Mass Times", path: "/programs" },
-  { label: "Ministries", path: "/ministries" },
-  { label: "Events", path: "/events" },
-  { label: "Organizations", path: "/organizations" },
-  { label: "Media", path: "/media" },
-  { label: "Contact Us", path: "/contact" },
+const quickLinks: { label: Text; path: string }[] = [
+  { label: { en: "About Us", ml: "ഞങ്ങളെക്കുറിച്ച്" }, path: "/about" },
+  { label: { en: "Mass Times", ml: "കുർബാന സമയങ്ങൾ" }, path: "/programs" },
+  { label: { en: "Ministries", ml: "ശുശ്രൂഷകൾ" }, path: "/ministries" },
+  { label: { en: "Events", ml: "പരിപാടികൾ" }, path: "/events" },
+  { label: { en: "Organizations", ml: "സ്ഥാപനങ്ങൾ" }, path: "/organizations" },
+  { label: { en: "Media", ml: "മീഡിയ" }, path: "/media" },
+  { label: { en: "Contact Us", ml: "ബന്ധപ്പെടുക" }, path: "/contact" },
 ];
+
+const text = {
+  about: {
+    en: "St. Mary’s Forane Church, Chalakudy, is one of the 10 Foranes or deaneries under the Diocese of Irinjalakuda, which was established in 1978 by the bifurcation of Thrissur Diocese.",
+    ml: "ഇരിങ്ങാലക്കുട രൂപതയിലെ 10 ഫൊറോനകളിൽ ഒന്നാണ് ചാലക്കുടി സെന്റ് മേരീസ് ഫൊറോന പള്ളി. 1978-ൽ തൃശ്ശൂർ രൂപത വിഭജിച്ചാണ് ഇരിങ്ങാലക്കുട രൂപത സ്ഥാപിതമായത്.",
+  },
+  diocese: {
+    en: "DIOCESE OF IRINJALAKUDA, THRISSUR-KERALA-INDIA",
+    ml: "ഇരിങ്ങാലക്കുട രൂപത, തൃശ്ശൂർ, കേരളം, ഇന്ത്യ",
+  },
+  quickLinks: { en: "Quick Links", ml: "പ്രധാന ലിങ്കുകൾ" },
+  contact: { en: "Contact", ml: "ബന്ധപ്പെടാൻ" },
+  address: {
+    en: "St. Mary's Forane Church (Shrine of the Nativity of Our Lady), located in Chalakudy, Thrissur district, Kerala 680307.",
+    ml: "സെന്റ് മേരീസ് ഫൊറോന പള്ളി (പരിശുദ്ധ ദൈവമാതാവിന്റെ പിറവിത്തിരുനാൾ ദേവാലയം), ചാലക്കുടി, തൃശ്ശൂർ ജില്ല, കേരളം 680307.",
+  },
+  connect: { en: "Connect With Us", ml: "ഞങ്ങളെ പിന്തുടരുക" },
+  rights: { en: "All rights reserved.", ml: "സർവ്വാവകാശങ്ങളും നിക്ഷിപ്തം." },
+} satisfies Record<string, Text>;
 
 const socialIcons = [
   {
@@ -47,6 +68,7 @@ const socialIcons = [
 ];
 
 export function Footer() {
+  const { tr } = useLanguage();
   return (
     <Box
       component="footer"
@@ -77,7 +99,7 @@ export function Footer() {
               <Box
                 component="img"
                 src={NavigationBarLogo}
-                alt="Church Logo"
+                alt={tr({ en: "Church Logo", ml: "പള്ളിയുടെ ലോഗോ" })}
                 className="logo-icon"
                 sx={{
                   height: 68,
@@ -88,23 +110,21 @@ export function Footer() {
               />
               <Typography
                 sx={{
-                  fontFamily: '"Cinzel", "Georgia", serif',
+                  fontFamily: '"Cinzel", "Noto Serif Malayalam", "Georgia", serif',
                   fontWeight: 800,
                   color: "#0f172a",
                   fontSize: "1rem",
                 }}
               >
-                St.Mary's Forane Church Chalakudy
+                {tr(churchName)}
               </Typography>
             </Box>
             <Typography
               sx={{ color: "#64748b", fontSize: "0.875rem", lineHeight: 1.8 }}
             >
-              St. Mary’s Forane Church, Chalakudy, is one of the 10 Foranes or
-              deaneries under the Diocese of Irinjalakuda, which was established
-              in 1978 by the bifurcation of Thrissur Diocese.
-              <Box component="span" sx={{ fontweight: 700 }}>
-                DIOCESE OF IRINJALAKUDA, THRISSUR-KERALA-INDIA
+              {tr(text.about)}{" "}
+              <Box component="span" sx={{ fontWeight: 700 }}>
+                {tr(text.diocese)}
               </Box>
             </Typography>
           </Grid>
@@ -114,7 +134,7 @@ export function Footer() {
             <Typography
               sx={{
                 color: "#1d4ed8",
-                fontFamily: '"Cinzel", "Georgia", serif',
+                fontFamily: '"Cinzel", "Noto Serif Malayalam", "Georgia", serif',
                 fontWeight: 700,
                 mb: 2.5,
                 letterSpacing: "0.1em",
@@ -122,7 +142,7 @@ export function Footer() {
                 textTransform: "uppercase",
               }}
             >
-              Quick Links
+              {tr(text.quickLinks)}
             </Typography>
             <Box
               component="ul"
@@ -149,7 +169,7 @@ export function Footer() {
                       "&:hover": { color: "#1d4ed8", pl: 0.75 },
                     }}
                   >
-                    {link.label}
+                    {tr(link.label)}
                   </Box>
                 </li>
               ))}
@@ -161,7 +181,7 @@ export function Footer() {
             <Typography
               sx={{
                 color: "#1d4ed8",
-                fontFamily: '"Cinzel", "Georgia", serif',
+                fontFamily: '"Cinzel", "Noto Serif Malayalam", "Georgia", serif',
                 fontWeight: 700,
                 mb: 2.5,
                 letterSpacing: "0.1em",
@@ -169,13 +189,13 @@ export function Footer() {
                 textTransform: "uppercase",
               }}
             >
-              Contact
+              {tr(text.contact)}
             </Typography>
             <Box sx={{ display: "flex", flexDirection: "column", gap: 1.5 }}>
               {[
                 {
                   Icon: LocationOnIcon,
-                  text: " St. Mary's Forane Church (Shrine of the Nativity of Our Lady), located in Chalakudy, Thrissur district, Kerala 680307.",
+                  text: tr(text.address),
                   multiline: true,
                 },
                 {
@@ -225,7 +245,7 @@ export function Footer() {
             <Typography
               sx={{
                 color: "#1d4ed8",
-                fontFamily: '"Cinzel", "Georgia", serif',
+                fontFamily: '"Cinzel", "Noto Serif Malayalam", "Georgia", serif',
                 fontWeight: 700,
                 mb: 2.5,
                 letterSpacing: "0.1em",
@@ -233,7 +253,7 @@ export function Footer() {
                 textTransform: "uppercase",
               }}
             >
-              Connect With Us
+              {tr(text.connect)}
             </Typography>
             <Box sx={{ display: "flex", gap: 1.5 }}>
               {socialIcons.map(({ Icon, label, link }) => (
@@ -270,8 +290,7 @@ export function Footer() {
         <Typography
           sx={{ textAlign: "center", color: "#94a3b8", fontSize: "0.82rem" }}
         >
-          &copy; {new Date().getFullYear()} St.Mary's Forane Church Chalakudy .
-          All rights reserved.
+          &copy; {new Date().getFullYear()} {tr(churchName)}. {tr(text.rights)}
         </Typography>
       </Box>
     </Box>

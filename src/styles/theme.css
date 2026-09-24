@@ -1,7 +1,7 @@
 :root {
   --font-size: 16px;
-  --font-sans: "DM Sans", "Inter", "Roboto", sans-serif;
-  --font-display: "Cinzel", Georgia, serif;
+  --font-sans: "DM Sans", "Noto Sans Malayalam", "Inter", "Roboto", sans-serif;
+  --font-display: "Cinzel", "Noto Serif Malayalam", Georgia, serif;
   --background: #0a0e27;
   --foreground: #e8eaf6;
   --card: rgba(15, 23, 42, 0.6);
@@ -236,4 +236,30 @@ input {
   font-size: var(--text-base);
   font-weight: var(--font-weight-normal);
   line-height: 1.5;
+}
+/* ── Malayalam (html[lang="ml"], set by LanguageProvider) ──
+   The English design tightens letter spacing on headings, which breaks up Malayalam
+   letter clusters, and Malayalam needs a little more line height to fit its tall glyphs. */
+html:lang(ml) * {
+  letter-spacing: normal !important;
+}
+html:lang(ml) h1,
+html:lang(ml) h2,
+html:lang(ml) h3,
+html:lang(ml) h4,
+html:lang(ml) h5,
+html:lang(ml) h6 {
+  line-height: 1.35 !important;
+}
+
+/* Malayalam compound words are long and can't wrap between syllables, so the large
+   English heading sizes push them off narrow screens. Scale headings down on phones,
+   and as a last resort let a single word that still doesn't fit break. */
+html:lang(ml) body {
+  overflow-wrap: break-word;
+}
+@media (max-width: 599.95px) {
+  html:lang(ml) h1 { font-size: 1.9rem !important; }
+  html:lang(ml) h2 { font-size: 1.45rem !important; }
+  html:lang(ml) h4 { font-size: 1.6rem !important; }
 }

@@ -9,14 +9,25 @@ import { Link } from "react-router";
 import { ScrollReveal } from "../../components/ScrollReveal";
 import { glassCard } from "../../../styles/style";
 import { ministries } from "./Ministries.Data";
+import { useLanguage, type Text } from "../../i18n/LanguageContext";
+
+const text = {
+  chip: { en: "Get Involved", ml: "പങ്കുചേരാം" },
+  title: { en: "Our Ministries", ml: "ഞങ്ങളുടെ ശുശ്രൂഷകൾ" },
+  intro: {
+    en: "Discover meaningful ways to connect, grow, and serve within our church community",
+    ml: "ഇടവക സമൂഹത്തിൽ ഒത്തുചേരാനും വളരാനും സേവിക്കാനുമുള്ള അർത്ഥവത്തായ വഴികൾ കണ്ടെത്തൂ",
+  },
+} satisfies Record<string, Text>;
 
 export default function Ministries() {
+  const { tr } = useLanguage();
   return (
     <Box>
       <Box sx={{ textAlign: "center", py: { xs: 8, md: 10 }, px: 3 }}>
         <ScrollReveal>
           <Chip
-            label="Get Involved"
+            label={tr(text.chip)}
             sx={{
               background: "rgba(29,78,216,0.08)",
               color: "#1d4ed8",
@@ -34,7 +45,7 @@ export default function Ministries() {
               letterSpacing: "-0.03em",
             }}
           >
-            Our Ministries
+            {tr(text.title)}
           </Typography>
           <Typography
             sx={{
@@ -44,8 +55,7 @@ export default function Ministries() {
               mx: "auto",
             }}
           >
-            Discover meaningful ways to connect, grow, and serve within our
-            church community
+            {tr(text.intro)}
           </Typography>
         </ScrollReveal>
       </Box>
@@ -90,7 +100,7 @@ export default function Ministries() {
                           fontSize: "0.97rem",
                         }}
                       >
-                        {title}
+                        {tr(title)}
                       </Typography>
                       <Typography
                         sx={{
@@ -100,7 +110,7 @@ export default function Ministries() {
                           flex: 1,
                         }}
                       >
-                        {description}
+                        {tr(description)}
                       </Typography>
                     </CardContent>
                   </Card>

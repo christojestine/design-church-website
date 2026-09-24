@@ -28,6 +28,10 @@ for (const e of events) {
     if (!validDate(e.endDate)) errors.push(`${label}: invalid endDate "${e.endDate}"`);
     else if (e.endDate < e.date) errors.push(`${label}: endDate is before date`);
   }
+  // The site has a Malayalam mode, so every event needs its Malayalam text too.
+  for (const field of ["title", "description", "time", "location"]) {
+    if (!e.ml?.[field]?.trim()) errors.push(`${label}: missing Malayalam ml.${field}`);
+  }
   const key = e.title + e.date;
   if (keys.has(key)) errors.push(`${label}: duplicate title + date`);
   keys.add(key);

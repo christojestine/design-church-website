@@ -2,6 +2,7 @@ import { RouterProvider } from "react-router";
 import { router } from "./routes";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
+import { LanguageProvider } from "./i18n/LanguageContext";
 
 const theme = createTheme({
   palette: {
@@ -13,51 +14,51 @@ const theme = createTheme({
     divider: "rgba(30,64,175,0.12)",
   },
   typography: {
-    fontFamily: '"DM Sans", "Inter", "Roboto", sans-serif',
+    fontFamily: '"DM Sans", "Noto Sans Malayalam", "Inter", "Roboto", sans-serif',
     h1: {
-      fontFamily: '"Cinzel", "Georgia", serif',
+      fontFamily: '"Cinzel", "Noto Serif Malayalam", "Georgia", serif',
       fontWeight: 800,
       letterSpacing: "-0.03em",
     },
     h2: {
-      fontFamily: '"Cinzel", "Georgia", serif',
+      fontFamily: '"Cinzel", "Noto Serif Malayalam", "Georgia", serif',
       fontWeight: 700,
       letterSpacing: "-0.02em",
     },
     h3: {
-      fontFamily: '"Cinzel", "Georgia", serif',
+      fontFamily: '"Cinzel", "Noto Serif Malayalam", "Georgia", serif',
       fontWeight: 700,
       letterSpacing: "-0.01em",
     },
     h4: {
-      fontFamily: '"Cinzel", "Georgia", serif',
+      fontFamily: '"Cinzel", "Noto Serif Malayalam", "Georgia", serif',
       fontWeight: 600,
     },
     h5: {
-      fontFamily: '"Cinzel", "Georgia", serif',
+      fontFamily: '"Cinzel", "Noto Serif Malayalam", "Georgia", serif',
       fontWeight: 600,
     },
     h6: {
-      fontFamily: '"Cinzel", "Georgia", serif',
+      fontFamily: '"Cinzel", "Noto Serif Malayalam", "Georgia", serif',
       fontWeight: 600,
     },
-    body1: { fontFamily: '"DM Sans", "Inter", "Roboto", sans-serif' },
-    body2: { fontFamily: '"DM Sans", "Inter", "Roboto", sans-serif' },
-    button: { fontFamily: '"DM Sans", "Inter", "Roboto", sans-serif' },
+    body1: { fontFamily: '"DM Sans", "Noto Sans Malayalam", "Inter", "Roboto", sans-serif' },
+    body2: { fontFamily: '"DM Sans", "Noto Sans Malayalam", "Inter", "Roboto", sans-serif' },
+    button: { fontFamily: '"DM Sans", "Noto Sans Malayalam", "Inter", "Roboto", sans-serif' },
   },
   shape: { borderRadius: 16 },
   components: {
     MuiCssBaseline: {
       styleOverrides: {
         body: {
-          fontFamily: '"DM Sans", "Inter", "Roboto", sans-serif',
+          fontFamily: '"DM Sans", "Noto Sans Malayalam", "Inter", "Roboto", sans-serif',
         },
-        h1: { fontFamily: '"Cinzel", "Georgia", serif' },
-        h2: { fontFamily: '"Cinzel", "Georgia", serif' },
-        h3: { fontFamily: '"Cinzel", "Georgia", serif' },
-        h4: { fontFamily: '"Cinzel", "Georgia", serif' },
-        h5: { fontFamily: '"Cinzel", "Georgia", serif' },
-        h6: { fontFamily: '"Cinzel", "Georgia", serif' },
+        h1: { fontFamily: '"Cinzel", "Noto Serif Malayalam", "Georgia", serif' },
+        h2: { fontFamily: '"Cinzel", "Noto Serif Malayalam", "Georgia", serif' },
+        h3: { fontFamily: '"Cinzel", "Noto Serif Malayalam", "Georgia", serif' },
+        h4: { fontFamily: '"Cinzel", "Noto Serif Malayalam", "Georgia", serif' },
+        h5: { fontFamily: '"Cinzel", "Noto Serif Malayalam", "Georgia", serif' },
+        h6: { fontFamily: '"Cinzel", "Noto Serif Malayalam", "Georgia", serif' },
       },
     },
     MuiButton: {
@@ -68,7 +69,7 @@ const theme = createTheme({
           borderRadius: 12,
           padding: "10px 24px",
           transition: "all 0.3s ease",
-          fontFamily: '"DM Sans", "Inter", "Roboto", sans-serif',
+          fontFamily: '"DM Sans", "Noto Sans Malayalam", "Inter", "Roboto", sans-serif',
         },
         containedPrimary: {
           background: "linear-gradient(135deg, #1d4ed8, #2563eb)",
@@ -134,7 +135,9 @@ export default function App() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <RouterProvider router={router} />
+      <LanguageProvider>
+        <RouterProvider router={router} />
+      </LanguageProvider>
     </ThemeProvider>
   );
 }

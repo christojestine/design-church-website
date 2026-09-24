@@ -13,8 +13,17 @@ import PhotoLibraryIcon from "@mui/icons-material/PhotoLibrary";
 import VideocamIcon from "@mui/icons-material/Videocam";
 import { glassCard } from "../../../styles/style";
 import { videos, photos } from "./Media.Data";
+import { useLanguage, type Text } from "../../i18n/LanguageContext";
+
+const text = {
+  chip: { en: "Church Media", ml: "പള്ളി മീഡിയ" },
+  title: { en: "Media Center", ml: "മീഡിയ സെന്റർ" },
+  videos: { en: "Videos", ml: "വീഡിയോകൾ" },
+  photos: { en: "Photos", ml: "ചിത്രങ്ങൾ" },
+} satisfies Record<string, Text>;
 
 export default function Media() {
+  const { tr } = useLanguage();
   const [tab, setTab] = useState(0);
 
   useEffect(() => {
@@ -51,7 +60,7 @@ export default function Media() {
       <Box sx={{ textAlign: "center", py: { xs: 8, md: 10 }, px: 3 }}>
         <ScrollReveal>
           <Chip
-            label="Church Media"
+            label={tr(text.chip)}
             sx={{
               background: "rgba(29,78,216,0.08)",
               color: "#1d4ed8",
@@ -69,7 +78,7 @@ export default function Media() {
               letterSpacing: "-0.03em",
             }}
           >
-            Media Center
+            {tr(text.title)}
           </Typography>
         </ScrollReveal>
       </Box>
@@ -112,12 +121,12 @@ export default function Media() {
             <Tab
               icon={<VideocamIcon sx={{ fontSize: 18 }} />}
               iconPosition="start"
-              label="Videos"
+              label={tr(text.videos)}
             />
             <Tab
               icon={<PhotoLibraryIcon sx={{ fontSize: 18 }} />}
               iconPosition="start"
-              label="Photos"
+              label={tr(text.photos)}
             />
           </Tabs>
         </Box>
@@ -203,7 +212,7 @@ export default function Media() {
                                   lineHeight: 1.6,
                                 }}
                               >
-                                {v.description}
+                                {tr(v.description)}
                               </Typography>
                             </Box>
                           </Box>
@@ -239,7 +248,7 @@ export default function Media() {
                       <Box
                         component="iframe"
                         src={`https://www.instagram.com/p/${photo.shortcode}/embed`}
-                        title={photo.caption}
+                        title={tr(photo.caption)}
                         loading="lazy"
                         sx={{ width: "100%", height: 520, border: "none" }}
                       />

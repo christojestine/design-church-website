@@ -1,4 +1,5 @@
 import { categoryStyles, events, type ChurchEvent } from "./Events.Data";
+import type { Lang } from "../../i18n/LanguageContext";
 
 /** Local calendar date as "YYYY-MM-DD" (uses the visitor's timezone, not UTC). */
 function toIsoDate(d: Date) {
@@ -12,11 +13,12 @@ function parseIsoDate(iso: string) {
   return new Date(y, m - 1, d);
 }
 
-/** "Fri, September 25, 2026", or "October 1 – 20, 2026" for multi-day events. */
-export function formatEventDate({ date, endDate }: ChurchEvent) {
+/** "Fri, September 25, 2026", or "October 1 – 20, 2026" for multi-day events (Malayalam month names for "ml"). */
+export function formatEventDate({ date, endDate }: ChurchEvent, lang: Lang = "en") {
+  const locale = lang === "ml" ? "ml-IN" : "en-US";
   const start = parseIsoDate(date);
   if (!endDate || endDate === date) {
-    return start.toLocaleDateString("en-US", {
+    return start.toLocaleDateString(locale, {
       weekday: "short",
       month: "long",
       day: "numeric",
@@ -24,7 +26,7 @@ export function formatEventDate({ date, endDate }: ChurchEvent) {
     });
   }
   const end = parseIsoDate(endDate);
-  const month = (d: Date) => d.toLocaleDateString("en-US", { month: "long" });
+  const month = (d: Date) => d.toLocaleDateString(locale, { month: "long" });
   if (start.getMonth() === end.getMonth()) {
     return `${month(start)} ${start.getDate()} – ${end.getDate()}, ${end.getFullYear()}`;
   }
@@ -46,15 +48,17 @@ export function isInRange(event: ChurchEvent, range: DateRange, now = new Date()
  * Events that have not finished yet, soonest first, with display fields attached.
  * An event stays visible through its last day and disappears the next day.
  * This runs in the browser on every render, so past events drop off without a rebuild.
+ * For "ml", each event's Malayalam text is used where it exists.
  */
-export function getUpcomingEvents(now = new Date()) {
+export function getUpcomingEvents(lang: Lang = "en", now = new Date()) {
   const today = toIsoDate(now);
   return events
     .filter((e) => (e.endDate ?? e.date) >= today)
     .sort((a, b) => a.date.localeCompare(b.date))
     .map((e) => ({
       ...e,
+      ...(lang === "ml" ? e.ml : undefined),
       ...categoryStyles[e.category],
-      displayDate: formatEventDate(e),
+      displayDate: formatEventDate(e, lang),
     }));
 }

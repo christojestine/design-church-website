@@ -54,6 +54,16 @@ Production routing uses basename `/design-church-website` for GitHub Pages (conf
 - The Events page shows all upcoming events; the Home page shows the next 3 from the same source.
 - To update events from a weekly Malayalam announcement PDF, use the `/event-update` Claude Code skill (`.claude/skills/event-update/`). It covers translation, event rules and a validator script.
 
+## Languages (English / Malayalam)
+- `src/app/i18n/LanguageContext.tsx`: `LanguageProvider` (wraps the app in `App.tsx`) and `useLanguage()` → `{ lang, setLang, tr }`. Choice comes from `?lang=ml` in the URL, then localStorage, then English; it sets `<html lang>`.
+- Text is written as `Text = { en, ml }` next to where it is used; `tr(text)` picks the current language. Malayalam is required by the type, so a missing translation fails the build. Paragraphs with inline bold text use a `lang === "ml" ? ... : ...` branch.
+- `src/app/i18n/common.ts`: text shared by several components (church name).
+- `components/LanguageToggle.tsx`: header switch (shows the language you can switch to).
+- Fonts: Noto Sans/Serif Malayalam sit behind DM Sans/Cinzel in every font stack; Google Fonts only downloads them when Malayalam is on screen. `theme.css` resets letter spacing and raises heading line height under `html:lang(ml)`.
+- Navigation shows the full desktop menu from 1280px (English) / 1500px (Malayalam); below that the drawer menu is used.
+- Events: `ChurchEvent.ml` holds optional Malayalam title/description/time/location (English is shown where missing); `getUpcomingEvents(lang)` and `formatEventDate(e, lang)` localise text and dates.
+- Every page is translated, including names (priests, council, sacristans) in Malayalam script. Data files hold `Text` fields; `formatClock()` in `i18n/common.ts` renders "6:00 AM" as "രാവിലെ 6:00". Events carry Malayalam in `ml` (the `/event-update` validator requires it). `theme.css` shrinks Malayalam headings on phones and lets over-long words wrap, because Malayalam compound words are too wide for the English heading sizes.
+
 ## Shared Components
 - `Navigation.tsx`: Sticky top navigation + mobile drawer.
 - `Footer.tsx`: Quick links, contact details, social links.

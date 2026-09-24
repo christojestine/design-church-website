@@ -4,10 +4,19 @@ import Chip from "@mui/material/Chip";
 import { ImageWithFallback } from "../../components/figma/ImageWithFallback";
 import CustomBoxContainer from "./CustomBoxContainer";
 import { aboutSections } from "./About.data";
+import { useLanguage, type Text } from "../../i18n/LanguageContext";
 import grottoSmall from "@/imports/118A2143-q1i6wlsiqm03o4ehgyalbdplv9c71xmkizsndnfwxy_2ac44f49.jpg";
 
 // The About page component
+const text = {
+  heroAlt: { en: "Grotto shrine", ml: "ഗ്രോട്ടോ" },
+  chip: { en: "Our Story", ml: "ഞങ്ങളുടെ ചരിത്രം" },
+  title: { en: "About Us", ml: "ഞങ്ങളെക്കുറിച്ച്" },
+  tagline: { en: "Our story, our mission, our faith", ml: "ഞങ്ങളുടെ ചരിത്രം, ദൗത്യം, വിശ്വാസം" },
+} satisfies Record<string, Text>;
+
 export default function About() {
+  const { tr } = useLanguage();
   return (
     <Box>
       {/* Hero with real photo */}
@@ -26,7 +35,7 @@ export default function About() {
         <Box sx={{ position: "absolute", inset: 0 }}>
           <ImageWithFallback
             src={grottoSmall}
-            alt="Grotto shrine"
+            alt={tr(text.heroAlt)}
             style={{ width: "100%", height: "100%", objectFit: "cover" }}
           />
           <Box
@@ -53,7 +62,7 @@ export default function About() {
           }}
         >
           <Chip
-            label="Our Story"
+            label={tr(text.chip)}
             sx={{
               background: "rgba(29,78,216,0.08)",
               color: "#1d4ed8",
@@ -71,10 +80,10 @@ export default function About() {
               letterSpacing: "-0.03em",
             }}
           >
-            About Us
+            {tr(text.title)}
           </Typography>
           <Typography sx={{ color: "#475569", fontSize: "1.15rem" }}>
-            Our story, our mission, our faith
+            {tr(text.tagline)}
           </Typography>
         </Box>
       </Box>
