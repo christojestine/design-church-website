@@ -78,6 +78,7 @@ From `package.json`:
 
 ## Build/Deploy Notes
 - Bundler config: `rspack.config.ts`
+- CSS uses Rspack's built-in CSS support (`type: 'css'` rule): no style-loader/css-loader/postcss-loader and no PostCSS config. Those loaders pulled in webpack and js-yaml, which caused `pnpm audit` failures.
 - `publicPath` is `/design-church-website/` in production.
 - `404.html` is emitted to `dist/` by a small inline plugin in `rspack.config.ts` for GitHub Pages route fallback. Do not switch back to `CopyRspackPlugin`: its glob scanned the whole project (incl. `node_modules`) and added ~15s to every build.
 - Router basename and bundler public path must stay aligned.

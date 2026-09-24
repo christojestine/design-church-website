@@ -1,7 +1,7 @@
 import path from 'path'
 import { fileURLToPath } from 'url'
 import fs from 'fs'
-import { HtmlRspackPlugin, DefinePlugin, CssExtractRspackPlugin, sources, type Compiler } from '@rspack/core'
+import { HtmlRspackPlugin, DefinePlugin, sources, type Compiler } from '@rspack/core'
 import { ReactRefreshRspackPlugin } from '@rspack/plugin-react-refresh'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
@@ -17,7 +17,9 @@ const config = {
     filename: isDev ? '[name].js' : '[name].[contenthash:8].js',
     chunkFilename: isDev ? '[name].js' : '[name].[contenthash:8].js',
     publicPath: isProd ? '/design-church-website/' : '/',
-    assetModuleFilename: 'assets/[name].[hash:8][ext][query]',
+    cssFilename: isDev ? '[name].css' : '[name].[contenthash:8].css',
+    cssChunkFilename: isDev ? '[name].css' : '[name].[contenthash:8].css',
+    assetModuleFilename:'assets/[name].[hash:8][ext][query]',
   },
   mode: isDev ? 'development' : 'production',
   devtool: isDev ? 'eval' : false,
@@ -58,7 +60,6 @@ const config = {
       },
     },
     ...(isDev ? [new ReactRefreshRspackPlugin()] : []),
-    ...(isProd ? [new CssExtractRspackPlugin({ filename: '[name].[contenthash:8].css', chunkFilename: '[name].[contenthash:8].css' })] : []),
   ],
   module: {
     rules: [
@@ -89,20 +90,11 @@ const config = {
           },
         },
       },
+      // Rspack's built-in CSS support: extracts .css files in production and hot-reloads in dev.
+      // Replaces style-loader/css-loader/postcss-loader, which pulled webpack and js-yaml (with audit issues) into the tree.
       {
         test: /\.css$/,
-        use: [
-          isProd ? CssExtractRspackPlugin.loader : 'style-loader',
-          {
-            loader: 'css-loader',
-            options: {
-              importLoaders: 0,
-              modules: false,
-            },
-          },
-          ...(isProd ? ['postcss-loader'] : []),
-        ],
-        type: 'javascript/auto',
+        type: 'css',
       },
       {
         test: /\.(png|jpe?g|gif|webp|avif)$/i,
