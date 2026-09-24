@@ -18,11 +18,12 @@ import { glassCard } from "../../../styles/style";
 import { getUpcomingEvents, isInRange, type DateRange } from "./eventDates";
 import { categoryStyles, type EventCategory } from "./Events.Data";
 
-const dateRanges: { value: DateRange; label: string }[] = [
-  { value: "all", label: "All" },
-  { value: "today", label: "Today" },
-  { value: "week", label: "Next 7 Days" },
-  { value: "month", label: "This Month" },
+// shortLabel is shown on phones so all four options fit on one line.
+const dateRanges: { value: DateRange; label: string; shortLabel: string }[] = [
+  { value: "all", label: "All", shortLabel: "All" },
+  { value: "today", label: "Today", shortLabel: "Today" },
+  { value: "week", label: "Next 7 Days", shortLabel: "7 Days" },
+  { value: "month", label: "This Month", shortLabel: "Month" },
 ];
 
 export default function EventsPage() {
@@ -115,11 +116,13 @@ export default function EventsPage() {
                     boxShadow: "0 4px 24px rgba(30,64,175,0.07)",
                     borderRadius: "999px",
                     p: 0.5,
-                    flexWrap: "wrap",
+                    width: { xs: "100%", sm: "auto" },
                     "& .MuiToggleButton-root": {
+                      flex: { xs: 1, sm: "none" },
+                      whiteSpace: "nowrap",
                       border: 0,
                       borderRadius: "999px !important",
-                      px: 1.75,
+                      px: { xs: 1, sm: 1.75 },
                       textTransform: "none",
                       fontWeight: 600,
                       color: "#475569",
@@ -128,9 +131,14 @@ export default function EventsPage() {
                       { background: "#7c3aed", color: "#fff" },
                   }}
                 >
-                  {dateRanges.map(({ value, label }) => (
-                    <ToggleButton key={value} value={value}>
-                      {label}
+                  {dateRanges.map(({ value, label, shortLabel }) => (
+                    <ToggleButton key={value} value={value} aria-label={label}>
+                      <Box component="span" sx={{ display: { xs: "none", sm: "inline" } }}>
+                        {label}
+                      </Box>
+                      <Box component="span" sx={{ display: { xs: "inline", sm: "none" } }}>
+                        {shortLabel}
+                      </Box>
                     </ToggleButton>
                   ))}
                 </ToggleButtonGroup>

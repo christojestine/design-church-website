@@ -166,6 +166,9 @@ export default function Programs() {
               borderRadius: "16px",
               p: 3,
               display: "flex",
+              // Phones: the Join button drops to its own full-width row.
+              flexWrap: { xs: "wrap", sm: "nowrap" },
+              alignItems: { xs: "flex-start", sm: "center" },
               gap: 2,
             }}
           >
@@ -173,7 +176,13 @@ export default function Programs() {
               sx={{ color: "#1d4ed8", flexShrink: 0, mt: 0.3 }}
             />
             <Typography
-              sx={{ color: "#475569", fontSize: "0.925rem", lineHeight: 1.75 }}
+              sx={{
+                color: "#475569",
+                fontSize: "0.925rem",
+                lineHeight: 1.75,
+                flex: 1,
+                minWidth: 0,
+              }}
             >
               Apart from the regular timings, some special masses will also be
               held on certain days. For updates, please join our WhatsApp
@@ -188,7 +197,9 @@ export default function Programs() {
                 background: "rgba(29,78,216,0.08)",
                 border: "1px solid rgba(29,78,216,0.15)",
                 color: "#1d4ed8",
-                ml: "auto",
+                ml: { xs: 0, sm: "auto" },
+                width: { xs: "100%", sm: "auto" },
+                flexShrink: 0,
                 borderRadius: "12px",
                 textTransform: "none",
                 px: 2.5,
@@ -237,7 +248,7 @@ export default function Programs() {
           </ScrollReveal>
           <ScrollReveal delay={0.15}>
             <Card sx={glassCard}>
-              <CardContent sx={{ p: 4 }}>
+              <CardContent sx={{ p: { xs: 2.5, md: 4 } }}>
                 {confessions.map((c, i) => (
                   <Box key={i}>
                     <Box
@@ -245,13 +256,16 @@ export default function Programs() {
                         display: "flex",
                         justifyContent: "space-between",
                         py: 2,
+                        gap: 2,
                         alignItems: "center",
                       }}
                     >
                       <Typography sx={{ color: "#334155", fontWeight: 500 }}>
                         {c.day}
                       </Typography>
-                      <Typography sx={{ color: "#1d4ed8", fontWeight: 600 }}>
+                      <Typography
+                        sx={{ color: "#1d4ed8", fontWeight: 600, textAlign: "right" }}
+                      >
                         {c.time}
                       </Typography>
                     </Box>
@@ -293,7 +307,7 @@ export default function Programs() {
           </ScrollReveal>
           <ScrollReveal delay={0.15}>
             <Card sx={glassCard}>
-              <CardContent sx={{ p: 4 }}>
+              <CardContent sx={{ p: { xs: 2.5, md: 4 } }}>
                 {vachabhishekaSayanam.map((c, i) => (
                   <Box key={i}>
                     <Box
@@ -301,13 +315,16 @@ export default function Programs() {
                         display: "flex",
                         justifyContent: "space-between",
                         py: 2,
+                        gap: 2,
                         alignItems: "center",
                       }}
                     >
                       <Typography sx={{ color: "#334155", fontWeight: 500 }}>
                         {c.day}
                       </Typography>
-                      <Typography sx={{ color: "#1d4ed8", fontWeight: 600 }}>
+                      <Typography
+                        sx={{ color: "#1d4ed8", fontWeight: 600, textAlign: "right" }}
+                      >
                         {c.time}
                       </Typography>
                     </Box>

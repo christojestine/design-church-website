@@ -22,7 +22,7 @@ export default function ParishTeam() {
   const closeModal = () => setOpen(false);
 
   return (
-    <Box sx={{ py: { xs: 4, md: 5 }, px: 3, pb: { xs: 10, md: 14 } }}>
+    <Box sx={{ py: { xs: 4, md: 5 }, px: { xs: 2, sm: 3 }, pb: { xs: 10, md: 14 } }}>
       {selectedPriest && (
         <PriestDetailsModal
           open={open}
@@ -227,7 +227,7 @@ export default function ParishTeam() {
         </ScrollReveal>
         <Grid
           container
-          spacing={4}
+          spacing={{ xs: 2, md: 4 }}
           sx={{ mt: 4, mx: "auto", maxWidth: 1300, justifyContent: "center" }}
         >
           {parishCouncil.map((member, i) => (
@@ -236,11 +236,11 @@ export default function ParishTeam() {
                 <Card
                   sx={{ ...glassCard, height: "100%", textAlign: "center" }}
                 >
-                  <CardContent sx={{ p: 4 }}>
+                  <CardContent sx={{ p: { xs: 1.5, sm: 2, md: 4 } }}>
                     <Box
                       sx={{
-                        width: 96,
-                        height: 96,
+                        width: { xs: 80, md: 96 },
+                        height: { xs: 80, md: 96 },
                         borderRadius: "50%",
                         mx: "auto",
                         mb: 2.5,
@@ -266,7 +266,10 @@ export default function ParishTeam() {
                         color: "#0f172a",
                         fontWeight: 700,
                         mb: 0.5,
-                        fontSize: "1rem",
+                        // Scales down on the narrowest phones so long surnames fit without breaking.
+                        fontSize: { xs: "clamp(0.75rem, 4vw, 0.85rem)", sm: "0.9rem", md: "1rem" },
+                        overflowWrap: "anywhere",
+                        hyphens: "auto",
                       }}
                     >
                       {member.name}
@@ -310,7 +313,7 @@ export default function ParishTeam() {
         </ScrollReveal>
         <Grid
           container
-          spacing={4}
+          spacing={{ xs: 2, md: 4 }}
           sx={{ mt: 4, mx: "auto", maxWidth: 1300, justifyContent: "center" }}
         >
           {Sacristan.map((member, i) => (
@@ -319,11 +322,11 @@ export default function ParishTeam() {
                 <Card
                   sx={{ ...glassCard, height: "100%", textAlign: "center" }}
                 >
-                  <CardContent sx={{ p: 4 }}>
+                  <CardContent sx={{ p: { xs: 1.5, sm: 2, md: 4 } }}>
                     <Box
                       sx={{
-                        width: 96,
-                        height: 96,
+                        width: { xs: 80, md: 96 },
+                        height: { xs: 80, md: 96 },
                         borderRadius: "50%",
                         mx: "auto",
                         mb: 2.5,
@@ -349,7 +352,10 @@ export default function ParishTeam() {
                         color: "#0f172a",
                         fontWeight: 700,
                         mb: 0.5,
-                        fontSize: "1rem",
+                        // Scales down on the narrowest phones so long surnames fit without breaking.
+                        fontSize: { xs: "clamp(0.75rem, 4vw, 0.85rem)", sm: "0.9rem", md: "1rem" },
+                        overflowWrap: "anywhere",
+                        hyphens: "auto",
                       }}
                     >
                       {member.name}

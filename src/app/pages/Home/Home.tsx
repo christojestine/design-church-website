@@ -50,11 +50,12 @@ export default function Home() {
             "& .swiper": { height: "100%", width: "100%" },
             "& .swiper-wrapper": { height: "100%" },
             "& .swiper-slide": { height: "100%" },
-            /* Pagination — pill dots, bottom-right */
+            /* Pagination — pill dots: bottom-centre between the arrows on phones, bottom-right on larger screens */
             "& .swiper-pagination": {
-              bottom: "28px !important",
-              right: "40px !important",
-              left: "auto !important",
+              bottom: { xs: "31px !important", md: "28px !important" },
+              right: { xs: "auto !important", md: "40px !important" },
+              left: { xs: "50% !important", md: "auto !important" },
+              transform: { xs: "translateX(-50%)", md: "none" },
               width: "auto !important",
               display: "flex",
               alignItems: "center",
@@ -110,9 +111,10 @@ export default function Home() {
                       display: "block",
                     }}
                   />
-                  {/* Slide label */}
+                  {/* Slide label (hidden on phones, where it collided with the hero buttons) */}
                   <Box
                     sx={{
+                      display: { xs: "none", md: "block" },
                       position: "absolute",
                       bottom: 36,
                       left: { xs: 24, md: "50%" },
@@ -157,7 +159,8 @@ export default function Home() {
           />
         </Box>
 
-        {/* ── Custom Nav Arrows — rendered at top z-index, always clickable ── */}
+        {/* ── Custom Nav Arrows — rendered at top z-index, always clickable.
+             Phones: along the bottom edge so they don't cover the headline. ── */}
         <Box
           sx={{
             position: "absolute",
@@ -165,9 +168,10 @@ export default function Home() {
             zIndex: 10,
             pointerEvents: "none",
             display: "flex",
-            alignItems: "center",
+            alignItems: { xs: "flex-end", md: "center" },
             justifyContent: "space-between",
             px: { xs: 1.5, md: 2.5 },
+            pb: { xs: 2, md: 0 },
           }}
         >
           <IconButton
@@ -221,7 +225,8 @@ export default function Home() {
             display: "flex",
             alignItems: "center",
             px: { xs: 3, md: 7, lg: 10 },
-            py: { xs: 8, md: 0 },
+            pt: { xs: 8, md: 0 },
+            pb: { xs: 12, md: 0 },
           }}
         >
           <Box
