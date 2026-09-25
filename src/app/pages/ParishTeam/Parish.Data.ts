@@ -1,7 +1,7 @@
 import frVarghese from "../../assets/images/Fr.Varghese.webp";
 import frAlbin from "../../assets/images/Fr.Albin.webp";
 import frJoyal from "../../assets/images/Fr.Joyal.webp";
-import frSinto from "../../assets/images/Fr.Sinto.webp";
+import frMelbin from "../../assets/images/Fr.Melbin.webp";
 import sunil from "../../assets/images/sunil.webp";
 import sabu from "../../assets/images/sabu.webp";
 import thomas from "../../assets/images/thomas.webp";
@@ -64,18 +64,20 @@ export const priest: Priest[] = [
     },
   },
   {
-    name: { en: "Fr.Sinto Pozholiparambil RCJ", ml: "ഫാ. സിന്റോ പൊഴോലിപ്പറമ്പിൽ ആർസിജെ" },
+    name: { en: "Fr. Melbin Joseph Ayyunnickal", ml: "ഫാ. മെൽബിൻ ജോസഫ് അയ്യുണ്ണിക്കൽ" },
     role: asstVicar,
-    color: "#fef3c7",
-    photo: frSinto,
-    // NOTE: these details are a copy of Fr. Varghese's and need Fr. Sinto's real details.
-    dateofbirth: "02/10/1958",
-    dateofordination: "31/12/1985",
-    homeparish: { en: "Poovathussery", ml: "പൂവത്തുശ്ശേരി" },
-    feastday: { en: "24 April", ml: "ഏപ്രിൽ 24" },
+    color: "#dcfce7",
+    photo: frMelbin,
+    dateofbirth: "23/09/1997",
+    dateofordination: "26/01/2026",
+    homeparish: {
+      en: "St. Anthony's Church Kamakshy",
+      ml: "കാമാക്ഷി സെന്റ് ആന്റണീസ് പള്ളി",
+    },
+    feastday: { en: "July 25 (St. James)", ml: "ജൂലൈ 25 (വി. യാക്കോബ്)" },
     currentposition: {
-      en: "Vicar of St. Mary’s Forane Church Chalakudy",
-      ml: "ചാലക്കുടി സെന്റ് മേരീസ് ഫൊറോന പള്ളി വികാരി",
+      en: "Asst. Vicar of St. Mary’s Forane Church Chalakudy",
+      ml: "ചാലക്കുടി സെന്റ് മേരീസ് ഫൊറോന പള്ളി അസി. വികാരി",
     },
   },
 ];
