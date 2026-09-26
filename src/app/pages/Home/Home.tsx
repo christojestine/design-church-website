@@ -39,6 +39,11 @@ const text = {
   pilgrimCentre: { en: "MARIAN PILGRIM CENTER", ml: "മരിയൻ തീർത്ഥാടന കേന്ദ്രം" },
   learnMore: { en: "Learn More About Us →", ml: "കൂടുതൽ അറിയാം →" },
   massTimes: { en: "View Mass Times", ml: "കുർബാന സമയങ്ങൾ" },
+  adorationChapel: { en: "Adoration Chapel", ml: "ആരാധനാ ചാപ്പൽ" },
+  adorationHours: {
+    en: "Monday to Saturday (8:00 AM to 8:00 PM)",
+    ml: "തിങ്കൾ മുതൽ ശനി വരെ (രാവിലെ 8:00 മുതൽ രാത്രി 8:00 വരെ)",
+  },
   ourStory: { en: "Our Story", ml: "ഞങ്ങളുടെ ചരിത്രം" },
   planVisit: { en: "Plan Your Visit", ml: "സന്ദർശനത്തിനുള്ള വഴി" },
   altarAlt: { en: "Church altar", ml: "പള്ളിയിലെ അൾത്താര" },
@@ -85,7 +90,7 @@ export default function Home() {
       <Box
         sx={{
           position: "relative",
-          minHeight: { xs: 600, md: 780 },
+          minHeight: { xs: 560, md: 620 },
           overflow: "hidden",
         }}
       >
@@ -270,12 +275,12 @@ export default function Home() {
           sx={{
             position: "relative",
             zIndex: 3,
-            minHeight: { xs: 600, md: 780 },
+            minHeight: { xs: 560, md: 620 },
             display: "flex",
             alignItems: "center",
             px: { xs: 3, md: 7, lg: 10 },
-            pt: { xs: 8, md: 0 },
-            pb: { xs: 12, md: 0 },
+            pt: { xs: 6, md: 5 },
+            pb: { xs: 11, md: 5 },
           }}
         >
           <Box
@@ -285,7 +290,7 @@ export default function Home() {
           >
             {/* — Eyebrow — */}
             <Box
-              sx={{ display: "flex", alignItems: "center", gap: 1.5, mb: 3 }}
+              sx={{ display: "flex", alignItems: "center", gap: 1.5, mb: 2 }}
             >
               <Box
                 sx={{
@@ -334,7 +339,7 @@ export default function Home() {
                 color: "white",
                 lineHeight: 1.08,
                 letterSpacing: "-0.03em",
-                mb: 3.5,
+                mb: 2.5,
                 textShadow: "0 4px 32px rgba(0,0,0,0.35)",
               }}
             >
@@ -348,7 +353,7 @@ export default function Home() {
                 height: 3,
                 borderRadius: 2,
                 background: "linear-gradient(90deg, #3b82f6, #a78bfa)",
-                mb: 3,
+                mb: 2.5,
               }}
             />
 
@@ -357,8 +362,8 @@ export default function Home() {
               sx={{
                 fontSize: { xs: "0.97rem", md: "1.07rem" },
                 color: "rgba(255,255,255,0.72)",
-                lineHeight: 1.8,
-                mb: 4.5,
+                lineHeight: 1.7,
+                mb: 2.5,
                 maxWidth: 420,
               }}
             >
@@ -366,6 +371,36 @@ export default function Home() {
               <br />
               {tr(text.pilgrimCentre)}
             </Typography>
+
+            {/* — Adoration chapel hours — */}
+            <Box
+              sx={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 1.5,
+                mb: 3,
+                px: 2,
+                py: 1,
+                borderRadius: "14px",
+                background: "rgba(255,255,255,0.08)",
+                border: "1px solid rgba(255,255,255,0.18)",
+                backdropFilter: "blur(8px)",
+              }}
+            >
+              <AccessTimeIcon sx={{ color: "#fcd34d", fontSize: 22 }} />
+              <Box>
+                <Typography
+                  sx={{ color: "white", fontWeight: 700, fontSize: "0.95rem" }}
+                >
+                  {tr(text.adorationChapel)}
+                </Typography>
+                <Typography
+                  sx={{ color: "rgba(255,255,255,0.72)", fontSize: "0.85rem" }}
+                >
+                  {tr(text.adorationHours)}
+                </Typography>
+              </Box>
+            </Box>
 
             {/* — Buttons — */}
             <Box sx={{ display: "flex", flexWrap: "wrap", gap: 2 }}>
