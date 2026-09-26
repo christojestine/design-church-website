@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
+import { useForm, type RegisterOptions } from "react-hook-form";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Grid from "@mui/material/Grid";
@@ -16,6 +17,19 @@ import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import SendIcon from "@mui/icons-material/Send";
 import { glassCard, inputFieldSx } from "../../styles/style";
 import { useLanguage, type Text } from "../i18n/LanguageContext";
+import {
+  type ContactValues,
+  LIMITS,
+  NAME_PATTERN,
+  EMAIL_PATTERN,
+  PHONE_PATTERN,
+  HTML_TAG_PATTERN,
+  MAX_LINKS,
+  countLinks,
+  submitToGoogleForm,
+  cooldownRemaining,
+  startCooldown,
+} from "./Contact.form";
 
 const text = {
   chip: { en: "Get In Touch", ml: "ബന്ധപ്പെടാം" },
@@ -35,7 +49,108 @@ const text = {
   subject: { en: "Subject", ml: "വിഷയം" },
   message: { en: "Message", ml: "സന്ദേശം" },
   send: { en: "Send Message", ml: "സന്ദേശം അയയ്ക്കുക" },
+  sending: { en: "Sending…", ml: "അയയ്ക്കുന്നു…" },
+  sendFailed: {
+    en: "Sorry, your message couldn't be sent. Please check your connection and try again, or email us directly.",
+    ml: "ക്ഷമിക്കണം, സന്ദേശം അയയ്ക്കാനായില്ല. ഇന്റർനെറ്റ് കണക്ഷൻ പരിശോധിച്ച് വീണ്ടും ശ്രമിക്കുക, അല്ലെങ്കിൽ ഞങ്ങൾക്ക് നേരിട്ട് ഇമെയിൽ ചെയ്യുക.",
+  },
+  cooldown: {
+    en: "You've just sent a message. Please wait a minute before sending another.",
+    ml: "നിങ്ങൾ ഇപ്പോൾ ഒരു സന്ദേശം അയച്ചു. മറ്റൊന്ന് അയയ്ക്കാൻ ഒരു മിനിറ്റ് കാത്തിരിക്കുക.",
+  },
+  sendAnother: { en: "Send another message", ml: "മറ്റൊരു സന്ദേശം അയയ്ക്കുക" },
+  tooFast: {
+    en: "Please check your details and press Send again.",
+    ml: "വിവരങ്ങൾ പരിശോധിച്ച ശേഷം വീണ്ടും 'അയയ്ക്കുക' അമർത്തുക.",
+  },
 } satisfies Record<string, Text>;
+
+// Validation messages. The form rules return these keys and each field shows the translation,
+// so errors switch language along with the rest of the page.
+const errorText = {
+  required: { en: "This field is required.", ml: "ഈ വിവരം നിർബന്ധമാണ്." },
+  nameLength: {
+    en: `Please enter ${LIMITS.name.min}–${LIMITS.name.max} characters.`,
+    ml: `${LIMITS.name.min}–${LIMITS.name.max} അക്ഷരങ്ങൾ നൽകുക.`,
+  },
+  nameChars: {
+    en: "Please use letters only (spaces, dots, hyphens and apostrophes are fine).",
+    ml: "അക്ഷരങ്ങൾ മാത്രം ഉപയോഗിക്കുക (സ്പേസ്, കുത്ത്, ഹൈഫൻ എന്നിവ ആകാം).",
+  },
+  email: { en: "Please enter a valid email address.", ml: "ശരിയായ ഇമെയിൽ വിലാസം നൽകുക." },
+  phone: {
+    en: "Please enter a valid phone number (digits, spaces, + and - only).",
+    ml: "ശരിയായ ഫോൺ നമ്പർ നൽകുക (അക്കങ്ങൾ, സ്പേസ്, +, - മാത്രം).",
+  },
+  subjectLength: {
+    en: `Please enter ${LIMITS.subject.min}–${LIMITS.subject.max} characters.`,
+    ml: `${LIMITS.subject.min}–${LIMITS.subject.max} അക്ഷരങ്ങൾ നൽകുക.`,
+  },
+  messageLength: {
+    en: `Please enter ${LIMITS.message.min}–${LIMITS.message.max} characters.`,
+    ml: `${LIMITS.message.min}–${LIMITS.message.max} അക്ഷരങ്ങൾ നൽകുക.`,
+  },
+  noHtml: { en: "HTML tags are not allowed.", ml: "HTML ടാഗുകൾ അനുവദനീയമല്ല." },
+  noLinks: { en: "Links are not allowed in the subject.", ml: "വിഷയത്തിൽ ലിങ്കുകൾ അനുവദനീയമല്ല." },
+  tooManyLinks: {
+    en: `Please include no more than ${MAX_LINKS} links.`,
+    ml: `${MAX_LINKS}-ൽ കൂടുതൽ ലിങ്കുകൾ ചേർക്കരുത്.`,
+  },
+} satisfies Record<string, Text>;
+type ErrorKey = keyof typeof errorText;
+
+const err = (key: ErrorKey) => key;
+const lengthBetween = (min: number, max: number, key: ErrorKey) => (v: string) => {
+  const n = v.trim().length;
+  return (n >= min && n <= max) || err(key);
+};
+const noHtml = (v: string) => !HTML_TAG_PATTERN.test(v) || err("noHtml");
+
+type Field = Exclude<keyof ContactValues, "hpTrap">;
+const rules: Record<Field, RegisterOptions<ContactValues, Field>> = {
+  name: {
+    required: err("required"),
+    validate: {
+      length: lengthBetween(LIMITS.name.min, LIMITS.name.max, "nameLength"),
+      chars: (v) => NAME_PATTERN.test(v.trim()) || err("nameChars"),
+    },
+  },
+  email: {
+    required: err("required"),
+    validate: (v) => {
+      const t = v.trim();
+      return (t.length <= LIMITS.email.max && EMAIL_PATTERN.test(t)) || err("email");
+    },
+  },
+  phone: {
+    validate: (v) => {
+      const t = v.trim();
+      if (!t) return true;
+      const digits = t.replace(/\D/g, "").length;
+      return (PHONE_PATTERN.test(t) && digits >= 7 && digits <= 15) || err("phone");
+    },
+  },
+  subject: {
+    required: err("required"),
+    validate: {
+      length: lengthBetween(LIMITS.subject.min, LIMITS.subject.max, "subjectLength"),
+      noHtml,
+      noLinks: (v) => countLinks(v) === 0 || err("noLinks"),
+    },
+  },
+  message: {
+    required: err("required"),
+    validate: {
+      length: lengthBetween(LIMITS.message.min, LIMITS.message.max, "messageLength"),
+      noHtml,
+      links: (v) => countLinks(v) <= MAX_LINKS || err("tooManyLinks"),
+    },
+  },
+};
+
+// Submissions faster than this after the form appears are probably bots. Browser autofill lets a
+// real person get close, so this only asks them to press Send again rather than dropping it.
+const MIN_FILL_MS = 2000;
 
 const inputSx = inputFieldSx;
 
@@ -87,17 +202,56 @@ const info: {
 export default function Contact() {
   const { tr } = useLanguage();
   const [submitted, setSubmitted] = useState(false);
-  const [form, setForm] = useState({
-    name: "",
-    email: "",
-    phone: "",
-    subject: "",
-    message: "",
+  const [notice, setNotice] = useState<"sendFailed" | "cooldown" | "tooFast" | null>(null);
+  const shownAt = useRef(Date.now());
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors, isSubmitting },
+  } = useForm<ContactValues>({
+    mode: "onTouched",
+    defaultValues: { name: "", email: "", phone: "", subject: "", message: "", hpTrap: "" },
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    setSubmitted(true);
+  // MUI's TextField needs register's ref on the <input> (inputRef), not on its wrapper.
+  const field = (name: Field) => {
+    const { ref, ...rest } = register(name, rules[name]);
+    const error = errors[name]?.message as ErrorKey | undefined;
+    return {
+      ...rest,
+      inputRef: ref,
+      error: Boolean(error),
+      helperText: error ? tr(errorText[error]) : undefined,
+    };
+  };
+
+  const onSubmit = async (values: ContactValues) => {
+    setNotice(null);
+    // Bot: filled the honeypot, which people can't see or reach. Show success, send nothing.
+    if (values.hpTrap) {
+      if (process.env.NODE_ENV !== "production") {
+        console.warn("Contact form: honeypot filled, treated as a bot and nothing was sent.");
+      }
+      setSubmitted(true);
+      return;
+    }
+    if (Date.now() - shownAt.current < MIN_FILL_MS) {
+      setNotice("tooFast");
+      return;
+    }
+    if (cooldownRemaining() > 0) {
+      setNotice("cooldown");
+      return;
+    }
+    try {
+      await submitToGoogleForm(values);
+      startCooldown();
+      reset();
+      setSubmitted(true);
+    } catch {
+      setNotice("sendFailed");
+    }
   };
 
   return (
@@ -152,38 +306,71 @@ export default function Contact() {
                     </Typography>
 
                     {submitted ? (
-                      <Alert
-                        severity="success"
-                        sx={{
-                          background: "rgba(22,163,74,0.07)",
-                          border: "1px solid rgba(22,163,74,0.2)",
-                          color: "#15803d",
-                          borderRadius: "12px",
-                          "& .MuiAlert-icon": { color: "#16a34a" },
-                        }}
-                      >
-                        {tr(text.thanks)}
-                      </Alert>
+                      <Box>
+                        <Alert
+                          severity="success"
+                          sx={{
+                            background: "rgba(22,163,74,0.07)",
+                            border: "1px solid rgba(22,163,74,0.2)",
+                            color: "#15803d",
+                            borderRadius: "12px",
+                            "& .MuiAlert-icon": { color: "#16a34a" },
+                          }}
+                        >
+                          {tr(text.thanks)}
+                        </Alert>
+                        <Button
+                          onClick={() => {
+                            shownAt.current = Date.now();
+                            setSubmitted(false);
+                          }}
+                          sx={{ mt: 2, textTransform: "none" }}
+                        >
+                          {tr(text.sendAnother)}
+                        </Button>
+                      </Box>
                     ) : (
                       <Box
                         component="form"
-                        onSubmit={handleSubmit}
+                        noValidate
+                        onSubmit={handleSubmit(onSubmit)}
                         sx={{
                           display: "flex",
                           flexDirection: "column",
                           gap: 2.5,
+                          position: "relative",
                         }}
                       >
+                        {notice && (
+                          <Alert
+                            severity={notice === "sendFailed" ? "error" : "info"}
+                            sx={{ borderRadius: "12px" }}
+                          >
+                            {tr(text[notice])}
+                          </Alert>
+                        )}
+                        {/* Honeypot: bots that fill every input in the HTML fill this too. It must be
+                            display:none, not just moved off-screen: browsers autofill any field that's
+                            rendered, which made real visitors look like bots. */}
+                        <Box aria-hidden="true" sx={{ display: "none" }}>
+                          <input
+                            type="text"
+                            tabIndex={-1}
+                            autoComplete="off"
+                            data-lpignore="true"
+                            data-1p-ignore
+                            {...register("hpTrap")}
+                          />
+                        </Box>
                         <Grid container spacing={2.5}>
                           <Grid size={{ xs: 12, sm: 6 }}>
                             <TextField
                               fullWidth
                               label={tr(text.name)}
                               required
-                              value={form.name}
-                              onChange={(e) =>
-                                setForm({ ...form, name: e.target.value })
-                              }
+                              autoComplete="name"
+                              slotProps={{ htmlInput: { maxLength: LIMITS.name.max } }}
+                              {...field("name")}
                               sx={inputSx}
                             />
                           </Grid>
@@ -193,10 +380,9 @@ export default function Contact() {
                               label={tr(text.email)}
                               type="email"
                               required
-                              value={form.email}
-                              onChange={(e) =>
-                                setForm({ ...form, email: e.target.value })
-                              }
+                              autoComplete="email"
+                              slotProps={{ htmlInput: { maxLength: LIMITS.email.max } }}
+                              {...field("email")}
                               sx={inputSx}
                             />
                           </Grid>
@@ -206,10 +392,10 @@ export default function Contact() {
                             <TextField
                               fullWidth
                               label={tr(text.phone)}
-                              value={form.phone}
-                              onChange={(e) =>
-                                setForm({ ...form, phone: e.target.value })
-                              }
+                              type="tel"
+                              autoComplete="tel"
+                              slotProps={{ htmlInput: { maxLength: 20, inputMode: "tel" } }}
+                              {...field("phone")}
                               sx={inputSx}
                             />
                           </Grid>
@@ -218,10 +404,8 @@ export default function Contact() {
                               fullWidth
                               label={tr(text.subject)}
                               required
-                              value={form.subject}
-                              onChange={(e) =>
-                                setForm({ ...form, subject: e.target.value })
-                              }
+                              slotProps={{ htmlInput: { maxLength: LIMITS.subject.max } }}
+                              {...field("subject")}
                               sx={inputSx}
                             />
                           </Grid>
@@ -232,20 +416,19 @@ export default function Contact() {
                           multiline
                           rows={5}
                           required
-                          value={form.message}
-                          onChange={(e) =>
-                            setForm({ ...form, message: e.target.value })
-                          }
+                          slotProps={{ htmlInput: { maxLength: LIMITS.message.max } }}
+                          {...field("message")}
                           sx={inputSx}
                         />
                         <Button
                           type="submit"
                           variant="contained"
                           size="large"
+                          disabled={isSubmitting}
                           endIcon={<SendIcon />}
                           sx={{ alignSelf: "flex-start", px: 4 }}
                         >
-                          {tr(text.send)}
+                          {tr(isSubmitting ? text.sending : text.send)}
                         </Button>
                       </Box>
                     )}
