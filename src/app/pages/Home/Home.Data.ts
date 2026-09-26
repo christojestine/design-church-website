@@ -5,6 +5,7 @@ import ChurchHelicamView from "../../assets/images/1.webp";
 import ChurchAltar from "../../assets/images/2.webp";
 import ChurchFrontView from "../../assets/images/3.webp";
 import ChurchGrotto from "../../assets/images/4.webp";
+import OldAltar from "../../assets/images/5.JPG";
 import type { Text } from "../../i18n/LanguageContext";
 
 
@@ -55,25 +56,36 @@ export const ministries: {
   },
 ];
 
-export const heroSlides: { src: string; alt: Text; label: Text }[] = [
+// `position` is the CSS object-position for the cropped slide (defaults to "center").
+export const heroSlides: { src: string; alt: Text; label: Text; position?: string }[] = [
   {
-    src: ChurchHelicamView,
-    alt: { en: "Aerial view of the church", ml: "പള്ളിയുടെ ആകാശദൃശ്യം" },
-    label: { en: "House of God", ml: "ദൈവാലയം" },
+    src: ChurchFrontView,
+    alt: { en: "Front view of the church", ml: "പള്ളിയുടെ മുൻവശം" },
+    label: {
+      en: "St. Mary's Forane Church, Chalakudy",
+      ml: "സെന്റ് മേരീസ് ഫൊറോന പള്ളി, ചാലക്കുടി",
+    },
   },
   {
     src: ChurchAltar,
     alt: { en: "The church altar", ml: "പള്ളിയിലെ അൾത്താര" },
     label: { en: "Sacred Interior", ml: "ദേവാലയത്തിനുള്ളിൽ" },
   },
-  {
-    src: ChurchFrontView,
-    alt: { en: "Front view of the church", ml: "പള്ളിയുടെ മുൻവശം" },
-    label: { en: "Evening Prayer", ml: "സന്ധ്യാപ്രാർത്ഥന" },
+    {
+    src: OldAltar,
+    position: "center bottom",
+    alt: { en: "The old altar of the church", ml: "പള്ളിയിലെ പഴയ അൾത്താര" },
+    label: { en: "The Old Altar", ml: "പഴയ അൾത്താര" },
   },
   {
     src: ChurchGrotto,
     alt: { en: "The Marian grotto", ml: "മരിയൻ ഗ്രോട്ടോ" },
     label: { en: "Grotto Shrine", ml: "ഗ്രോട്ടോ" },
   },
+  {
+    src: ChurchHelicamView,
+    alt: { en: "Aerial view of the church", ml: "പള്ളിയുടെ ആകാശദൃശ്യം" },
+    label: { en: "House of God", ml: "ദൈവാലയം" },
+  },
+
 ];
