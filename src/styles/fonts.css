@@ -3,3 +3,26 @@
 /* Malayalam: only downloaded by the browser when Malayalam text is on screen (Google Fonts uses unicode-range). */
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Malayalam:wght@400;500;600;700;800&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+Malayalam:wght@500;600;700;800&display=swap');
+
+/* Rachana (SMC) for Malayalam headings. Declared here instead of importing SMC's CSS so we can:
+   - scale it up: its glyphs are drawn ~21% smaller than Noto Serif Malayalam at the same font-size
+     (Malayalam letter height 0.457em vs 0.575em), which made small headings look tiny;
+   - limit it to Malayalam characters, so English text never falls onto Rachana's Latin glyphs. */
+@font-face {
+  font-family: "Rachana";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  size-adjust: 126%;
+  src: url("https://smc.org.in/downloads/fonts/rachana/Rachana-Regular.woff2") format("woff2");
+  unicode-range: U+0D00-0D7F, U+200C-200D, U+25CC;
+}
+@font-face {
+  font-family: "Rachana";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  size-adjust: 126%;
+  src: url("https://smc.org.in/downloads/fonts/rachana/Rachana-Bold.woff2") format("woff2");
+  unicode-range: U+0D00-0D7F, U+200C-200D, U+25CC;
+}

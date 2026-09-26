@@ -29,8 +29,12 @@ const text = {
   joinLabel: { en: "Join WhatsApp Community", ml: "വാട്ട്സ്ആപ്പ് കൂട്ടായ്മയിൽ ചേരുക" },
   join: { en: "Join", ml: "ചേരുക" },
   sacrament: { en: "Sacrament", ml: "കൂദാശ" },
+  chapelsChip: { en: "Main Chapels (Kurishe Palli)", ml: "പ്രധാന കുരിശുപള്ളികൾ" },
+  chapelMassTitle: { en: "Weekly Holy Mass", ml: "പ്രതിവാര വി. കുർബാന" },
   confessionTitle: { en: "Confession Times", ml: "കുമ്പസാര സമയങ്ങൾ" },
   vachabhishekaTitle: { en: "Vachabhisheka Sayanam", ml: "വചനാഭിഷേക ശയനം" },
+  adorationChip: { en: "Eucharistic Adoration", ml: "ദിവ്യകാരുണ്യ ആരാധന" },
+  adorationTitle: { en: "Adoration Chapel", ml: "ആരാധനാ ചാപ്പൽ" },
 } satisfies Record<string, Text>;
 
 const schedule = [
@@ -57,6 +61,19 @@ const schedule = [
   },
 ];
 
+const chapelMasses: { chapel: Text; day: Text; time: string }[] = [
+  {
+    chapel: { en: "St. Mary's Chapel, Chenathunad", ml: "സെന്റ് മേരീസ് കുരിശുപള്ളി, ചേനത്തുനാട്" },
+    day: { en: "Every Saturday", ml: "എല്ലാ ശനിയാഴ്ചയും" },
+    time: "6:00 PM",
+  },
+  {
+    chapel: { en: "Our Lady of Lourdes Chapel, Mariyapuram", ml: "ലൂർദ് മാതാ കുരിശുപള്ളി, മരിയാപുരം" },
+    day: { en: "Every Thursday", ml: "എല്ലാ വ്യാഴാഴ്ചയും" },
+    time: "5:30 PM",
+  },
+];
+
 const confessions: { day: Text; time: Text }[] = [
   {
     day: { en: "Monday to Saturday", ml: "തിങ്കൾ മുതൽ ശനി വരെ" },
@@ -79,11 +96,18 @@ const vachabhishekaSayanam: { day: Text; time: Text }[] = [
   },
 ];
 
+const adorationChapel: { day: Text; time: Text }[] = [
+  {
+    day: { en: "Monday to Saturday", ml: "തിങ്കൾ മുതൽ ശനി വരെ" },
+    time: { en: "8:00 AM to 8:00 PM", ml: "രാവിലെ 8:00 മുതൽ രാത്രി 8:00 വരെ" },
+  },
+];
+
 export default function Programs() {
   const { lang, tr } = useLanguage();
   return (
     <Box>
-      <Box sx={{ textAlign: "center", py: { xs: 4, md: 4 }, px: 3 }}>
+      <Box sx={{ textAlign: "center", pt: { xs: 4, md: 4 }, pb: 0, px: 3 }}>
         <ScrollReveal>
           <Chip
             label={tr(text.chip)}
@@ -109,7 +133,7 @@ export default function Programs() {
         </ScrollReveal>
       </Box>
 
-      <Box sx={{ py: { xs: 4, md: 6 }, px: 3 }}>
+      <Box sx={{ pt: { xs: 1, md: 2 }, pb: { xs: 4, md: 6 }, px: 3 }}>
         <Box sx={{ maxWidth: 1000, mx: "auto" }}>
           <Grid container spacing={4}>
             {schedule.map(
@@ -183,6 +207,134 @@ export default function Programs() {
               ),
             )}
           </Grid>
+        </Box>
+      </Box>
+
+      <Box sx={{ py: { xs: 4, md: 4 }, px: 3 }}>
+        <Box sx={{ maxWidth: 700, mx: "auto" }}>
+          <ScrollReveal>
+            <Box sx={{ textAlign: "center", mb: 5 }}>
+              <Chip
+                label={tr(text.chapelsChip)}
+                sx={{
+                  background: "rgba(29,78,216,0.08)",
+                  color: "#1d4ed8",
+                  fontWeight: 600,
+                  mb: 2,
+                }}
+              />
+              <Typography
+                variant="h2"
+                sx={{
+                  fontSize: { xs: "1.8rem", md: "2.4rem" },
+                  fontWeight: 800,
+                  color: "#0f172a",
+                }}
+              >
+                {tr(text.chapelMassTitle)}
+              </Typography>
+            </Box>
+          </ScrollReveal>
+          <ScrollReveal delay={0.15}>
+            <Card sx={glassCard}>
+              <CardContent sx={{ p: { xs: 2.5, md: 4 } }}>
+                {chapelMasses.map((c, i) => (
+                  <Box key={i}>
+                    <Box
+                      sx={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        py: 2,
+                        gap: 2,
+                        alignItems: "center",
+                      }}
+                    >
+                      <Box>
+                        <Typography sx={{ color: "#334155", fontWeight: 600 }}>
+                          {tr(c.chapel)}
+                        </Typography>
+                        <Typography sx={{ color: "#64748b", fontSize: "0.875rem" }}>
+                          {tr(c.day)}
+                        </Typography>
+                      </Box>
+                      <Typography
+                        sx={{
+                          color: "#1d4ed8",
+                          fontWeight: 600,
+                          textAlign: "right",
+                          flexShrink: 0,
+                        }}
+                      >
+                        {formatClock(c.time, lang)}
+                      </Typography>
+                    </Box>
+                    {i < chapelMasses.length - 1 && (
+                      <Divider sx={{ borderColor: "rgba(29,78,216,0.07)" }} />
+                    )}
+                  </Box>
+                ))}
+              </CardContent>
+            </Card>
+          </ScrollReveal>
+        </Box>
+      </Box>
+
+      <Box sx={{ py: { xs: 4, md: 4 }, px: 3 }}>
+        <Box sx={{ maxWidth: 700, mx: "auto" }}>
+          <ScrollReveal>
+            <Box sx={{ textAlign: "center", mb: 5 }}>
+              <Chip
+                label={tr(text.adorationChip)}
+                sx={{
+                  background: "rgba(180,83,9,0.08)",
+                  color: "#b45309",
+                  fontWeight: 600,
+                  mb: 2,
+                }}
+              />
+              <Typography
+                variant="h2"
+                sx={{
+                  fontSize: { xs: "1.8rem", md: "2.4rem" },
+                  fontWeight: 800,
+                  color: "#0f172a",
+                }}
+              >
+                {tr(text.adorationTitle)}
+              </Typography>
+            </Box>
+          </ScrollReveal>
+          <ScrollReveal delay={0.15}>
+            <Card sx={glassCard}>
+              <CardContent sx={{ p: { xs: 2.5, md: 4 } }}>
+                {adorationChapel.map((c, i) => (
+                  <Box key={i}>
+                    <Box
+                      sx={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        py: 2,
+                        gap: 2,
+                        alignItems: "center",
+                      }}
+                    >
+                      <Typography sx={{ color: "#334155", fontWeight: 500 }}>
+                        {tr(c.day)}
+                      </Typography>
+                      <Typography
+                        sx={{ color: "#1d4ed8", fontWeight: 600, textAlign: "right" }}
+                      >
+                        {tr(c.time)}
+                      </Typography>
+                    </Box>
+                    {i < adorationChapel.length - 1 && (
+                      <Divider sx={{ borderColor: "rgba(29,78,216,0.07)" }} />
+                    )}
+                  </Box>
+                ))}
+              </CardContent>
+            </Card>
+          </ScrollReveal>
         </Box>
       </Box>
 

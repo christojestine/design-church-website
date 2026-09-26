@@ -98,7 +98,7 @@ export function Navigation() {
             <Box sx={{ flexShrink: 1, [desktop]: { flexShrink: 0, width: 220 } }}>
               <Typography
                 sx={{
-                  fontFamily: '"Cinzel", "Noto Serif Malayalam", "Georgia", serif',
+                  fontFamily: '"Cinzel", "Rachana", "Noto Serif Malayalam", "Georgia", serif',
                   fontWeight: 800,
                   fontSize: { xs: "0.95rem", md: "1.1rem" },
                   color: "#0f172a",

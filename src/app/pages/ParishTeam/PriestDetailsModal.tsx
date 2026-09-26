@@ -134,7 +134,7 @@ const PriestDetailsModal = ({
               fontWeight: 800,
               textAlign: "center",
               color: "#172033",
-              fontFamily: '"Noto Serif Malayalam", Georgia, serif',
+              fontFamily: '"Rachana", "Noto Serif Malayalam", Georgia, serif',
             }}
           >
             {tr(priest.name)}

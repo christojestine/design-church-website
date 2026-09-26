@@ -16,30 +16,30 @@ const theme = createTheme({
   typography: {
     fontFamily: '"DM Sans", "Noto Sans Malayalam", "Inter", "Roboto", sans-serif',
     h1: {
-      fontFamily: '"Cinzel", "Noto Serif Malayalam", "Georgia", serif',
+      fontFamily: '"Cinzel", "Rachana", "Noto Serif Malayalam", "Georgia", serif',
       fontWeight: 800,
       letterSpacing: "-0.03em",
     },
     h2: {
-      fontFamily: '"Cinzel", "Noto Serif Malayalam", "Georgia", serif',
+      fontFamily: '"Cinzel", "Rachana", "Noto Serif Malayalam", "Georgia", serif',
       fontWeight: 700,
       letterSpacing: "-0.02em",
     },
     h3: {
-      fontFamily: '"Cinzel", "Noto Serif Malayalam", "Georgia", serif',
+      fontFamily: '"Cinzel", "Rachana", "Noto Serif Malayalam", "Georgia", serif',
       fontWeight: 700,
       letterSpacing: "-0.01em",
     },
     h4: {
-      fontFamily: '"Cinzel", "Noto Serif Malayalam", "Georgia", serif',
+      fontFamily: '"Cinzel", "Rachana", "Noto Serif Malayalam", "Georgia", serif',
       fontWeight: 600,
     },
     h5: {
-      fontFamily: '"Cinzel", "Noto Serif Malayalam", "Georgia", serif',
+      fontFamily: '"Cinzel", "Rachana", "Noto Serif Malayalam", "Georgia", serif',
       fontWeight: 600,
     },
     h6: {
-      fontFamily: '"Cinzel", "Noto Serif Malayalam", "Georgia", serif',
+      fontFamily: '"Cinzel", "Rachana", "Noto Serif Malayalam", "Georgia", serif',
       fontWeight: 600,
     },
     body1: { fontFamily: '"DM Sans", "Noto Sans Malayalam", "Inter", "Roboto", sans-serif' },
@@ -53,12 +53,12 @@ const theme = createTheme({
         body: {
           fontFamily: '"DM Sans", "Noto Sans Malayalam", "Inter", "Roboto", sans-serif',
         },
-        h1: { fontFamily: '"Cinzel", "Noto Serif Malayalam", "Georgia", serif' },
-        h2: { fontFamily: '"Cinzel", "Noto Serif Malayalam", "Georgia", serif' },
-        h3: { fontFamily: '"Cinzel", "Noto Serif Malayalam", "Georgia", serif' },
-        h4: { fontFamily: '"Cinzel", "Noto Serif Malayalam", "Georgia", serif' },
-        h5: { fontFamily: '"Cinzel", "Noto Serif Malayalam", "Georgia", serif' },
-        h6: { fontFamily: '"Cinzel", "Noto Serif Malayalam", "Georgia", serif' },
+        h1: { fontFamily: '"Cinzel", "Rachana", "Noto Serif Malayalam", "Georgia", serif' },
+        h2: { fontFamily: '"Cinzel", "Rachana", "Noto Serif Malayalam", "Georgia", serif' },
+        h3: { fontFamily: '"Cinzel", "Rachana", "Noto Serif Malayalam", "Georgia", serif' },
+        h4: { fontFamily: '"Cinzel", "Rachana", "Noto Serif Malayalam", "Georgia", serif' },
+        h5: { fontFamily: '"Cinzel", "Rachana", "Noto Serif Malayalam", "Georgia", serif' },
+        h6: { fontFamily: '"Cinzel", "Rachana", "Noto Serif Malayalam", "Georgia", serif' },
       },
     },
     MuiButton: {

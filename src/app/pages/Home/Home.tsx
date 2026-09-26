@@ -61,7 +61,7 @@ const text = {
 
 // Gradient word in the "Welcome Home" heading.
 const gradientWord = {
-  fontFamily: '"Cinzel", "Noto Serif Malayalam", "Georgia", serif',
+  fontFamily: '"Cinzel", "Rachana", "Noto Serif Malayalam", "Georgia", serif',
   fontWeight: 800,
   background: "linear-gradient(135deg, #1d4ed8, #7c3aed)",
   WebkitBackgroundClip: "text",

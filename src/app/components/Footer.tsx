@@ -110,7 +110,7 @@ export function Footer() {
               />
               <Typography
                 sx={{
-                  fontFamily: '"Cinzel", "Noto Serif Malayalam", "Georgia", serif',
+                  fontFamily: '"Cinzel", "Rachana", "Noto Serif Malayalam", "Georgia", serif',
                   fontWeight: 800,
                   color: "#0f172a",
                   fontSize: "1rem",
@@ -134,7 +134,7 @@ export function Footer() {
             <Typography
               sx={{
                 color: "#1d4ed8",
-                fontFamily: '"Cinzel", "Noto Serif Malayalam", "Georgia", serif',
+                fontFamily: '"Cinzel", "Rachana", "Noto Serif Malayalam", "Georgia", serif',
                 fontWeight: 700,
                 mb: 2.5,
                 letterSpacing: "0.1em",
@@ -181,7 +181,7 @@ export function Footer() {
             <Typography
               sx={{
                 color: "#1d4ed8",
-                fontFamily: '"Cinzel", "Noto Serif Malayalam", "Georgia", serif',
+                fontFamily: '"Cinzel", "Rachana", "Noto Serif Malayalam", "Georgia", serif',
                 fontWeight: 700,
                 mb: 2.5,
                 letterSpacing: "0.1em",
@@ -245,7 +245,7 @@ export function Footer() {
             <Typography
               sx={{
                 color: "#1d4ed8",
-                fontFamily: '"Cinzel", "Noto Serif Malayalam", "Georgia", serif',
+                fontFamily: '"Cinzel", "Rachana", "Noto Serif Malayalam", "Georgia", serif',
                 fontWeight: 700,
                 mb: 2.5,
                 letterSpacing: "0.1em",
