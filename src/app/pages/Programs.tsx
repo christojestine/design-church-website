@@ -13,7 +13,7 @@ import ChurchIcon from "@mui/icons-material/AccountBalance";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
 import WhatsappIcon from "@mui/icons-material/WhatsApp";
-import { glassCard } from "../../styles/style";
+import { glassCard, pageHeaderSx } from "../../styles/style";
 import { useLanguage, type Text } from "../i18n/LanguageContext";
 import { formatClock } from "../i18n/common";
 
@@ -107,7 +107,7 @@ export default function Programs() {
   const { lang, tr } = useLanguage();
   return (
     <Box>
-      <Box sx={{ textAlign: "center", pt: { xs: 4, md: 4 }, pb: 0, px: 3 }}>
+      <Box sx={pageHeaderSx}>
         <ScrollReveal>
           <Chip
             label={tr(text.chip)}
@@ -133,7 +133,7 @@ export default function Programs() {
         </ScrollReveal>
       </Box>
 
-      <Box sx={{ pt: { xs: 1, md: 2 }, pb: { xs: 4, md: 6 }, px: 3 }}>
+      <Box sx={{ pt: 0, pb: { xs: 4, md: 6 }, px: 3 }}>
         <Box sx={{ maxWidth: 1000, mx: "auto" }}>
           <Grid container spacing={4}>
             {schedule.map(

@@ -7,7 +7,7 @@ import Chip from "@mui/material/Chip";
 import Button from "@mui/material/Button";
 import { Link } from "react-router";
 import { ScrollReveal } from "../../components/ScrollReveal";
-import { glassCard } from "../../../styles/style";
+import { glassCard, pageHeaderSx } from "../../../styles/style";
 import { ministryGroups } from "./Ministries.Data";
 import { useLanguage, type Text } from "../../i18n/LanguageContext";
 
@@ -24,7 +24,7 @@ export default function Ministries() {
   const { tr } = useLanguage();
   return (
     <Box>
-      <Box sx={{ textAlign: "center", pt: { xs: 8, md: 10 }, pb: 0, px: 3 }}>
+      <Box sx={pageHeaderSx}>
         <ScrollReveal>
           <Chip
             label={tr(text.chip)}
@@ -65,7 +65,7 @@ export default function Ministries() {
         <Box
           key={g}
           sx={{
-            pt: { xs: 3, md: 4 },
+            pt: g === 0 ? 0 : { xs: 3, md: 4 },
             pb: g === ministryGroups.length - 1 ? { xs: 4, md: 6 } : 0,
             px: 3,
           }}

@@ -15,7 +15,7 @@ import PhoneIcon from "@mui/icons-material/Phone";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import SendIcon from "@mui/icons-material/Send";
-import { glassCard, inputFieldSx } from "../../styles/style";
+import { glassCard, inputFieldSx, pageHeaderSx } from "../../styles/style";
 import { useLanguage, type Text } from "../i18n/LanguageContext";
 import {
   type ContactValues,
@@ -256,7 +256,7 @@ export default function Contact() {
 
   return (
     <Box>
-      <Box sx={{ textAlign: "center", py: { xs: 8, md: 10 }, px: 3 }}>
+      <Box sx={pageHeaderSx}>
         <ScrollReveal>
           <Chip
             label={tr(text.chip)}
@@ -285,7 +285,7 @@ export default function Contact() {
         </ScrollReveal>
       </Box>
 
-      <Box sx={{ py: { xs: 4, md: 6 }, px: 3, pb: { xs: 10, md: 14 } }}>
+      <Box sx={{ pt: 0, px: 3, pb: { xs: 10, md: 14 } }}>
         <Box sx={{ maxWidth: 1100, mx: "auto" }}>
           <Grid container spacing={5} sx={{ alignItems: "flex-start" }}>
             {/* Form */}

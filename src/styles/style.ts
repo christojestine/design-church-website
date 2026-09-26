@@ -42,3 +42,12 @@ export const inputFieldSx: SxProps<Theme> = {
   "& .MuiInputLabel-root.Mui-focused": { color: "#1d4ed8" },
   "& .MuiOutlinedInput-input": { color: "#0f172a" },
 };
+
+/** Standard spacing for the centred title block at the top of a page. The section right
+ *  below it should start with `pt: 0` so the gap isn't doubled. */
+export const pageHeaderSx: SxProps<Theme> = {
+  textAlign: "center",
+  pt: { xs: 4, md: 5 },
+  pb: { xs: 3, md: 4 },
+  px: 3,
+};

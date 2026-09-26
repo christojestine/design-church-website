@@ -11,7 +11,7 @@ import { ScrollReveal } from "../../components/ScrollReveal";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import PhotoLibraryIcon from "@mui/icons-material/PhotoLibrary";
 import VideocamIcon from "@mui/icons-material/Videocam";
-import { glassCard } from "../../../styles/style";
+import { glassCard, pageHeaderSx } from "../../../styles/style";
 import { videos, photos } from "./Media.Data";
 import { useLanguage, type Text } from "../../i18n/LanguageContext";
 
@@ -57,7 +57,7 @@ export default function Media() {
 
   return (
     <Box>
-      <Box sx={{ textAlign: "center", py: { xs: 8, md: 10 }, px: 3 }}>
+      <Box sx={pageHeaderSx}>
         <ScrollReveal>
           <Chip
             label={tr(text.chip)}
@@ -84,7 +84,7 @@ export default function Media() {
       </Box>
 
       {/* Tab switcher */}
-      <Box sx={{ maxWidth: 480, mx: "auto", px: 3, mb: 7 }}>
+      <Box sx={{ maxWidth: 480, mx: "auto", px: 3, mb: 5 }}>
         <Box
           sx={{
             background: "rgba(255,255,255,0.65)",

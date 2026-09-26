@@ -14,7 +14,7 @@ import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import { ScrollReveal } from "../../components/ScrollReveal";
-import { glassCard } from "../../../styles/style";
+import { glassCard, pageHeaderSx } from "../../../styles/style";
 import { getUpcomingEvents, isInRange, type DateRange } from "./eventDates";
 import { categoryLabels, categoryStyles, type EventCategory } from "./Events.Data";
 import { useLanguage, type Text } from "../../i18n/LanguageContext";
@@ -61,7 +61,7 @@ export default function EventsPage() {
   const isFiltered = range !== "all" || category !== "all";
   return (
     <Box>
-      <Box sx={{ textAlign: "center", py: { xs: 8, md: 10 }, px: 3 }}>
+      <Box sx={pageHeaderSx}>
         <ScrollReveal>
           <Chip
             label={tr(text.chip)}
@@ -97,7 +97,7 @@ export default function EventsPage() {
         </ScrollReveal>
       </Box>
 
-      <Box sx={{ py: { xs: 4, md: 6 }, px: 3 }}>
+      <Box sx={{ pt: 0, pb: { xs: 4, md: 6 }, px: 3 }}>
         <Box sx={{ maxWidth: 1280, mx: "auto" }}>
           {upcoming.length > 0 && (
             <Box
