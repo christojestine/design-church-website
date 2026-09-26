@@ -13,6 +13,16 @@ function parseIsoDate(iso: string) {
   return new Date(y, m - 1, d);
 }
 
+/** "Saturday, September 26, 2026" (Malayalam month and weekday names for "ml"). */
+export function formatLongDate(iso: string, lang: Lang = "en") {
+  return parseIsoDate(iso).toLocaleDateString(lang === "ml" ? "ml-IN" : "en-US", {
+    weekday: "long",
+    month: "long",
+    day: "numeric",
+    year: "numeric",
+  });
+}
+
 /** "Fri, September 25, 2026", or "October 1 – 20, 2026" for multi-day events (Malayalam month names for "ml"). */
 export function formatEventDate({ date, endDate }: ChurchEvent, lang: Lang = "en") {
   const locale = lang === "ml" ? "ml-IN" : "en-US";

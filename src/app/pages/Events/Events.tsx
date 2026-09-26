@@ -11,12 +11,13 @@ import TextField from "@mui/material/TextField";
 import MenuItem from "@mui/material/MenuItem";
 import { useState } from "react";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
+import UpdateIcon from "@mui/icons-material/Update";
 import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import { ScrollReveal } from "../../components/ScrollReveal";
 import { glassCard, pageHeaderSx } from "../../../styles/style";
-import { getUpcomingEvents, isInRange, type DateRange } from "./eventDates";
-import { categoryLabels, categoryStyles, type EventCategory } from "./Events.Data";
+import { formatLongDate, getUpcomingEvents, isInRange, type DateRange } from "./eventDates";
+import { categoryLabels, categoryStyles, eventsLastUpdated, type EventCategory } from "./Events.Data";
 import { useLanguage, type Text } from "../../i18n/LanguageContext";
 
 // shortLabel is shown on phones so all four options fit on one line.
@@ -43,6 +44,7 @@ const text = {
     ml: "ഇപ്പോൾ വരാനിരിക്കുന്ന പരിപാടികളൊന്നുമില്ല. പിന്നീട് വീണ്ടും നോക്കുക.",
   },
   clear: { en: "Clear filters", ml: "ഫിൽട്ടറുകൾ മാറ്റുക" },
+  lastUpdated: { en: "Last updated", ml: "അവസാനം പുതുക്കിയത്" },
 } satisfies Record<string, Text>;
 
 export default function EventsPage() {
@@ -94,6 +96,24 @@ export default function EventsPage() {
           >
             {tr(text.intro)}
           </Typography>
+          <Box
+            sx={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 0.75,
+              mt: 2,
+              color: "#64748b",
+              fontSize: "0.85rem",
+            }}
+          >
+            <UpdateIcon sx={{ fontSize: 16 }} />
+            <Typography component="span" sx={{ fontSize: "inherit", color: "inherit" }}>
+              {tr(text.lastUpdated)}:{" "}
+              <Box component="time" dateTime={eventsLastUpdated} sx={{ fontWeight: 600 }}>
+                {formatLongDate(eventsLastUpdated, lang)}
+              </Box>
+            </Typography>
+          </Box>
         </ScrollReveal>
       </Box>
 

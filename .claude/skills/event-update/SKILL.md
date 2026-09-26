@@ -58,6 +58,7 @@ Read `Events.Data.ts` first. Follow its current shape, which may have changed si
    - Remove events whose `endDate ?? date` is before the new notice date. They're hidden already, and removing them keeps the file short.
    - Keep future events that are already there. If the new notice repeats or changes one (a new time or date), update that entry rather than adding a duplicate.
    - Add the new events in date order, under `// ── <section> ──` comments like the existing ones. Update the `// Source:` comment to the new notice date.
+   - Set `eventsLastUpdated` to today's date (the day you edit the file, not the notice date). The Events page shows it as "Last updated".
    - `title + date` must be unique, because the page uses it as the React key.
 
 6. **Validate.** Run all three:
@@ -66,7 +67,7 @@ Read `Events.Data.ts` first. Follow its current shape, which may have changed si
    npx tsc --noEmit -p . 2>&1 | grep "pages/Events"
    NODE_ENV=production npx rspack build 2>&1 | tail -1
    ```
-   The validator checks date formats, date order, categories, duplicate keys and that every event has all four Malayalam fields, then prints what is visible today. Fix anything it reports. Ignore any errors `tsc` shows in `App.tsx` and `main.tsx`, which aren't part of the events code. The `grep` shows only errors in the events files.
+   The validator checks date formats, date order, categories, duplicate keys, that every event has all four Malayalam fields and that `eventsLastUpdated` is a valid date that isn't in the future (it warns if it isn't today), then prints what is visible today. Fix anything it reports. Ignore any errors `tsc` shows in `App.tsx` and `main.tsx`, which aren't part of the events code. The `grep` shows only errors in the events files.
 
 7. **Reply** with:
    - how many events you added, updated and removed

@@ -4,7 +4,7 @@ import path from "node:path";
 import { pathToFileURL } from "node:url";
 
 const dataFile = path.resolve("src/app/pages/Events/Events.Data.ts");
-const { events, categoryStyles } = await import(pathToFileURL(dataFile).href);
+const { events, categoryStyles, eventsLastUpdated } = await import(pathToFileURL(dataFile).href);
 
 const errors: string[] = [];
 const isoDate = /^\d{4}-\d{2}-\d{2}$/;
@@ -40,6 +40,16 @@ for (const e of events) {
 const now = new Date();
 const pad = (n: number) => String(n).padStart(2, "0");
 const today = `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}`;
+
+// Shown on the Events page as "Last updated"; it should be the day the list was edited.
+if (typeof eventsLastUpdated !== "string" || !validDate(eventsLastUpdated)) {
+  errors.push(`eventsLastUpdated: missing or invalid date "${eventsLastUpdated}"`);
+} else if (eventsLastUpdated > today) {
+  errors.push(`eventsLastUpdated: ${eventsLastUpdated} is in the future`);
+} else if (eventsLastUpdated !== today) {
+  console.warn(`Note: eventsLastUpdated is ${eventsLastUpdated}, not today (${today}). Set it to today if you just edited the list.
+`);
+}
 const visible = events
   .filter((e: any) => (e.endDate ?? e.date) >= today)
   .sort((a: any, b: any) => a.date.localeCompare(b.date));

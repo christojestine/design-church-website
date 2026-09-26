@@ -46,6 +46,10 @@ export interface ChurchEvent {
 
 const MAIN_CHURCH = "St. Mary's Forane Church";
 
+/** Date this list was last edited, as "YYYY-MM-DD". Shown on the Events page as "Last updated";
+ *  change it whenever `events` changes. */
+export const eventsLastUpdated = "2026-09-26";
+
 // Source: parish announcements dated 27 September 2026.
 export const events: ChurchEvent[] = [
   // ── Sunday, 27 September ──
